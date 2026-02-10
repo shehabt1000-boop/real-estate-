@@ -1,0 +1,1010 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, interactive-widget=resizes-content">
+    
+    <!-- PWA Settings -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#0f172a">
+    <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/609/609803.png">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+    <!-- Meta Tags -->
+    <meta property="og:title" content="السوق وياك">
+    <meta property="og:description" content="عقارات مصر">
+    <meta property="og:image" content="https://images.pexels.com/photos/19213018/pexels-photo-19213018.jpeg?auto=compress&cs=tinysrgb&w=512&h=512&dpr=1">
+    <meta property="og:type" content="website">
+
+    <title>السوق وياك | عقارات مصر</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: { 
+                extend: { 
+                    colors: { navy: '#0f172a', darkbg: '#1e293b', brand: '#10b981' },
+                    fontFamily: { sans: ['Cairo', 'sans-serif'] },
+                    screens: { 'xs': '400px' }
+                } 
+            }
+        }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <style>
+        html { background-color: #0f172a; }
+        body { 
+            font-family: 'Cairo', sans-serif; 
+            -webkit-tap-highlight-color: transparent;
+            overscroll-behavior-y: none;
+            background-color: transparent;
+        }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .select-none { user-select: none; }
+
+        /* --- Fixed Background Optimization (LVH Fix) --- */
+        #app-background {
+            position: fixed; 
+            top: 0; 
+            left: 0; 
+            width: 100%; 
+            height: 100vh; /* Fallback */
+            height: 100lvh; /* Largest Viewport Height */
+            z-index: -50;
+            background-image: url('https://images.pexels.com/photos/19213018/pexels-photo-19213018.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1');
+            background-size: cover; 
+            background-position: center; 
+            background-repeat: no-repeat;
+            pointer-events: none; 
+            will-change: transform;
+            transform: translate3d(0,0,0);
+        }
+        
+        /* Overlay */
+        #app-background::after {
+            content: ''; position: absolute; inset: 0;
+            background: rgba(241, 245, 249, 0.75);
+            backdrop-filter: blur(2px);
+            transition: background-color 0.3s ease;
+        }
+        .dark #app-background::after { 
+            background: rgba(15, 23, 42, 0.80); 
+        }
+
+        /* Animations */
+        @keyframes shimmer { 0% { background-position: -1000px 0; } 100% { background-position: 1000px 0; } }
+        .skeleton { animation: shimmer 1.5s infinite linear; background: linear-gradient(to right, #f1f5f9 4%, #e2e8f0 25%, #f1f5f9 36%); background-size: 1000px 100%; }
+        .dark .skeleton { background: linear-gradient(to right, #1e293b 4%, #334155 25%, #1e293b 36%); }
+
+        @keyframes popIn { from { transform: scale(0.98); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+        .animate-pop { animation: popIn 0.1s ease-out forwards; will-change: transform, opacity; }
+
+        .mobile-full-modal { position: fixed; inset: 0; z-index: 60; background-color: white; display: flex; flex-direction: column; height: 100dvh; }
+        .dark .mobile-full-modal { background-color: #1e293b; }
+        @media (min-width: 768px) { 
+            .mobile-full-modal { position: relative; inset: auto; width: 100%; max-width: 32rem; height: 750px; max-height: 90vh; border-radius: 1.5rem; overflow: hidden; } 
+            .modal-overlay { position: fixed; inset: 0; z-index: 60; background-color: rgba(0,0,0,0.8); display: flex; align-items: center; justify-content: center; padding: 1rem; } 
+        }
+
+        @keyframes slideInDown { from { transform: translateY(-100%); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+        @keyframes fadeOut { from { opacity: 1; } to { opacity: 0; } }
+        .toast { animation: slideInDown 0.2s ease-out forwards; }
+        .toast.hiding { animation: fadeOut 0.2s ease-in forwards; }
+
+        .sticky-header { 
+            z-index: 50; 
+            transform: translateZ(0); 
+            transition: background-color 0.2s ease;
+            border-bottom-left-radius: 1.5rem;
+            border-bottom-right-radius: 1.5rem;
+        }
+
+        /* Splash Screen */
+        #splash-screen { 
+            position: fixed; inset: 0; z-index: 10000; background-color: #0f172a;
+            background-image: linear-gradient(rgba(15, 23, 42, 0.60), rgba(15, 23, 42, 0.80)), url('https://images.pexels.com/photos/19213018/pexels-photo-19213018.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1');
+            background-size: cover; background-position: center;
+            display: flex; flex-direction: column; justify-content: center; align-items: center; 
+            transition: opacity 0.3s ease-out, visibility 0.3s; 
+        }
+        .splash-icon-container { position: relative; width: 80px; height: 80px; display: flex; justify-content: center; align-items: center; }
+        .splash-ring { position: absolute; inset: 0; border-radius: 50%; border: 2px solid rgba(16, 185, 129, 0.3); border-top-color: #10b981; animation: spin 1s infinite linear; }
+        .splash-logo { color: white; z-index: 10; animation: pulse 2s infinite; }
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+        @keyframes pulse { 50% { transform: scale(0.9); opacity: 0.8; } }
+        .hidden-splash { opacity: 0; visibility: hidden; pointer-events: none; }
+
+        body:not(.app-loaded) #app-content-wrapper { opacity: 0; visibility: hidden; }
+        #app-content-wrapper { transition: opacity 0.4s ease-in-out; opacity: 1; }
+
+        .input-box {
+            width: 100%; background: white; border: 1px solid #000000; border-radius: 0.4rem;
+            padding: 0.4rem 0.5rem; font-size: 0.8rem; font-weight: 700; outline: none; color: #0f172a; transition: border-color 0.2s;
+        }
+        .dark .input-box { background: #1e293b; border-color: #94a3b8; color: white; }
+        .input-box:focus { border-color: #10b981; box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.2); }
+        .input-box::placeholder { color: #64748b; font-weight: 500; font-size: 0.75rem; }
+
+        .custom-select-wrapper { position: relative; }
+        .custom-select {
+            appearance: none; background-color: #f8fafc; border: 1px solid #000; border-radius: 0.4rem;
+            padding: 0.4rem 1.5rem 0.4rem 0.5rem; width: 100%; font-weight: 700; font-size: 0.75rem; color: #334155; cursor: pointer;
+        }
+        .dark .custom-select { background-color: #1e293b; color: white; border-color: #94a3b8; }
+        .custom-select-icon { position: absolute; left: 0.5rem; top: 50%; transform: translateY(-50%); pointer-events: none; color: #64748b; width: 0.8rem; height: 0.8rem; }
+
+        .modern-table { border-collapse: collapse; width: 100%; }
+        .modern-table td, .modern-table th { padding: 0.4rem; border-bottom: 1px solid #e2e8f0; }
+        .dark .modern-table td, .dark .modern-table th { border-color: #334155; }
+        .modern-table tr:nth-child(even) { background-color: #f8fafc; }
+        .dark .modern-table tr:nth-child(even) { background-color: #1e293b; }
+
+        .amenity-tile input:checked + div { background-color: #10b981; color: white; border-color: #10b981; }
+        
+        #filter-panel { transition: max-height 0.2s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.15s; max-height: 0; opacity: 0; overflow: hidden; will-change: max-height, opacity; }
+        #filter-panel.open { max-height: 450px; opacity: 1; }
+
+        body.keyboard-open #bottom-nav { display: none; }
+    </style>
+</head>
+<body class="text-slate-800 dark:text-slate-100 select-none">
+
+    <!-- Splash Screen -->
+    <div id="splash-screen">
+        <div class="splash-icon-container">
+            <div class="splash-ring"></div>
+            <svg class="splash-logo" xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline><circle cx="12" cy="7" r="2" fill="#10b981" stroke="none"></circle></svg>
+        </div>
+        <div class="mt-4 text-white font-bold text-lg tracking-wide">السوق <span class="text-emerald-500">وياك</span></div>
+    </div>
+
+    <!-- Wrapper -->
+    <div id="app-content-wrapper">
+        <div id="app-background"></div>
+
+        <div id="toast-container" class="fixed top-4 left-0 right-0 z-[100] flex flex-col items-center gap-2 pointer-events-none px-4"></div>
+
+        <!-- Header -->
+        <header class="fixed top-0 w-full sticky-header bg-white/95 dark:bg-navy/95 backdrop-blur-none flex items-center justify-between px-4 h-12 shadow-md z-50">
+            <div class="flex flex-col justify-center">
+                <span class="text-[9px] font-bold text-slate-500 dark:text-slate-400 leading-none">مرحبا بكم في</span>
+                <span class="text-[10px] font-black text-slate-800 dark:text-white leading-tight">سوق <span class="text-emerald-600 dark:text-emerald-400">العقارات</span></span>
+            </div>
+            
+            <!-- Logo Updated: Circular Black Frame, Dark Gold Border in Dark Mode -->
+            <div class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center cursor-pointer group" id="logo-trigger">
+                <div class="w-10 h-10 flex items-center justify-center bg-slate-900 text-white rounded-full border-2 border-slate-900 dark:border-[#B8860B] shadow-lg group-hover:scale-110 transition-all duration-300">
+                    <i data-lucide="building-2" class="w-5 h-5"></i>
+                </div>
+            </div>
+
+            <div class="flex gap-1.5 items-center">
+                <a href="https://wa.me/201206244875" target="_blank" class="p-1.5 rounded-full bg-green-50 dark:bg-green-900/20 text-green-600 dark:text-green-400 hover:bg-green-100 border border-green-100 dark:border-green-900/50 transition shadow-sm"><i data-lucide="message-circle" class="w-3.5 h-3.5"></i></a>
+                <button onclick="toggleDarkMode()" class="p-1.5 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-yellow-400 hover:bg-slate-200 transition"><i data-lucide="moon" class="w-3.5 h-3.5 block dark:hidden"></i><i data-lucide="sun" class="w-3.5 h-3.5 hidden dark:block"></i></button>
+                <button onclick="toggleAdminPanel()" id="btn-admin-top" class="hidden bg-slate-100 dark:bg-slate-800 p-1.5 rounded-full text-slate-600 dark:text-white"><i data-lucide="shield" class="w-3.5 h-3.5"></i></button>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="pt-[3.5rem] pb-20 container mx-auto px-2 max-w-5xl min-h-screen">
+            <div class="sticky top-12 z-40 space-y-1 pointer-events-none mb-1">
+                <div class="relative px-1 pt-2 pb-1 bg-slate-50/95 dark:bg-navy/95 rounded-b-xl shadow-sm pointer-events-auto transform-gpu border-t-0 border-x border-b border-slate-100 dark:border-slate-700">
+                    <div class="relative w-full px-1">
+                        <button onclick="toggleFilterPanel()" class="absolute left-1 top-0 h-full w-9 flex items-center justify-center text-slate-500 hover:text-slate-800 dark:hover:text-white transition z-10"><i data-lucide="sliders-horizontal" class="w-4 h-4"></i></button>
+                        <input type="text" id="search-input" placeholder="ابحث (شقة، أرض، عنوان)..." class="w-full bg-white dark:bg-darkbg border border-black dark:border-slate-500 rounded-lg pl-10 pr-9 py-1 text-xs shadow-sm focus:ring-1 focus:ring-emerald-500 outline-none dark:text-white transition font-bold h-8">
+                        <button onclick="performSearch()" class="absolute right-1 top-0 h-full w-9 flex items-center justify-center text-slate-500 hover:text-emerald-600 transition"><i data-lucide="search" class="w-4 h-4"></i></button>
+                    </div>
+                    <div id="filter-panel" class="mt-1 bg-white dark:bg-slate-800 rounded-lg border border-black dark:border-slate-600 shadow-lg mx-1">
+                        <div class="p-2 space-y-1.5">
+                            <div class="flex justify-between items-center border-b border-slate-100 dark:border-slate-700 pb-1">
+                                <h3 class="text-[10px] font-bold text-slate-700 dark:text-white flex items-center gap-1"><i data-lucide="filter" class="w-3 h-3"></i> تصفية</h3>
+                                <button onclick="resetFilters()" class="text-[9px] text-red-500 font-bold underline">إعادة تعيين</button>
+                            </div>
+                            <div class="custom-select-wrapper">
+                                <select id="filter-type" class="custom-select py-1 text-[10px]">
+                                    <option value="">كل الأنواع (بيع/إيجار)</option>
+                                    <option value="sale">بيع</option>
+                                    <option value="rent">إيجار</option>
+                                </select>
+                                <i data-lucide="chevron-down" class="custom-select-icon w-3 h-3"></i>
+                            </div>
+                            <div class="grid grid-cols-2 gap-1.5">
+                                <div class="custom-select-wrapper">
+                                    <select id="filter-gov" onchange="populateCities('filter-gov', 'filter-city')" class="custom-select py-1 text-[10px]"><option value="">كل المحافظات</option></select>
+                                    <i data-lucide="chevron-down" class="custom-select-icon w-3 h-3"></i>
+                                </div>
+                                <div class="custom-select-wrapper">
+                                    <select id="filter-city" class="custom-select py-1 text-[10px]"><option value="">كل المراكز</option></select>
+                                    <i data-lucide="chevron-down" class="custom-select-icon w-3 h-3"></i>
+                                </div>
+                            </div>
+                            <div class="grid grid-cols-2 gap-1.5">
+                                <input type="number" id="filter-min-price" placeholder="أقل سعر" class="input-box text-[10px] py-1">
+                                <input type="number" id="filter-max-price" placeholder="أعلى سعر" class="input-box text-[10px] py-1">
+                            </div>
+                            <div class="flex gap-2">
+                                <button onclick="performSearch(); toggleFilterPanel()" class="flex-1 bg-emerald-600 text-white py-1.5 rounded font-bold text-[10px] shadow hover:bg-emerald-700 transition">تطبيق</button>
+                                <button onclick="toggleFilterPanel()" class="w-16 bg-red-500 text-white py-1.5 rounded font-bold text-[10px] shadow hover:bg-red-600 transition flex items-center justify-center"><i data-lucide="x" class="w-3 h-3"></i> إغلاق</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="grid-container" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 mt-2"></div>
+            
+            <div id="load-more-container" class="hidden mt-4 text-center">
+                <button onclick="loadMore()" class="bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 text-slate-700 dark:text-slate-200 px-6 py-2 rounded-full text-xs font-bold shadow-sm hover:bg-slate-50 dark:hover:bg-slate-700 transition">عرض المزيد</button>
+            </div>
+
+            <div id="empty-state" class="hidden text-center py-16 opacity-60 flex flex-col items-center">
+                <div class="bg-slate-200 dark:bg-slate-700 p-3 rounded-full inline-block mb-2"><i data-lucide="search-x" class="w-6 h-6 text-slate-400"></i></div>
+                <p class="text-slate-500 dark:text-slate-400 font-bold text-xs">لا توجد نتائج</p>
+                <button onclick="resetFilters()" class="mt-1 text-emerald-600 dark:text-emerald-400 text-[10px] font-bold underline">عرض الكل</button>
+            </div>
+        </main>
+
+        <!-- Floating Dock -->
+        <nav id="bottom-nav" class="fixed bottom-4 left-1/2 -translate-x-1/2 z-50 bg-white/90 dark:bg-slate-800/90 backdrop-blur-lg border border-slate-200 dark:border-slate-600 px-5 py-1.5 rounded-full flex items-center gap-6 shadow-xl transform transition-all hover:scale-105 transform-gpu">
+            <button onclick="resetFilters(); window.scrollTo({top:0, behavior:'smooth'})" class="flex flex-col items-center gap-0.5 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition group"><i data-lucide="home" class="w-5 h-5 group-hover:scale-110 transition"></i></button>
+            <button onclick="toggleAddModal()" class="w-12 h-12 bg-slate-900 dark:bg-emerald-600 text-white rounded-full flex items-center justify-center shadow-lg shadow-slate-900/20 transform -translate-y-5 border-4 border-[#f8fafc] dark:border-navy hover:scale-110 transition active:scale-90"><i data-lucide="plus" class="w-6 h-6"></i></button>
+            <button onclick="toggleChat()" class="flex flex-col items-center gap-0.5 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition group relative"><div id="chat-badge" class="hidden absolute top-0 right-0 w-2 h-2 bg-red-500 rounded-full border border-white dark:border-slate-800"></div><i data-lucide="message-circle" class="w-5 h-5 group-hover:scale-110 transition"></i></button>
+        </nav>
+    </div>
+
+    <!-- Details Modal -->
+    <div id="details-modal" class="hidden modal-overlay">
+        <div class="mobile-full-modal animate-pop">
+            <div class="relative h-44 bg-gray-200 dark:bg-slate-800 shrink-0 group">
+                <button onclick="closeDetails()" class="absolute top-2 left-2 bg-red-500 text-black p-1 rounded-full z-20 shadow-sm hover:bg-red-600 transition"><i data-lucide="x" class="w-4 h-4"></i></button>
+                <div class="absolute top-2 right-2 flex gap-2 z-20">
+                    <button onclick="downloadImages()" class="bg-white/80 dark:bg-black/50 text-slate-800 dark:text-white p-1 rounded-full shadow-sm"><i data-lucide="download" class="w-4 h-4"></i></button>
+                    <button onclick="shareListing()" class="bg-white/80 dark:bg-black/50 text-slate-800 dark:text-white p-1 rounded-full shadow-sm"><i data-lucide="share-2" class="w-4 h-4"></i></button>
+                </div>
+                <div id="details-slider" class="flex w-full h-full overflow-x-auto no-scrollbar snap-x scroll-smooth"></div>
+                <div id="details-arrows"><button onclick="scrollDetails(1)" class="absolute left-2 top-1/2 -translate-y-1/2 bg-black/30 text-white p-1 rounded-full z-10"><i data-lucide="chevron-left" class="w-4 h-4"></i></button><button onclick="scrollDetails(-1)" class="absolute right-2 top-1/2 -translate-y-1/2 bg-black/30 text-white p-1 rounded-full z-10"><i data-lucide="chevron-right" class="w-4 h-4"></i></button></div>
+                <span id="d-type-badge" class="absolute bottom-2 right-2 text-white px-2 py-0.5 rounded text-[10px] font-bold shadow backdrop-blur-sm"></span>
+            </div>
+            <div class="flex-1 overflow-y-auto bg-white dark:bg-darkbg">
+                <div id="d-controls" class="hidden p-2 bg-slate-50 dark:bg-slate-800 border-b dark:border-slate-700 flex gap-2 justify-end"></div>
+                <div class="p-2 space-y-2">
+                    <div class="space-y-1">
+                        <div><span class="text-[9px] font-bold text-slate-400 block mb-0">العنوان العقاري</span><h2 id="d-title" class="text-sm font-bold text-slate-900 dark:text-white leading-tight"></h2></div>
+                        <div class="flex items-center justify-between border-b border-slate-100 dark:border-slate-700 pb-1">
+                            <div><span class="text-[9px] font-bold text-slate-400 block mb-0">السعر المطلوب</span><span id="d-price" class="text-emerald-600 dark:text-emerald-400 font-black text-lg"></span></div>
+                            <span id="d-time-badge" class="text-[9px] text-slate-400 font-medium bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded-full"></span>
+                        </div>
+                    </div>
+                    <div class="border border-slate-200 dark:border-slate-700 rounded-lg overflow-hidden">
+                        <table class="w-full text-[10px] modern-table"><tbody id="d-table-body"></tbody></table>
+                    </div>
+                    <div>
+                        <h3 class="text-[10px] font-bold text-slate-900 dark:text-white mb-1 flex items-center gap-1"><i data-lucide="sparkles" class="w-3 h-3 text-yellow-500"></i> المميزات</h3>
+                        <div id="d-amenities" class="grid grid-cols-3 gap-0 border border-slate-200 dark:border-slate-700 rounded-lg overflow-hidden bg-slate-50 dark:bg-slate-800/50"></div>
+                    </div>
+                    <div class="bg-slate-50 dark:bg-slate-800/50 p-2 rounded-lg border border-slate-200 dark:border-slate-700"><h3 class="text-[9px] font-bold text-slate-400 uppercase mb-0.5">التفاصيل الكاملة</h3><p id="d-desc" class="text-[10px] text-slate-700 dark:text-slate-300 leading-snug whitespace-pre-wrap font-medium"></p></div>
+                </div>
+            </div>
+            <div class="p-2 border-t border-slate-100 dark:border-slate-700 bg-white dark:bg-darkbg flex flex-col gap-2 shrink-0 pb-6 md:pb-2">
+                <a id="d-map" href="#" target="_blank" class="hidden w-full bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 py-2 rounded-lg flex justify-center items-center gap-2 font-bold text-[10px] border border-blue-100 dark:border-blue-800 hover:bg-blue-100 transition"><i data-lucide="map" class="w-3 h-3"></i> الموقع على الخريطة</a>
+                <div class="flex gap-2"><a id="d-wa" href="#" target="_blank" class="flex-1 bg-[#25D366] text-white py-2.5 rounded-lg flex justify-center items-center gap-2 font-bold shadow-lg hover:opacity-90 transition text-[10px]"><i data-lucide="message-circle" class="w-4 h-4"></i> واتساب</a><a id="d-call" href="#" class="flex-1 bg-slate-900 dark:bg-slate-700 text-white py-2.5 rounded-lg flex justify-center items-center gap-2 font-bold shadow-lg hover:opacity-90 transition text-[10px]"><i data-lucide="phone" class="w-4 h-4"></i> اتصال</a></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Modal -->
+    <div id="add-modal" class="hidden modal-overlay">
+        <div class="mobile-full-modal animate-pop">
+            <div class="p-2.5 border-b border-slate-100 dark:border-slate-700 flex justify-between items-center bg-white dark:bg-darkbg shrink-0">
+                <h3 class="font-bold text-slate-800 dark:text-white text-sm">إضافة عقار</h3>
+                <button onclick="toggleAddModal()" class="bg-red-500 text-black p-1 rounded-full hover:bg-red-600 transition"><i data-lucide="x" class="w-4 h-4"></i></button>
+            </div>
+            <div class="flex-1 overflow-y-auto p-2.5 bg-slate-50 dark:bg-darkbg">
+                <div class="space-y-2.5">
+                    <div class="bg-white dark:bg-slate-800 p-2.5 rounded-lg border border-black dark:border-slate-500 shadow-sm">
+                        <label class="block text-[10px] font-bold text-slate-700 dark:text-slate-300 mb-1.5">صور وفيديوهات العقار <span class="text-red-500">*</span></label>
+                        <div class="grid grid-cols-4 gap-1.5">
+                            <label class="aspect-square border-2 border-dashed border-emerald-300 dark:border-emerald-700 bg-emerald-50 dark:bg-emerald-900/20 rounded-lg flex flex-col items-center justify-center cursor-pointer hover:bg-emerald-100 transition text-emerald-600 dark:text-emerald-400 relative overflow-hidden">
+                                <input type="file" multiple accept="image/*,video/*" onchange="handleUpload(this)" class="absolute inset-0 opacity-0 z-10"><i data-lucide="camera" class="w-4 h-4 mb-0.5"></i><span class="text-[8px] font-bold">إضافة</span>
+                            </label>
+                            <div id="preview-area" class="col-span-3 flex gap-1.5 overflow-x-auto no-scrollbar py-0.5"></div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white dark:bg-slate-800 p-2.5 rounded-lg border border-black dark:border-slate-500 shadow-sm space-y-1.5">
+                        <h4 class="text-[9px] font-bold text-slate-400 uppercase tracking-wider border-b border-slate-100 dark:border-slate-700 pb-0.5 mb-0.5">بيانات أساسية</h4>
+                        <div class="flex gap-1.5">
+                            <div class="custom-select-wrapper flex-1">
+                                <select id="in-category" onchange="updateFormFields()" class="custom-select">
+                                    <option value="apartment">شقة</option><option value="villa">فيلا</option><option value="chalet">شالية</option><option value="office">مكتب</option><option value="shop">محل</option><option value="land">أرض</option><option value="building">عمارة</option><option value="warehouse">مخزن</option>
+                                </select>
+                                <i data-lucide="chevron-down" class="custom-select-icon w-3 h-3"></i>
+                            </div>
+                            <div class="custom-select-wrapper w-20 shrink-0">
+                                <select id="in-type" class="custom-select"><option value="sale">بيع</option><option value="rent">إيجار</option></select>
+                                <i data-lucide="chevron-down" class="custom-select-icon w-3 h-3"></i>
+                            </div>
+                        </div>
+                        <input id="in-title" class="input-box" placeholder="عنوان الإعلان">
+                        <input id="in-price" type="number" class="input-box" placeholder="السعر (جنيه)">
+                        
+                        <div class="grid grid-cols-2 gap-1.5">
+                            <input id="in-area" type="number" class="input-box" placeholder="المساحة (م²)">
+                            <input id="in-level" type="text" class="input-box" placeholder="الدور">
+                            <input id="in-floors-alt" type="number" class="input-box hidden" placeholder="عدد الأدوار">
+                            <div id="land-type-wrapper" class="hidden custom-select-wrapper">
+                                <select id="in-land-type" class="custom-select">
+                                    <option value="building">مباني</option>
+                                    <option value="agriculture">زراعية</option>
+                                </select>
+                                <i data-lucide="chevron-down" class="custom-select-icon w-3 h-3"></i>
+                            </div>
+                        </div>
+                        
+                        <div id="land-fields" class="hidden grid grid-cols-2 gap-1.5">
+                            <input id="in-feddan" type="number" class="input-box" placeholder="فدان (اختياري)">
+                            <input id="in-qirat" type="number" class="input-box" placeholder="قيراط (اختياري)">
+                        </div>
+
+                        <div id="building-fields" class="hidden grid grid-cols-2 gap-1.5">
+                            <input id="in-apartments" type="number" class="input-box" placeholder="عدد الشقق">
+                        </div>
+
+                        <div id="room-fields" class="grid grid-cols-2 gap-1.5">
+                            <input id="in-rooms" type="number" class="input-box" placeholder="عدد الغرف">
+                            <input id="in-baths" type="number" class="input-box" placeholder="عدد الحمامات">
+                        </div>
+                        
+                        <div id="extra-fields" class="grid grid-cols-2 gap-1.5">
+                            <input id="in-balconies" type="number" class="input-box" placeholder="عدد البلكونات">
+                            <div class="custom-select-wrapper">
+                                <select id="in-finishing" class="custom-select">
+                                    <option value="" disabled selected>نوع التشطيب</option>
+                                    <option value="red">طوب أحمر</option>
+                                    <option value="semi">نصف تشطيب</option>
+                                    <option value="full">تشطيب كامل</option>
+                                    <option value="super">سوبر لوكس</option>
+                                    <option value="ultra">الترا سوبر لوكس</option>
+                                </select>
+                                <i data-lucide="chevron-down" class="custom-select-icon w-3 h-3"></i>
+                            </div>
+                        </div>
+
+                        <div id="furnished-field" class="flex items-center justify-between bg-slate-50 dark:bg-slate-700/50 p-1.5 rounded-lg border border-black dark:border-slate-500">
+                            <span class="text-[10px] font-bold text-slate-600 dark:text-slate-300">مفروش؟</span>
+                            <div class="flex gap-1.5">
+                                <label class="cursor-pointer"><input type="radio" name="furnished" value="yes" class="peer hidden"><span class="px-2 py-0.5 rounded text-[9px] font-bold bg-white dark:bg-slate-600 border border-slate-200 dark:border-slate-500 text-slate-500 peer-checked:bg-emerald-500 peer-checked:text-white peer-checked:border-emerald-500 transition">نعم</span></label>
+                                <label class="cursor-pointer"><input type="radio" name="furnished" value="no" checked class="peer hidden"><span class="px-2 py-0.5 rounded text-[9px] font-bold bg-white dark:bg-slate-600 border border-slate-200 dark:border-slate-500 text-slate-500 peer-checked:bg-slate-800 peer-checked:text-white peer-checked:border-slate-800 transition">لا</span></label>
+                            </div>
+                        </div>
+
+                        <div class="flex gap-2 items-center pt-0.5">
+                            <span class="text-[10px] font-bold text-slate-600 dark:text-slate-400">شارة:</span>
+                            <div class="flex gap-1.5">
+                                <label class="cursor-pointer amenity-tile"><input type="radio" name="badge" value="none" checked class="hidden"><div class="px-2 py-0.5 rounded border border-slate-200 dark:border-slate-600 text-[9px] font-bold text-slate-600 dark:text-slate-300 transition">عادي</div></label>
+                                <label class="cursor-pointer amenity-tile"><input type="radio" name="badge" value="hot" class="hidden"><div class="px-2 py-0.5 rounded border border-orange-200 text-[9px] font-bold text-orange-600 transition hover:bg-orange-50">🔥 لقطة</div></label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white dark:bg-slate-800 p-2.5 rounded-lg border border-black dark:border-slate-500 shadow-sm space-y-1.5">
+                        <h4 class="text-[9px] font-bold text-slate-400 uppercase tracking-wider border-b border-slate-100 dark:border-slate-700 pb-0.5 mb-0.5">المميزات</h4>
+                        <div class="grid grid-cols-4 gap-1" id="amenities-grid"></div>
+                        <textarea id="in-desc" rows="2" class="input-box resize-none" placeholder="وصف تفصيلي..."></textarea>
+                    </div>
+
+                    <div class="bg-white dark:bg-slate-800 p-2.5 rounded-lg border border-black dark:border-slate-500 shadow-sm space-y-1.5">
+                        <h4 class="text-[9px] font-bold text-slate-400 uppercase tracking-wider border-b border-slate-100 dark:border-slate-700 pb-0.5 mb-0.5">الموقع والتواصل</h4>
+                        <input id="in-address" class="input-box mb-1.5" placeholder="العنوان بالتفصيل (اسم الشارع، علامة مميزة)...">
+                        <div class="grid grid-cols-2 gap-1.5">
+                            <div class="custom-select-wrapper">
+                                <select id="in-gov" onchange="populateCities('in-gov', 'in-city')" class="custom-select"><option value="" disabled selected>المحافظة</option></select>
+                                <i data-lucide="chevron-down" class="custom-select-icon w-3 h-3"></i>
+                            </div>
+                            <div class="custom-select-wrapper">
+                                <select id="in-city" class="custom-select"><option value="" disabled selected>المركز/المدينة</option></select>
+                                <i data-lucide="chevron-down" class="custom-select-icon w-3 h-3"></i>
+                            </div>
+                        </div>
+                        <input id="in-map" class="input-box" placeholder="رابط جوجل ماب (اختياري)">
+                        <input id="in-phone" type="tel" class="input-box" placeholder="رقم الهاتف">
+                    </div>
+                </div>
+            </div>
+            <div class="p-2.5 border-t border-slate-100 dark:border-slate-700 bg-white dark:bg-darkbg shrink-0 pb-6 md:pb-3">
+                <button onclick="submitListing()" id="btn-publish" class="w-full bg-slate-900 dark:bg-emerald-600 text-white py-2.5 rounded-lg font-bold text-xs shadow-lg hover:opacity-90 transition transform active:scale-95">نشر الإعلان</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Chat & Lightbox & Admin -->
+    <div id="chat-modal" class="hidden modal-overlay"><div class="mobile-full-modal animate-pop border border-navy/10"><div class="bg-slate-900 dark:bg-emerald-600 p-3 text-white flex justify-between items-center shrink-0"><div class="flex items-center gap-2"><div class="bg-white/10 p-1.5 rounded-full"><i data-lucide="bot" class="w-5 h-5 text-yellow-400"></i></div><div><h4 class="font-bold text-xs">الدعم الفني</h4><span class="text-[9px] opacity-80">متصل الآن</span></div></div><button onclick="toggleChat()" class="bg-red-500 text-black p-1 rounded-full hover:bg-red-600 transition"><i data-lucide="x" class="w-4 h-4"></i></button></div><div id="chat-box" class="flex-1 bg-slate-100 dark:bg-slate-900 p-3 overflow-y-auto space-y-2 text-xs"></div><div class="p-3 bg-white dark:bg-slate-800 border-t dark:border-slate-700 flex items-center gap-2 shrink-0 pb-safe"><input id="chat-msg" type="text" class="flex-1 bg-slate-100 dark:bg-slate-700 border-0 rounded-full px-4 py-3 text-sm outline-none dark:text-white font-bold" placeholder="اكتب رسالتك..."><button onclick="sendMsg()" class="w-10 h-10 bg-slate-900 dark:bg-emerald-600 rounded-full text-white flex items-center justify-center shadow"><i data-lucide="send" class="w-4 h-4"></i></button></div></div></div>
+    <div id="lightbox" class="hidden fixed inset-0 bg-black/95 z-[100] flex flex-col items-center justify-center select-none"><button onclick="closeLightbox()" class="absolute top-4 left-4 bg-white/20 text-white p-2 rounded-full z-20"><i data-lucide="x" class="w-6 h-6"></i></button><div class="relative w-full h-full flex items-center justify-center"><img id="lightbox-img" src="" class="max-w-full max-h-[80vh] object-contain"></div></div>
+    <div id="admin-panel" class="hidden fixed inset-0 bg-navy z-[90] flex flex-col text-white"><div class="p-3 border-b border-white/10 flex justify-between items-center bg-[#001a38]"><h2 class="font-bold flex items-center gap-2 text-sm"><i data-lucide="shield" class="w-4 h-4 text-emerald-400"></i> التحكم</h2><div class="flex gap-3"><button onclick="refreshAdmin()"><i data-lucide="refresh-cw" class="w-4 h-4"></i></button><button onclick="toggleAdminPanel()"><i data-lucide="x" class="w-5 h-5"></i></button></div></div><div class="flex-1 flex overflow-hidden"><div class="w-1/3 border-l border-white/10 bg-[#001f3f] overflow-y-auto p-2" id="admin-users-list"></div><div class="w-2/3 flex flex-col bg-navy relative"><div id="admin-chat-header" class="h-12 border-b border-white/10 flex items-center justify-between px-3 bg-[#001a38]"><span class="text-xs font-bold">اختر محادثة</span><button onclick="kickUser()" id="btn-end-chat" class="hidden bg-red-600 text-white text-[10px] font-bold px-2 py-1 rounded flex items-center gap-1"><i data-lucide="slash" class="w-3 h-3"></i> إنهاء</button></div><div id="admin-msg-area" class="flex-1 p-3 overflow-y-auto space-y-2 text-xs"></div><div class="p-2 border-t border-white/10 flex gap-2 bg-[#001a38]"><input id="admin-input" class="flex-1 bg-white/5 border border-white/20 rounded px-3 py-1.5 text-xs text-white outline-none" placeholder="الرد..."><button onclick="sendAdminMsg()" class="bg-blue-600 px-4 py-1.5 rounded text-xs font-bold">إرسال</button></div></div></div></div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, setPersistence, browserLocalPersistence, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, addDoc, updateDoc, deleteDoc, onSnapshot, collection, query, where, serverTimestamp, getDocs } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        const firebaseConfig = { apiKey: "AIzaSyC7zHuH8LK-yQAKG-Nm7dh31fXtVLxuCLM", authDomain: "sharqia-81030.firebaseapp.com", projectId: "sharqia-81030", storageBucket: "sharqia-81030.firebasestorage.app", messagingSenderId: "581888625195", appId: "1:581888625195:web:1667ba1e439e8e6c1fb86e" };
+        const app = initializeApp(firebaseConfig); const db = getFirestore(app); const auth = getAuth(app);
+        
+        const COLLECTION_NAME = "listings_v2"; 
+        
+        let state = { user: null, listings: [], filesToUpload: [], chatId: null, chatStep: 0, tempName: '', activeAdminChat: null, isAdmin: false, welcomeSent: false, currentFilter: 'all', visibleLimit: 12 };
+
+        const ALL_AMENITIES = ["غاز طبيعي", "كهرباء", "مياه", "أسانسير", "واي فاي", "حمام سباحة", "حديقة", "جراج", "أمن وحراسة", "كاميرات مراقبة", "مطبخ أمريكاني", "غرفة خادمة", "مسموح بالحيوانات", "على ناصية"];
+        const LAND_AMENITIES = ["كهرباء", "مياه", "غاز طبيعي", "على ناصية"];
+        
+        const CAT_MAP = { 'apartment': 'شقة', 'villa': 'فيلا', 'chalet': 'شالية', 'office': 'مكتب', 'shop': 'محل', 'land': 'أرض', 'building': 'عمارة', 'warehouse': 'مخزن' };
+        const FINISH_MAP = { 'red': 'طوب أحمر', 'semi': 'نصف تشطيب', 'full': 'تشطيب كامل', 'super': 'سوبر لوكس', 'ultra': 'الترا سوبر لوكس' };
+
+        const CAT_KEYWORDS = {
+            'شقة': 'apartment', 'شقق': 'apartment',
+            'فيلا': 'villa', 'فلل': 'villa',
+            'شالية': 'chalet', 'شاليهات': 'chalet',
+            'مكتب': 'office', 'مكاتب': 'office',
+            'محل': 'shop', 'محلات': 'shop',
+            'ارض': 'land', 'اراضي': 'land',
+            'عمارة': 'building', 'عماير': 'building',
+            'مخزن': 'warehouse', 'مخازن': 'warehouse'
+        };
+
+        const EGYPT_LOCATIONS = {
+            "الشرقية": ["الزقازيق", "العاشر من رمضان", "منيا القمح", "بلبيس", "مشتول السوق", "القنايات", "أبو حماد", "القرين", "ههيا", "أبو كبير", "فاقوس", "الصالحية الجديدة", "الإبراهيمية", "ديرب نجم", "كفر صقر", "أولاد صقر", "الحسينية", "صان الحجر", "منشأة أبو عمر"],
+            "القاهرة": ["مدينة نصر", "مصر الجديدة", "المعادي", "التجمع الخامس", "الرحاب", "مدينتي", "الشروق", "العبور", "المقطم", "الزيتون", "حدائق القبة", "شبرا", "وسط البلد", "المنيل", "الزمالك", "المهندسين", "الدقي", "العجوزة"],
+            "الجيزة": ["6 أكتوبر", "الشيخ زايد", "الهرم", "فيصل", "المهندسين", "الدقي", "العجوزة", "إمبابة", "الوراق", "بولاق الدكرور", "العمرانية", "المنيب"],
+            "الإسكندرية": ["سموحة", "ميامي", "المنتزه", "سيدي بشر", "جليم", "ستانلي", "رشدي", "كفر عبده", "محرم بك", "العجمي", "الساحل الشمالي", "برج العرب"],
+            "الدقهلية": ["المنصورة", "طلخا", "ميت غمر", "دكرنس", "أجا", "منية النصر", "السنبلاوين", "شربين", "بلقاس", "المطرية", "المنزلة", "جمصة"],
+            "القليوبية": ["بنها", "قليوب", "شبرا الخيمة", "القناطر الخيرية", "الخانكة", "كفر شكر", "طوخ", "قها", "العبور"],
+            "المنوفية": ["شبين الكوم", "مدينة السادات", "منوف", "سرس الليان", "أشمون", "الباجور", "قويسنا", "بركة السبع", "تلا", "الشهداء"],
+            "الغربية": ["طنطا", "المحلة الكبرى", "كفر الزيات", "زفتى", "السنطة", "قطور", "بسيون", "سمنود"],
+            "البحيرة": ["دمنهور", "كفر الدوار", "رشيد", "إدكو", "أبو المطامير", "أبو حمص", "الدلنجات", "المحمودية", "الرحمانية", "إيتاي البارود", "حوش عيسى", "شبراخيت", "كوم حمادة", "بدر", "وادي النطرون", "النوبارية الجديدة"],
+            "دمياط": ["دمياط", "دمياط الجديدة", "رأس البر", "فارسكور", "الزرقا", "السرو", "الروضة", "كفر البطيخ", "عزبة البرج", "ميت أبو غالب", "كفر سعد"],
+            "بورسعيد": ["بورسعيد", "بورفؤاد"],
+            "الإسماعيلية": ["الإسماعيلية", "التل الكبير", "فايد", "القنطرة شرق", "القنطرة غرب", "أبو صوير", "القصاصين"],
+            "السويس": ["السويس", "الأربعين", "عتاقة", "الجناين", "فيصل"],
+            "كفر الشيخ": ["كفر الشيخ", "دسوق", "فوه", "مطوبس", "بلطيم", "مصيف بلطيم", "الحامول", "بيلا", "الرياض", "سيدي سالم", "قلين", "برج البرلس"],
+            "الفيوم": ["الفيوم", "الفيوم الجديدة", "طامية", "سنورس", "إطسا", "إبشواي", "يوسف الصديق"],
+            "بني سويف": ["بني سويف", "بني سويف الجديدة", "الواسطى", "ناصر", "إهناسيا", "ببا", "الفشن", "سمسطا"],
+            "المنيا": ["المنيا", "المنيا الجديدة", "العدوة", "مغاغة", "بني مزار", "مطاي", "سمالوط", "أبو قرقاص", "ملوي", "دير مواس"],
+            "أسيوط": ["أسيوط", "أسيوط الجديدة", "ديروط", "القوصية", "أبنوب", "منفلوط", "أبو تيج", "الغنايم", "ساحل سليم", "البداري", "صدفا", "الفتح"],
+            "سوهاج": ["سوهاج", "سوهاج الجديدة", "أخميم", "أخميم الجديدة", "البلينا", "المراغة", "المنشأة", "دار السلام", "جرجا", "جهينة", "ساقلتة", "طما", "طهطا"],
+            "قنا": ["قنا", "قنا الجديدة", "أبو تشت", "نجع حمادي", "دشنا", "الوقف", "قفط", "قوص", "نقادة", "فرشوط"],
+            "الأقصر": ["الأقصر", "الأقصر الجديدة", "إسنا", "طيبة الجديدة", "الزينية", "البياضية", "القرنة", "أرمنت", "الطود"],
+            "أسوان": ["أسوان", "أسوان الجديدة", "دراو", "كوم أمبو", "نصر النوبة", "إدفو"],
+            "البحر الأحمر": ["الغردقة", "رأس غارب", "سفاجا", "القصير", "مرسى علم", "الشلاتين", "حلايب"],
+            "الوادي الجديد": ["الخارجة", "باريس", "موط", "الفرافرة", "بلاط"],
+            "مطروح": ["مرسى مطروح", "الحمام", "العلمين", "الضبعة", "النجيلة", "سيدي براني", "السلوم", "سيوة"],
+            "شمال سيناء": ["العريش", "بئر العبد", "نخل", "الحسنة", "الشيخ زويد", "رفح"],
+            "جنوب سيناء": ["الطور", "شرم الشيخ", "دهب", "نويبع", "طابا", "سانت كاترين", "أبو رديس", "أبو زنيمة", "رأس سدر"]
+        };
+
+        setPersistence(auth, browserLocalPersistence).then(()=>signInAnonymously(auth));
+        onAuthStateChanged(auth, (u) => { 
+            if(u) { 
+                state.user=u; 
+                // Removed manual height calculation to let CSS lvh handle it
+                loadListings(); 
+                checkUserChat(); 
+                checkAdminStatus(); 
+                renderAmenities(ALL_AMENITIES); 
+                initLocations();
+                
+                const originalHeight = window.innerHeight;
+                window.addEventListener('resize', () => {
+                    if (window.innerHeight < originalHeight * 0.8) {
+                        document.body.classList.add('keyboard-open');
+                    } else {
+                        document.body.classList.remove('keyboard-open');
+                    }
+                });
+                
+                document.querySelectorAll('input, textarea').forEach(el => {
+                    el.addEventListener('focus', () => document.body.classList.add('keyboard-open'));
+                    el.addEventListener('blur', () => document.body.classList.remove('keyboard-open'));
+                });
+            } 
+        });
+
+        function renderAmenities(list) { 
+            document.getElementById('amenities-grid').innerHTML = list.map(a => `<label class="amenity-tile cursor-pointer"><input type="checkbox" class="amenity-check hidden" value="${a}"><div class="text-center py-1 border border-slate-200 dark:border-slate-600 rounded-lg text-[8px] font-bold text-slate-600 dark:text-slate-300 transition hover:bg-slate-50 dark:hover:bg-slate-700 truncate">${a}</div></label>`).join(''); 
+        }
+
+        function initLocations() {
+            const govSelects = ['in-gov', 'filter-gov'];
+            govSelects.forEach(id => {
+                const sel = document.getElementById(id);
+                if(sel) {
+                    sel.innerHTML = `<option value="" ${id==='in-gov'?'disabled selected':'selected'}>${id==='in-gov'?'المحافظة':'كل المحافظات'}</option>`;
+                    Object.keys(EGYPT_LOCATIONS).forEach(gov => {
+                        sel.innerHTML += `<option value="${gov}">${gov}</option>`;
+                    });
+                }
+            });
+        }
+
+        window.populateCities = (govId, cityId) => {
+            const gov = document.getElementById(govId).value;
+            const citySel = document.getElementById(cityId);
+            citySel.innerHTML = `<option value="" ${govId==='in-gov'?'disabled selected':'selected'}>${govId==='in-gov'?'المركز/المدينة':'كل المراكز'}</option>`;
+            
+            if(gov && EGYPT_LOCATIONS[gov]) {
+                EGYPT_LOCATIONS[gov].forEach(city => {
+                    citySel.innerHTML += `<option value="${city}">${city}</option>`;
+                });
+            }
+        };
+
+        window.toggleFilterPanel = () => {
+            const p = document.getElementById('filter-panel');
+            p.classList.toggle('open');
+        };
+
+        window.updateFormFields = () => {
+            const cat = document.getElementById('in-category').value;
+            const roomFields = document.getElementById('room-fields');
+            const furnishedField = document.getElementById('furnished-field');
+            const levelInput = document.getElementById('in-level');
+            const floorsAltInput = document.getElementById('in-floors-alt');
+            const landTypeWrapper = document.getElementById('land-type-wrapper');
+            const landFields = document.getElementById('land-fields');
+            const buildingFields = document.getElementById('building-fields');
+            const extraFields = document.getElementById('extra-fields'); 
+            
+            roomFields.classList.remove('hidden');
+            furnishedField.classList.remove('hidden');
+            levelInput.classList.remove('hidden');
+            floorsAltInput.classList.add('hidden');
+            landTypeWrapper.classList.add('hidden');
+            landFields.classList.add('hidden');
+            buildingFields.classList.add('hidden');
+            extraFields.classList.remove('hidden');
+
+            if(cat === 'land') {
+                renderAmenities(LAND_AMENITIES);
+                roomFields.classList.add('hidden');
+                furnishedField.classList.add('hidden');
+                levelInput.classList.add('hidden');
+                extraFields.classList.add('hidden');
+                landTypeWrapper.classList.remove('hidden'); 
+                landFields.classList.remove('hidden');
+            } else {
+                renderAmenities(ALL_AMENITIES);
+                if (cat === 'building') {
+                    roomFields.classList.add('hidden'); 
+                    furnishedField.classList.add('hidden');
+                    levelInput.classList.add('hidden'); 
+                    floorsAltInput.classList.remove('hidden'); 
+                    buildingFields.classList.remove('hidden');
+                    extraFields.classList.add('hidden');
+                } else if (['shop','office','warehouse'].includes(cat)) {
+                    roomFields.classList.add('hidden');
+                    extraFields.classList.add('hidden');
+                }
+            }
+        }
+
+        function checkAdminStatus() { if(localStorage.getItem('souq_admin') === 'true') { state.isAdmin = true; document.getElementById('btn-admin-top').classList.remove('hidden'); } }
+        window.toggleDarkMode = () => { document.documentElement.classList.toggle('dark'); localStorage.setItem('souq_theme', document.documentElement.classList.contains('dark') ? 'dark' : 'light'); }
+        if(localStorage.getItem('souq_theme') === 'dark') document.documentElement.classList.add('dark');
+
+        window.showToast=(m,t='s')=>{const d=document.createElement('div');d.className=`toast fixed top-4 left-1/2 -translate-x-1/2 bg-white dark:bg-slate-800 shadow-xl px-4 py-2 rounded-lg border border-${t==='e'?'red':'emerald'}-500 flex items-center gap-2 text-xs font-bold z-[100] text-slate-800 dark:text-white`;d.innerHTML=`<i data-lucide="${t==='e'?'alert-circle':'check-circle'}" class="w-4 h-4 text-${t==='e'?'red':'emerald'}-500"></i> ${m}`;document.getElementById('toast-container').appendChild(d);lucide.createIcons();setTimeout(()=>{d.classList.add('hiding');setTimeout(()=>d.remove(),300)},3000)};
+
+        function normalizeText(t) { return t ? t.toString().toLowerCase().replace(/[أإآ]/g, 'ا').replace(/ة/g, 'ه').replace(/ى/g, 'ي') : ""; }
+        function timeAgo(d) { if(!d) return 'جديد'; const s=Math.floor((new Date()-d.toDate())/1000); if(s<60)return 'الآن'; if(s<3600)return `منذ ${Math.floor(s/60)} د`; if(s<86400)return `منذ ${Math.floor(s/3600)} س`; return `منذ ${Math.floor(s/86400)} ي`; }
+        function showSkeletons() { const c=document.getElementById('grid-container'); c.innerHTML=''; for(let i=0;i<6;i++) c.innerHTML+=`<div class="bg-white dark:bg-slate-800 rounded-lg overflow-hidden shadow-sm border-2 border-navy/10 dark:border-slate-700 h-full"><div class="h-28 skeleton rounded-t-lg"></div><div class="p-2 space-y-2"><div class="h-3 rounded skeleton w-3/4"></div><div class="h-2 rounded skeleton w-1/2"></div></div></div>`; }
+        
+        function loadListings() { 
+            showSkeletons(); 
+            onSnapshot(query(collection(db, COLLECTION_NAME)), (snap) => { 
+                state.listings = []; 
+                snap.forEach(d => state.listings.push({id:d.id, ...d.data()})); 
+                state.listings.sort((a,b) => {
+                    if (a.isPinned === b.isPinned) {
+                        return (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0);
+                    }
+                    return (a.isPinned ? -1 : 1);
+                });
+                performSearch(); 
+                
+                document.body.classList.add('app-loaded');
+                setTimeout(() => {
+                    document.getElementById('splash-screen').classList.add('hidden-splash');
+                }, 100);
+                
+                const urlParams = new URLSearchParams(window.location.search);
+                const sharedId = urlParams.get('id');
+                if(sharedId) {
+                    const item = state.listings.find(i => i.id === sharedId);
+                    if(item) openDetails(sharedId);
+                }
+            }); 
+        }
+        
+        window.performSearch = () => { 
+            const q = normalizeText(document.getElementById('search-input').value); 
+            const filterGov = document.getElementById('filter-gov').value;
+            const filterCity = document.getElementById('filter-city').value;
+            const filterType = document.getElementById('filter-type').value;
+            const minPrice = Number(document.getElementById('filter-min-price').value) || 0;
+            const maxPrice = Number(document.getElementById('filter-max-price').value) || Infinity;
+
+            let detectedCat = '';
+            for (const [key, val] of Object.entries(CAT_KEYWORDS)) {
+                if (q.includes(key)) {
+                    detectedCat = val;
+                    break; 
+                }
+            }
+
+            const cont = document.getElementById('grid-container'); 
+            const filtered = state.listings.filter(item => { 
+                let matchType = true; 
+                if (state.currentFilter !== 'all' && item.type !== state.currentFilter) matchType = false;
+                
+                if (filterType && item.type !== filterType) matchType = false;
+
+                const catNameAr = CAT_MAP[item.category] || '';
+                const itemText = normalizeText(item.title + item.desc + item.phone + item.gov + item.city + item.location + (item.address || '') + catNameAr);
+                const matchText = itemText.includes(q);
+                
+                const matchCat = !detectedCat || item.category === detectedCat;
+                const matchGov = !filterGov || item.gov === filterGov;
+                const matchCity = !filterCity || item.city === filterCity;
+                const matchPrice = item.price >= minPrice && item.price <= maxPrice;
+
+                return matchType && matchText && matchCat && matchGov && matchCity && matchPrice; 
+            }); 
+
+            const visibleItems = filtered.slice(0, state.visibleLimit);
+            const loadMoreBtn = document.getElementById('load-more-container');
+            
+            if(!filtered.length) { 
+                document.getElementById('empty-state').classList.remove('hidden'); 
+                cont.innerHTML = ''; 
+                loadMoreBtn.classList.add('hidden');
+            } else { 
+                document.getElementById('empty-state').classList.add('hidden'); 
+                cont.innerHTML = visibleItems.map(item => createCard(item)).join(''); 
+                lucide.createIcons({ root: cont }); 
+                
+                if(filtered.length > state.visibleLimit) {
+                    loadMoreBtn.classList.remove('hidden');
+                } else {
+                    loadMoreBtn.classList.add('hidden');
+                }
+            } 
+        };
+
+        window.loadMore = () => {
+            state.visibleLimit += 12;
+            performSearch();
+        };
+
+        let searchTimeout;
+        document.getElementById('search-input').addEventListener('input', () => { clearTimeout(searchTimeout); searchTimeout = setTimeout(performSearch, 200); });
+        document.getElementById('search-input').addEventListener('keydown', (e) => { if(e.key === 'Enter') { e.preventDefault(); performSearch(); document.getElementById('search-input').blur(); } });
+        
+        window.filter = (t) => { 
+            state.currentFilter = t; 
+            state.visibleLimit = 12; 
+            performSearch(); 
+        };
+
+        const getCloudinaryThumb = (url) => {
+            if (url && url.includes('cloudinary.com')) {
+                return url.replace('/upload/', '/upload/w_512,h_512,c_fill,q_auto/');
+            }
+            return url;
+        };
+
+        function createCard(item) {
+            const imgs = Array.isArray(item.images)?item.images:[item.image];
+            let badge = item.badge==='hot' ? `<span class="inline-block bg-orange-500 text-white text-[8px] font-bold px-1.5 py-0.5 rounded shadow animate-pulse">🔥 لقطة</span>` : (item.badge==='verified' ? `<span class="inline-block bg-blue-500 text-white text-[8px] font-bold px-1.5 py-0.5 rounded shadow flex items-center gap-0.5"><i data-lucide="check-circle" class="w-2 h-2"></i> موثوق</span>` : '');
+            let statusOverlay = ''; 
+            if(item.status && item.status !== 'available') { 
+                const txt = item.status==='sold'?'تم البيع':'تم التأجير'; 
+                const clr = item.status==='sold'?'bg-red-600':'bg-blue-600'; 
+                statusOverlay=`<div class="absolute inset-0 sold-overlay flex items-center justify-center z-30 pointer-events-none"><span class="${clr} text-white font-bold px-3 py-1 rounded-lg shadow-xl transform -rotate-12 text-xs">${txt}</span></div>`; 
+            }
+            
+            let iconsHtml = '';
+            if(item.category === 'land') {
+                if(item.feddan || item.qirat) iconsHtml += `<span class="flex items-center gap-0.5"><i data-lucide="maximize" class="w-2.5 h-2.5 text-slate-400"></i> ${item.feddan?item.feddan+' ف':''} ${item.qirat?item.qirat+' ق':''}</span>`;
+            } else if (item.category === 'building') {
+                if(item.floors) iconsHtml += `<span class="flex items-center gap-0.5"><i data-lucide="layers" class="w-2.5 h-2.5 text-slate-400"></i> ${item.floors}</span>`;
+            } else {
+                if(item.rooms) iconsHtml += `<span class="flex items-center gap-0.5"><i data-lucide="bed-double" class="w-2.5 h-2.5 text-slate-400"></i> ${item.rooms}</span>`;
+                if(item.baths) iconsHtml += `<span class="flex items-center gap-0.5"><i data-lucide="bath" class="w-2.5 h-2.5 text-slate-400"></i> ${item.baths}</span>`;
+            }
+            if(item.area) iconsHtml += `<span class="flex items-center gap-0.5"><i data-lucide="ruler" class="w-2.5 h-2.5 text-slate-400"></i> ${item.area}م</span>`;
+
+            const locDisplay = item.gov ? `${item.gov}، ${item.city}` : item.location;
+
+            // WhatsApp Message - No Image Link
+            const waMsg = `مهتم بهذا العقار: ${item.title} (${Number(item.price).toLocaleString()} ج)`;
+            const waLink = `https://wa.me/20${item.phone}?text=${encodeURIComponent(waMsg)}`;
+
+            return `<div class="bg-white dark:bg-slate-800 rounded-lg overflow-hidden shadow-sm border border-black dark:border-slate-500 flex flex-col h-full cursor-pointer active:scale-95 transition-transform group relative transform-gpu" onclick="openDetails('${item.id}')">
+                <div class="relative w-full h-28 sm:h-36 bg-gray-200 dark:bg-slate-700 shrink-0">
+                    ${statusOverlay}
+                    <span class="absolute top-1.5 right-1.5 ${item.type === 'sale' ? 'bg-emerald-600' : 'bg-blue-600'} text-white px-1.5 py-0.5 rounded text-[8px] font-bold shadow z-20 card-overlay-z">${item.type === 'sale' ? 'بيع' : 'إيجار'}</span>
+                    ${imgs.length > 1 ? `<button onclick="scrollCard(event, '${item.id}', -1)" class="absolute right-1 top-1/2 -translate-y-1/2 bg-black/20 hover:bg-black/40 text-white p-0.5 rounded-full z-10 hidden group-hover:block"><i data-lucide="chevron-right" class="w-3 h-3"></i></button><button onclick="scrollCard(event, '${item.id}', 1)" class="absolute left-1 top-1/2 -translate-y-1/2 bg-black/20 hover:bg-black/40 text-white p-0.5 rounded-full z-10 hidden group-hover:block"><i data-lucide="chevron-left" class="w-3 h-3"></i></button>` : ''}
+                    <div id="slider-${item.id}" class="flex w-full h-full overflow-x-auto no-scrollbar snap-x scroll-smooth">${imgs.map(src => {
+                        const isVid = src.includes('.mp4') || src.includes('.mov');
+                        return isVid ? `<video src="${src}" class="w-full h-full object-cover shrink-0 snap-center ${statusOverlay?'grayscale':''}" muted playsinline></video>` : `<img src="${src}" class="w-full h-full object-cover shrink-0 snap-center ${statusOverlay?'grayscale':''}">`
+                    }).join('')}</div>
+                </div>
+                <div class="p-1.5 flex-1 flex flex-col">
+                    <div class="flex-1">
+                        <div class="flex justify-between items-start mb-0.5">
+                            <h3 class="font-bold text-slate-900 dark:text-white text-[10px] line-clamp-1 leading-tight">${item.title}</h3>
+                            <span class="font-black text-emerald-600 dark:text-emerald-400 text-[10px] whitespace-nowrap">${Number(item.price).toLocaleString()} ج</span>
+                        </div>
+                        <div class="h-3.5 flex justify-end items-center mt-0.5">
+                            ${!statusOverlay ? badge : ''}
+                        </div>
+                        <div class="flex items-center gap-0.5 text-[9px] text-slate-500 dark:text-slate-400 mb-0.5 mt-0.5">
+                            <i data-lucide="map-pin" class="w-2.5 h-2.5 text-emerald-500 shrink-0"></i> 
+                            <span class="truncate leading-tight">${locDisplay}</span>
+                        </div>
+                        <div class="flex items-center gap-2 text-[9px] text-slate-600 dark:text-slate-300 font-bold mb-1.5 h-4">
+                            ${iconsHtml}
+                        </div>
+                    </div>
+                    <div class="mt-auto flex gap-1 pt-1.5 border-t border-slate-100 dark:border-slate-700">
+                        <a href="${waLink}" target="_blank" onclick="event.stopPropagation()" class="flex-1 bg-emerald-600 text-white py-1 rounded flex justify-center items-center gap-1 text-[9px] font-bold"><i data-lucide="message-circle" class="w-2.5 h-2.5"></i> واتس</a>
+                        <a href="tel:${item.phone}" onclick="event.stopPropagation()" class="bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 p-1 rounded"><i data-lucide="phone" class="w-2.5 h-2.5"></i></a>
+                    </div>
+                </div>
+            </div>`;
+        }
+
+        window.openDetails = (id) => {
+            try {
+                const item = state.listings.find(i => i.id === id); if(!item) return;
+                state.currentItem = item; document.getElementById('d-title').innerText = item.title; document.getElementById('d-price').innerText = Number(item.price).toLocaleString() + ' جنيه'; document.getElementById('d-desc').innerText = item.desc; document.getElementById('d-time-badge').innerText = timeAgo(item.createdAt);
+                
+                const amCont = document.getElementById('d-amenities'); 
+                amCont.innerHTML=''; 
+                if(item.amenities && Array.isArray(item.amenities) && item.amenities.length > 0) {
+                    item.amenities.forEach(a => {
+                        amCont.innerHTML += `<div class="p-1.5 text-center text-[9px] font-bold text-slate-700 dark:text-slate-300 border-r border-b border-slate-200 dark:border-slate-700 last:border-r-0">${a}</div>`;
+                    });
+                } else {
+                    amCont.innerHTML = `<div class="col-span-3 p-2 text-center text-[9px] text-slate-400">لا توجد مميزات إضافية</div>`;
+                }
+
+                const mapBtn = document.getElementById('d-map'); if(item.mapLink) { mapBtn.classList.remove('hidden'); mapBtn.classList.add('flex'); mapBtn.href = item.mapLink; } else { mapBtn.classList.add('hidden'); mapBtn.classList.remove('flex'); }
+                const typeEl = document.getElementById('d-type-badge'); typeEl.innerText = item.type === 'sale' ? 'للبيع' : 'للإيجار'; typeEl.className = `absolute bottom-2 right-2 text-white px-2 py-0.5 rounded text-[10px] font-bold shadow backdrop-blur-sm ${item.type === 'sale' ? 'bg-emerald-600/90' : 'bg-blue-600/90'}`;
+                
+                const imgs = Array.isArray(item.images) ? item.images : [item.image]; 
+                
+                // WhatsApp Link - No Image Link
+                const updateWaLink = () => {
+                    const shareUrl = window.location.origin + window.location.pathname + '?id=' + item.id;
+                    const waMsg = `مهتم بهذا العقار: ${item.title} (${Number(item.price).toLocaleString()} ج)\nالرابط: ${shareUrl}`;
+                    document.getElementById('d-wa').href = `https://wa.me/20${item.phone}?text=${encodeURIComponent(waMsg)}`; 
+                };
+                
+                updateWaLink();
+                document.getElementById('d-call').href = `tel:${item.phone}`;
+                
+                const slider = document.getElementById('details-slider'); 
+                slider.innerHTML = imgs.map(src => {
+                    const isVid = src.includes('.mp4') || src.includes('.mov');
+                    return isVid ? `<video src="${src}" controls class="w-full h-full object-contain snap-center shrink-0 bg-black"></video>` : `<img src="${src}" class="w-full h-full object-cover snap-center shrink-0 cursor-pointer" onclick="openLightbox('${src}')">`
+                }).join('');
+                document.getElementById('details-arrows').style.display = imgs.length > 1 ? 'block' : 'none';
+
+                const locDisplay = item.gov ? `${item.gov}، ${item.city}` : item.location;
+
+                let tableHtml = `<tr><th class="w-1/3 text-slate-500 dark:text-slate-400 font-normal bg-slate-50 dark:bg-slate-800/50 text-[10px] flex items-center gap-1"><i data-lucide="home" class="w-3 h-3"></i> نوع العقار</th><td class="font-bold text-slate-800 dark:text-slate-200">${CAT_MAP[item.category] || 'عقار'}</td></tr>`;
+                tableHtml += `<tr><th class="text-slate-500 dark:text-slate-400 font-normal bg-slate-50 dark:bg-slate-800/50 text-[10px] flex items-center gap-1"><i data-lucide="map-pin" class="w-3 h-3"></i> الموقع</th><td class="font-bold text-slate-800 dark:text-slate-200">${locDisplay}</td></tr>`;
+                
+                if(item.address) tableHtml += `<tr><th class="text-slate-500 dark:text-slate-400 font-normal bg-slate-50 dark:bg-slate-800/50 text-[10px] flex items-center gap-1"><i data-lucide="map" class="w-3 h-3"></i> العنوان</th><td class="font-bold text-slate-800 dark:text-slate-200">${item.address}</td></tr>`;
+
+                if(item.area) tableHtml += `<tr><th class="text-slate-500 dark:text-slate-400 font-normal bg-slate-50 dark:bg-slate-800/50 text-[10px] flex items-center gap-1"><i data-lucide="ruler" class="w-3 h-3"></i> المساحة</th><td class="font-bold text-slate-800 dark:text-slate-200">${item.area} م²</td></tr>`;
+                
+                if(item.category === 'land') {
+                    if(item.landType) tableHtml += `<tr><th class="text-slate-500 dark:text-slate-400 font-normal bg-slate-50 dark:bg-slate-800/50 text-[10px] flex items-center gap-1"><i data-lucide="sprout" class="w-3 h-3"></i> نوع الأرض</th><td class="font-bold text-slate-800 dark:text-slate-200">${item.landType==='building'?'مباني':'زراعية'}</td></tr>`;
+                    if(item.feddan) tableHtml += `<tr><th class="text-slate-500 dark:text-slate-400 font-normal bg-slate-50 dark:bg-slate-800/50 text-[10px] flex items-center gap-1"><i data-lucide="maximize" class="w-3 h-3"></i> فدان</th><td class="font-bold text-slate-800 dark:text-slate-200">${item.feddan}</td></tr>`;
+                    if(item.qirat) tableHtml += `<tr><th class="text-slate-500 dark:text-slate-400 font-normal bg-slate-50 dark:bg-slate-800/50 text-[10px] flex items-center gap-1"><i data-lucide="minimize" class="w-3 h-3"></i> قيراط</th><td class="font-bold text-slate-800 dark:text-slate-200">${item.qirat}</td></tr>`;
+                } else if (item.category === 'building') {
+                    if(item.floors) tableHtml += `<tr><th class="text-slate-500 dark:text-slate-400 font-normal bg-slate-50 dark:bg-slate-800/50 text-[10px] flex items-center gap-1"><i data-lucide="layers" class="w-3 h-3"></i> عدد الأدوار</th><td class="font-bold text-slate-800 dark:text-slate-200">${item.floors}</td></tr>`;
+                    if(item.apartments) tableHtml += `<tr><th class="text-slate-500 dark:text-slate-400 font-normal bg-slate-50 dark:bg-slate-800/50 text-[10px] flex items-center gap-1"><i data-lucide="grid" class="w-3 h-3"></i> عدد الشقق</th><td class="font-bold text-slate-800 dark:text-slate-200">${item.apartments}</td></tr>`;
+                } else {
+                    if(item.rooms) tableHtml += `<tr><th class="text-slate-500 dark:text-slate-400 font-normal bg-slate-50 dark:bg-slate-800/50 text-[10px] flex items-center gap-1"><i data-lucide="bed-double" class="w-3 h-3"></i> الغرف</th><td class="font-bold text-slate-800 dark:text-slate-200">${item.rooms}</td></tr>`;
+                    if(item.baths) tableHtml += `<tr><th class="text-slate-500 dark:text-slate-400 font-normal bg-slate-50 dark:bg-slate-800/50 text-[10px] flex items-center gap-1"><i data-lucide="bath" class="w-3 h-3"></i> الحمامات</th><td class="font-bold text-slate-800 dark:text-slate-200">${item.baths}</td></tr>`;
+                    if(item.balconies) tableHtml += `<tr><th class="text-slate-500 dark:text-slate-400 font-normal bg-slate-50 dark:bg-slate-800/50 text-[10px] flex items-center gap-1"><i data-lucide="wind" class="w-3 h-3"></i> البلكونات</th><td class="font-bold text-slate-800 dark:text-slate-200">${item.balconies}</td></tr>`;
+                    if(item.finishing) tableHtml += `<tr><th class="text-slate-500 dark:text-slate-400 font-normal bg-slate-50 dark:bg-slate-800/50 text-[10px] flex items-center gap-1"><i data-lucide="paint-bucket" class="w-3 h-3"></i> التشطيب</th><td class="font-bold text-slate-800 dark:text-slate-200">${FINISH_MAP[item.finishing] || item.finishing}</td></tr>`;
+                    if(item.level) tableHtml += `<tr><th class="text-slate-500 dark:text-slate-400 font-normal bg-slate-50 dark:bg-slate-800/50 text-[10px] flex items-center gap-1"><i data-lucide="arrow-up-circle" class="w-3 h-3"></i> الدور</th><td class="font-bold text-slate-800 dark:text-slate-200">${item.level}</td></tr>`;
+                    if(item.furnished) tableHtml += `<tr><th class="text-slate-500 dark:text-slate-400 font-normal bg-slate-50 dark:bg-slate-800/50 text-[10px] flex items-center gap-1"><i data-lucide="sofa" class="w-3 h-3"></i> الفرش</th><td class="font-bold text-slate-800 dark:text-slate-200">${item.furnished==='yes'?'مفروش':'غير مفروش'}</td></tr>`;
+                }
+                tableHtml += `<tr><th class="text-slate-500 dark:text-slate-400 font-normal bg-slate-50 dark:bg-slate-800/50 text-[10px] flex items-center gap-1"><i data-lucide="info" class="w-3 h-3"></i> الحالة</th><td class="font-bold text-slate-800 dark:text-slate-200">متاح</td></tr>`;
+                document.getElementById('d-table-body').innerHTML = tableHtml;
+
+                const isOwner = state.user && state.user.uid === item.authorId;
+                const showControls = state.isAdmin || isOwner;
+                const controlsDiv = document.getElementById('d-controls');
+                if(showControls) {
+                    controlsDiv.classList.remove('hidden');
+                    controlsDiv.innerHTML = `<button onclick="del(event,'${item.id}')" class="bg-red-50 text-red-600 border border-red-200 py-1 px-3 rounded text-[9px] font-bold flex items-center justify-center gap-1"><i data-lucide="trash-2" class="w-3 h-3"></i> حذف</button><button onclick="toggleStatus(event,'${item.id}','${item.status||'available'}','${item.type}')" class="bg-blue-50 text-blue-600 border border-blue-200 py-1 px-3 rounded text-[9px] font-bold flex items-center justify-center gap-1"><i data-lucide="edit-3" class="w-3 h-3"></i> حالة</button>${state.isAdmin ? `<button onclick="pin(event,'${item.id}',${item.isPinned})" class="${item.isPinned ? 'bg-yellow-100 text-yellow-600 border-yellow-300' : 'bg-slate-100 text-slate-600 border-slate-200'} border py-1 px-3 rounded text-[9px] font-bold flex items-center justify-center gap-1"><i data-lucide="star" class="w-3 h-3 ${item.isPinned?'fill-current':''}"></i> تثبيت</button>` : ''}`;
+                } else { controlsDiv.classList.add('hidden'); }
+
+                toggleModal('details-modal'); lucide.createIcons();
+            } catch(e) { console.error(e); showToast('حدث خطأ في عرض التفاصيل', 'e'); }
+        }
+        window.closeDetails = () => toggleModal('details-modal');
+        window.shareListing = async () => { if(!state.currentItem) return; const d = { title: 'السوق وياك', text: `شاهد عقار: ${state.currentItem.title}`, url: window.location.href + '?id=' + state.currentItem.id }; try { await navigator.share(d); showToast('تمت المشاركة'); } catch(e) { navigator.clipboard.writeText(d.url); showToast('تم النسخ'); } };
+        
+        window.downloadImages = async () => {
+            if(!state.currentItem || !state.currentItem.images) return;
+            showToast('جاري تحضير الصور...');
+            for(let i=0; i<state.currentItem.images.length; i++) {
+                const url = state.currentItem.images[i];
+                const a = document.createElement('a');
+                a.href = url;
+                a.target = '_blank';
+                a.download = `souq_${state.currentItem.id}_${i+1}`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                await new Promise(r => setTimeout(r, 500)); 
+            }
+        };
+
+        window.scrollDetails = (dir) => { const s = document.getElementById('details-slider'); s.scrollBy({ left: dir * s.clientWidth, behavior: 'smooth' }); }
+        window.scrollCard = (e, id, dir) => { e.stopPropagation(); const s = document.getElementById(`slider-${id}`); s.scrollBy({ left: dir * s.clientWidth, behavior: 'smooth' }); }
+        window.openLightbox = (src) => { document.getElementById('lightbox-img').src = src; document.getElementById('lightbox').classList.remove('hidden'); }
+        window.closeLightbox = () => document.getElementById('lightbox').classList.add('hidden');
+
+        function toggleModal(id) { const m=document.getElementById(id); m.classList.toggle('hidden'); if(!m.classList.contains('hidden')) document.body.style.overflow='hidden'; else document.body.style.overflow=''; return !m.classList.contains('hidden'); }
+        window.toggleAddModal=()=>{if(toggleModal('add-modal')){state.filesToUpload=[];document.getElementById('preview-area').innerHTML=''; updateFormFields();}};
+        
+        window.handleUpload=async(input)=>{
+            if(input.files.length+state.filesToUpload.length>5)return showToast('5 ملفات كحد أقصى','e');
+            for(let f of input.files){
+                state.filesToUpload.push(f);
+            }
+            renderPreview();
+        }; 
+        
+        function renderPreview() {
+            const area = document.getElementById('preview-area');
+            area.innerHTML = state.filesToUpload.map((f, idx) => {
+                const isVid = f.type.startsWith('video');
+                const url = URL.createObjectURL(f);
+                return `
+                <div class="relative w-12 h-12 shrink-0 group">
+                    ${isVid ? `<video src="${url}" class="w-full h-full rounded-lg object-cover border border-gray-200"></video>` : `<img src="${url}" class="w-full h-full rounded-lg object-cover border border-gray-200">`}
+                    <button onclick="removeFile(${idx})" class="absolute -top-1 -right-1 bg-red-500 text-white rounded-full p-0.5 shadow-sm"><i data-lucide="x" class="w-3 h-3"></i></button>
+                </div>
+            `}).join('');
+            lucide.createIcons();
+        }
+
+        window.removeFile = (idx) => { state.filesToUpload.splice(idx, 1); renderPreview(); }
+
+        async function uploadToCloudinary(file) {
+            const formData = new FormData();
+            formData.append('file', file);
+            formData.append('upload_preset', 'souq_upload');
+            const res = await fetch('https://api.cloudinary.com/v1_1/db9h7zm1h/auto/upload', { method: 'POST', body: formData });
+            const data = await res.json();
+            return data.secure_url;
+        }
+        
+        window.submitListing=async()=>{
+            try {
+                if(!state.filesToUpload.length)return showToast('مطلوب صورة أو فيديو','e');
+                const btn = document.getElementById('btn-publish');
+                const originalText = btn.innerText;
+                btn.innerText='جاري الرفع والنشر...';
+                btn.disabled = true;
+
+                const uploadedUrls = [];
+                for(let f of state.filesToUpload) {
+                    const url = await uploadToCloudinary(f);
+                    uploadedUrls.push(url);
+                }
+
+                const bdg=document.querySelector('input[name="badge"]:checked').value;
+                const am=[];document.querySelectorAll('.amenity-check:checked').forEach(c=>am.push(c.value));
+                const cat = document.getElementById('in-category').value;
+                const furnished = document.querySelector('input[name="furnished"]:checked')?.value;
+                const landType = document.getElementById('in-land-type').value;
+                const gov = document.getElementById('in-gov').value;
+                const city = document.getElementById('in-city').value;
+                
+                if(!gov || !city) {
+                    showToast('يرجى اختيار المحافظة والمركز', 'e');
+                    btn.innerText = originalText;
+                    btn.disabled = false;
+                    return;
+                }
+
+                await addDoc(collection(db, COLLECTION_NAME),{
+                    title:document.getElementById('in-title').value,
+                    price:Number(document.getElementById('in-price').value),
+                    type:document.getElementById('in-type').value,
+                    category: cat,
+                    area: Number(document.getElementById('in-area').value) || 0,
+                    feddan: Number(document.getElementById('in-feddan').value) || 0,
+                    qirat: Number(document.getElementById('in-qirat').value) || 0,
+                    landType: landType,
+                    floors: Number(cat === 'building' ? document.getElementById('in-floors-alt').value : document.getElementById('in-floors-alt').value) || 0, 
+                    apartments: Number(document.getElementById('in-apartments').value) || 0,
+                    rooms: Number(document.getElementById('in-rooms').value) || 0,
+                    baths: Number(document.getElementById('in-baths').value) || 0,
+                    balconies: Number(document.getElementById('in-balconies').value) || 0,
+                    finishing: document.getElementById('in-finishing').value,
+                    level: document.getElementById('in-level').value,
+                    furnished: furnished,
+                    gov: gov,
+                    city: city,
+                    address: document.getElementById('in-address').value,
+                    location:document.getElementById('in-loc')?.value || '', 
+                    phone:document.getElementById('in-phone').value,
+                    desc:document.getElementById('in-desc').value,
+                    mapLink:document.getElementById('in-map').value,
+                    amenities:am,
+                    images:uploadedUrls,
+                    image:uploadedUrls[0],
+                    badge:bdg,
+                    status:'available',
+                    isPinned:false,
+                    createdAt:serverTimestamp(),
+                    authorId:state.user.uid
+                });
+                showToast('تم النشر بنجاح');
+                toggleModal('add-modal');
+                btn.innerText = originalText;
+                btn.disabled = false;
+                location.reload();
+            } catch(e) {
+                console.error(e);
+                showToast('حدث خطأ أثناء النشر', 'e');
+                document.getElementById('btn-publish').innerText = 'نشر الإعلان';
+                document.getElementById('btn-publish').disabled = false;
+            }
+        };
+
+        window.del=async(e,id)=>{if(e)e.stopPropagation();if(confirm('حذف؟')){await deleteDoc(doc(db, COLLECTION_NAME, id));showToast('تم الحذف'); closeDetails();}};
+        window.pin=async(e,id,s)=>{if(e)e.stopPropagation();await updateDoc(doc(db, COLLECTION_NAME, id),{isPinned:!s});showToast(s?'تم إلغاء التثبيت':'تم التثبيت'); closeDetails();};
+        window.toggleStatus=async(e,id,currentStatus,type)=>{if(e)e.stopPropagation();let nextStatus='available';if(currentStatus==='available'){nextStatus=type==='sale'?'sold':'rented'};await updateDoc(doc(db, COLLECTION_NAME, id),{status:nextStatus});showToast(`الحالة: ${nextStatus==='available'?'متاح':(nextStatus==='sold'?'تم البيع':'تم التأجير')}`); closeDetails();};
+
+        window.toggleChat=()=>{if(toggleModal('chat-modal')){if(!state.chatId&&state.chatStep===0&&!state.welcomeSent){state.welcomeSent=true;setTimeout(()=>botMsg('مرحباً! 👋<br>ما هو الاسم؟'),100)}}};
+        window.sendMsg=async()=>{const t=document.getElementById('chat-msg').value.trim();if(!t)return;document.getElementById('chat-msg').value='';userMsg(t);if(!state.chatId){if(state.chatStep===0){state.tempName=t;state.chatStep=1;setTimeout(()=>botMsg(`أهلاً ${t}، كيف نساعدك؟`),200)}else if(state.chatStep===1){state.chatStep=2;setTimeout(()=>botMsg('جاري تحويلك للدعم الفني...'),200);const r=await addDoc(collection(db,"chats"),{userId:state.user.uid,userName:state.tempName,lastMsg:t,status:'waiting',messages:[{s:'bot',t:`الاسم: ${state.tempName}`,d:new Date()},{s:'user',t,d:new Date()},{s:'bot',t:'جاري تحويلك للدعم الفني...',d:new Date()}],createdAt:serverTimestamp()});state.chatId=r.id;listenChat(r.id)}}else{const s=await getDocs(query(collection(db,"chats"),where('__name__','==',state.chatId)));if(!s.empty){const m=s.docs[0].data().messages;m.push({s:'user',t,d:new Date()});await updateDoc(doc(db,"chats",state.chatId),{messages:m,lastMsg:t,status:'waiting'})}}};
+        function listenChat(id){onSnapshot(doc(db,"chats",id),s=>{if(s.exists()){const d=s.data();if(d.status==='closed'){state.chatId=null;state.chatStep=0;state.welcomeSent=false;document.getElementById('chat-box').innerHTML='';showToast("تم إنهاء المحادثة");toggleModal('chat-modal');return}document.getElementById('chat-box').innerHTML='';d.messages.forEach(m=>{if(!m.t.startsWith('الاسم'))(m.s==='user'?userMsg:botMsg)(m.t)})}})};
+        function checkUserChat(){onSnapshot(query(collection(db,"chats"),where('userId','==',state.user.uid),where('status','!=','closed')),s=>{if(!s.empty){state.chatId=s.docs[0].id;state.chatStep=2;listenChat(state.chatId)}})};
+        function userMsg(t){const d=document.createElement('div');d.className="flex justify-start";d.innerHTML=`<div class="bg-emerald-100 text-emerald-900 px-3 py-2 rounded-xl rounded-tr-none shadow-sm text-xs max-w-[85%]">${t}</div>`;document.getElementById('chat-box').appendChild(d);document.getElementById('chat-box').scrollTop=9999}
+        function botMsg(t){const d=document.createElement('div');d.className="flex justify-end";d.innerHTML=`<div class="bg-white dark:bg-slate-700 dark:text-white text-slate-800 px-3 py-2 rounded-xl rounded-tl-none shadow-sm text-xs max-w-[85%]">${t}</div>`;document.getElementById('chat-box').appendChild(d);document.getElementById('chat-box').scrollTop=9999}
+
+        window.toggleAdminPanel=()=>{document.getElementById('admin-panel').classList.toggle('hidden');if(!document.getElementById('admin-panel').classList.contains('hidden'))refreshAdmin()};
+        document.getElementById('logo-trigger').addEventListener('click',()=>{if(prompt('Code:')==='1532'){state.isAdmin=true;document.getElementById('btn-admin-top').classList.remove('hidden');filter('all');localStorage.setItem('souq_admin', 'true');showToast('أدمن');}});
+        window.refreshAdmin=()=>{onSnapshot(query(collection(db,"chats"),where('status','!=','closed')),s=>{const l=document.getElementById('admin-users-list');l.innerHTML='';s.forEach(d=>{const dt=d.data();l.innerHTML+=`<div onclick="loadAdmin('${d.id}','${dt.userName}')" class="p-3 mb-2 bg-white/5 rounded-xl cursor-pointer border border-white/10"><div class="font-bold text-xs text-white flex justify-between"><span>${dt.userName}</span>${dt.status==='waiting'?'<span class="w-2 h-2 bg-red-500 rounded-full animate-pulse"></span>':''}</div><div class="text-[10px] text-gray-400 truncate mt-1">${dt.lastMsg}</div></div>`})})};
+        window.loadAdmin=(id,n)=>{state.activeAdminChat=id;document.getElementById('admin-chat-header').innerHTML=`<span>${n}</span><button onclick="kickUser()" id="btn-end-chat" class="hidden bg-red-600 text-white text-[10px] font-bold px-2 py-1 rounded flex items-center gap-1"><i data-lucide="slash" class="w-3 h-3"></i> إنهاء</button>`;document.getElementById('btn-end-chat').classList.remove('hidden');onSnapshot(doc(db,"chats",id),s=>{const b=document.getElementById('admin-msg-area');b.innerHTML='';if(!s.exists())return;s.data().messages.forEach(m=>{b.innerHTML+=`<div class="${m.s==='support'?'text-left':'text-right'} mb-2"><span class="inline-block px-3 py-2 rounded-lg text-xs ${m.s==='support'?'bg-slate-900 dark:bg-emerald-600 text-white':'bg-white/10'}">${m.t}</span></div>`});b.scrollTop=9999})};
+        window.sendAdminMsg=async()=>{const t=document.getElementById('admin-input').value;if(!t||!state.activeAdminChat)return;document.getElementById('admin-input').value='';const s=await getDocs(query(collection(db,"chats"),where('__name__','==',state.activeAdminChat)));const m=s.docs[0].data().messages;m.push({s:'support',t,d:new Date()});await updateDoc(doc(db,"chats",state.activeAdminChat),{messages:m,status:'active'})};
+        window.kickUser=async()=>{if(confirm("إنهاء؟")){await updateDoc(doc(db,"chats",state.activeAdminChat),{status:'closed'});document.getElementById('admin-msg-area').innerHTML='';document.getElementById('btn-end-chat').classList.add('hidden');state.activeAdminChat=null}};
+        window.resetFilters=()=>{document.getElementById('search-input').value='';filter('all')};
+
+        // Register Service Worker
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('./service-worker.js')
+                    .then(reg => console.log('SW registered!', reg.scope))
+                    .catch(err => console.log('SW failed:', err));
+            });
+        }
+
+        lucide.createIcons();
+    </script>
+</body>
+</html>
