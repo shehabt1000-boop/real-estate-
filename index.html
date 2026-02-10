@@ -64,16 +64,22 @@
             transform: translate3d(0,0,0);
         }
 
-        /* Overlay */
-        #app-background::after {
-            content: ''; position: absolute; inset: 0;
-            background: rgba(241, 245, 249, 0.55);
-            backdrop-filter: blur(2px);
-            transition: background-color 0.3s ease;
-        }
-        .dark #app-background::after { 
-            background: rgba(15, 23, 42, 0.40); 
-        }
+/* Overlay */
+#app-background::after {
+    content: ''; 
+    position: absolute; 
+    inset: 0;
+    /* قللنا الشفافية من 0.55 لـ 0.1 عشان الطبقة البيضا تخف */
+    background: rgba(241, 245, 249, 0.15); 
+    /* قللنا الضباب من 2px لـ 0.5px عشان يبقى شبه مختفي */
+    backdrop-filter: blur(0.5px); 
+    transition: background-color 0.3s ease;
+}
+
+.dark #app-background::after { 
+    /* قللنا الشفافية من 0.40 لـ 0.1 عشان الطبقة السودا تخف */
+    background: rgba(15, 23, 42, 0.15); 
+}
 
         /* Animations */
         @keyframes shimmer { 0% { background-position: -1000px 0; } 100% { background-position: 1000px 0; } }
@@ -1008,3 +1014,4 @@
     </script>
 </body>
 </html>
+
