@@ -183,9 +183,9 @@
 
             <!-- Logo Updated: Circular Black Frame, Dark Gold Border in Dark Mode -->
             <div class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center cursor-pointer group" id="logo-trigger">
-                <div class="w-10 h-10 flex items-center justify-center bg-slate-900 text-white rounded-full border-2 border-slate-900 dark:border-[#B8860B] shadow-lg group-hover:scale-110 transition-all duration-300">
-                    <i data-lucide="building-2" class="w-5 h-5"></i>
-                </div>
+                <div class="w-10 h-10 flex items-center justify-center bg-slate-900 text-white rounded-full border-2 border-emerald-600 dark:border-emerald-500 shadow-lg group-hover:scale-110 transition-all duration-300">
+    <i data-lucide="building-2" class="w-5 h-5 text-white"></i>
+</div>
             </div>
 
             <div class="flex gap-1.5 items-center">
@@ -255,13 +255,22 @@
         </main>
 
         <!-- Floating Dock -->
-        <nav id="bottom-nav" class="fixed bottom-4 left-1/2 -translate-x-1/2 z-50 bg-white/90 dark:bg-slate-800/90 backdrop-blur-lg border border-slate-200 dark:border-slate-600 px-5 py-1.5 rounded-full flex items-center gap-6 shadow-xl transform transition-all hover:scale-105 transform-gpu">
-            <button onclick="resetFilters(); window.scrollTo({top:0, behavior:'smooth'})" class="flex flex-col items-center gap-0.5 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition group"><i data-lucide="home" class="w-5 h-5 group-hover:scale-110 transition"></i></button>
-            <button onclick="toggleAddModal()" class="w-12 h-12 bg-slate-900 dark:bg-emerald-600 text-white rounded-full flex items-center justify-center shadow-lg shadow-slate-900/20 transform -translate-y-5 border-4 border-[#f8fafc] dark:border-navy hover:scale-110 transition active:scale-90"><i data-lucide="plus" class="w-6 h-6"></i></button>
-            <button onclick="toggleChat()" class="flex flex-col items-center gap-0.5 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition group relative"><div id="chat-badge" class="hidden absolute top-0 right-0 w-2 h-2 bg-red-500 rounded-full border border-white dark:border-slate-800"></div><i data-lucide="message-circle" class="w-5 h-5 group-hover:scale-110 transition"></i></button>
-        </nav>
-    </div>
+        <nav id="bottom-nav" class="fixed bottom-4 left-1/2 -translate-x-1/2 z-50 bg-white/90 dark:bg-slate-800/90 backdrop-blur-lg border border-slate-200 dark:border-slate-600 px-5 py-2 rounded-full flex items-center gap-6 shadow-xl transform transition-all hover:scale-105 transform-gpu">
 
+    <button onclick="resetFilters(); window.scrollTo({top:0, behavior:'smooth'})" class="flex items-center justify-center text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition group">
+        <i data-lucide="home" class="w-5 h-5 group-hover:scale-110 transition"></i>
+    </button>
+
+    <button onclick="toggleAddModal()" class="w-10 h-10 bg-slate-900 text-white rounded-full flex items-center justify-center shadow-lg shadow-slate-900/20 transform -translate-y-4 border-2 border-emerald-600 dark:border-emerald-500 hover:scale-110 transition active:scale-90">
+        <i data-lucide="plus" class="w-5 h-5"></i>
+    </button>
+
+    <button onclick="toggleChat()" class="flex items-center justify-center text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition group relative">
+        <div id="chat-badge" class="hidden absolute top-0 right-0 w-2 h-2 bg-red-500 rounded-full border border-white dark:border-slate-800"></div>
+        <i data-lucide="message-circle" class="w-5 h-5 group-hover:scale-110 transition"></i>
+    </button>
+
+</nav>
     <!-- Details Modal -->
     <div id="details-modal" class="hidden modal-overlay">
         <div class="mobile-full-modal animate-pop">
@@ -1014,4 +1023,5 @@
     </script>
 </body>
 </html>
+
 
