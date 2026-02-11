@@ -48,41 +48,25 @@
 
         /* --- Fixed Background Optimization --- */
         #app-background {
-            position: fixed; 
-            top: 0; 
-            left: 0; 
-            width: 100%; 
-            height: 100vh; 
-            height: 100lvh; 
+            position: fixed; top: 0; left: 0; width: 100%; height: 100vh; height: 100lvh; 
             z-index: -50;
             background-image: url('https://images.pexels.com/photos/14270540/pexels-photo-14270540.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1');
-            background-size: cover; 
-            background-position: center; 
-            background-repeat: no-repeat;
-            pointer-events: none; 
-            will-change: transform; /* Performance Boost */
-            transform: translate3d(0,0,0);
+            background-size: cover; background-position: center; background-repeat: no-repeat;
+            pointer-events: none; will-change: transform; transform: translate3d(0,0,0);
         }
-
         #app-background::after {
-            content: ''; 
-            position: absolute; 
-            inset: 0;
-            background: rgba(241, 245, 249, 0.15); 
-            backdrop-filter: blur(0.5px); 
+            content: ''; position: absolute; inset: 0;
+            background: rgba(241, 245, 249, 0.15); /* No blur for performance */
         }
-
-        .dark #app-background::after { 
-            background: rgba(15, 23, 42, 0.15); 
-        }
+        .dark #app-background::after { background: rgba(15, 23, 42, 0.15); }
 
         /* Animations */
         @keyframes shimmer { 0% { background-position: -1000px 0; } 100% { background-position: 1000px 0; } }
         .skeleton { animation: shimmer 1.5s infinite linear; background: linear-gradient(to right, #f1f5f9 4%, #e2e8f0 25%, #f1f5f9 36%); background-size: 1000px 100%; }
         .dark .skeleton { background: linear-gradient(to right, #1e293b 4%, #334155 25%, #1e293b 36%); }
 
-        @keyframes popIn { from { transform: scale(0.98); opacity: 0; } to { transform: scale(1); opacity: 1; } }
-        .animate-pop { animation: popIn 0.1s ease-out forwards; will-change: transform, opacity; }
+        @keyframes popIn { from { transform: scale(0.95); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+        .animate-pop { animation: popIn 0.15s ease-out forwards; will-change: transform, opacity; }
 
         .mobile-full-modal { position: fixed; inset: 0; z-index: 60; background-color: white; display: flex; flex-direction: column; height: 100dvh; }
         .dark .mobile-full-modal { background-color: #1e293b; }
@@ -97,39 +81,33 @@
         .toast.hiding { animation: fadeOut 0.2s ease-in forwards; }
 
         .sticky-header { 
-            z-index: 50; 
-            transform: translateZ(0); 
-            transition: background-color 0.2s ease;
-            border-bottom-left-radius: 1.5rem;
-            border-bottom-right-radius: 1.5rem;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            z-index: 50; transform: translateZ(0); 
+            background-color: rgba(255, 255, 255, 0.95); /* Solid color, no blur */
+            border-bottom-left-radius: 1.5rem; border-bottom-right-radius: 1.5rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
         }
-        
-        /* Fix Sticky Search Bar */
+        .dark .sticky-header { background-color: rgba(15, 23, 42, 0.95); }
+
+        /* --- Optimized Search Bar (No Blur, Spacing Added) --- */
         .sticky-search-bar {
             position: sticky;
-            top: 3rem; /* Height of header (h-12) */
+            top: 3.5rem; /* Space from header */
             z-index: 40;
-            padding-top: 0.5rem;
-            padding-bottom: 0.5rem;
-            transition: all 0.3s ease;
-            /* Glassmorphism for smooth overlap */
-            background: rgba(255, 255, 255, 0.85);
-            backdrop-filter: blur(8px);
-            border-bottom: 1px solid rgba(0,0,0,0.05);
+            margin: 0 0.5rem 0.5rem 0.5rem; /* Side margins */
+            padding: 0.25rem;
+            border-radius: 0.75rem;
+            background: rgba(255, 255, 255, 0.9); /* No backdrop-filter */
+            border: 1px solid rgba(0,0,0,0.1);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            transition: transform 0.2s;
         }
         .dark .sticky-search-bar {
-            background: rgba(15, 23, 42, 0.85);
-            border-bottom: 1px solid rgba(255,255,255,0.05);
+            background: rgba(30, 41, 59, 0.9);
+            border-color: rgba(255,255,255,0.1);
         }
 
         /* Listing Card Optimization */
-        .listing-card {
-            /* This tells the browser to skip rendering off-screen cards = HUGE FPS BOOST */
-            content-visibility: auto; 
-            contain-intrinsic-size: 300px; 
-            will-change: transform;
-        }
+        .listing-card { content-visibility: auto; contain-intrinsic-size: 300px; will-change: transform; }
 
         /* Splash Screen */
         #splash-screen { 
@@ -173,8 +151,19 @@
 
         .amenity-tile input:checked + div { background-color: #10b981; color: white; border-color: #10b981; }
 
-        #filter-panel { transition: max-height 0.2s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.15s; max-height: 0; opacity: 0; overflow: hidden; will-change: max-height, opacity; }
-        #filter-panel.open { max-height: 450px; opacity: 1; }
+        /* Optimized Filter Panel Transition */
+        #filter-panel { 
+            display: none; /* Hidden by default for performance */
+            opacity: 0;
+            transform: scaleY(0.95);
+            transform-origin: top;
+            transition: opacity 0.15s ease, transform 0.15s ease;
+        }
+        #filter-panel.open { 
+            display: block; 
+            opacity: 1;
+            transform: scaleY(1);
+        }
 
         body.keyboard-open #bottom-nav { display: none; }
     </style>
@@ -197,7 +186,7 @@
         <div id="toast-container" class="fixed top-4 left-0 right-0 z-[100] flex flex-col items-center gap-2 pointer-events-none px-4"></div>
 
         <!-- Header -->
-        <header class="fixed top-0 w-full sticky-header bg-white/95 dark:bg-navy/95 backdrop-blur-md flex items-center justify-between px-4 h-12 shadow-sm z-50 border-b border-slate-100 dark:border-slate-800">
+        <header class="fixed top-0 w-full sticky-header flex items-center justify-between px-4 h-12 shadow-sm z-50 border-b border-slate-100 dark:border-slate-800">
             <div class="flex flex-col justify-center">
                 <span class="text-[9px] font-bold text-slate-500 dark:text-slate-400 leading-none">مرحبا بكم في</span>
                 <span class="text-[10px] font-black text-slate-800 dark:text-white leading-tight">سوق <span class="text-emerald-600 dark:text-emerald-400">العقارات</span></span>
@@ -219,18 +208,27 @@
         <!-- Main Content -->
         <main class="pt-[3rem] pb-20 container mx-auto px-2 max-w-5xl min-h-screen">
             
-            <!-- Sticky Search Bar with improved design -->
-            <div class="sticky-search-bar mb-2 rounded-b-xl px-1">
+            <!-- Sticky Search Bar -->
+            <div class="sticky-search-bar">
                 <div class="relative w-full">
                     <button onclick="toggleFilterPanel()" class="absolute left-1 top-0 h-full w-9 flex items-center justify-center text-slate-500 hover:text-slate-800 dark:hover:text-white transition z-10"><i data-lucide="sliders-horizontal" class="w-4 h-4"></i></button>
-                    <input type="text" id="search-input" placeholder="ابحث (شقة، أرض، عنوان)..." class="w-full bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 rounded-lg pl-10 pr-9 py-1 text-xs shadow-sm focus:ring-1 focus:ring-emerald-500 outline-none dark:text-white transition font-bold h-9">
+                    <input type="text" id="search-input" placeholder="ابحث (شقة، أرض، عنوان)..." class="w-full bg-transparent border-none rounded-lg pl-10 pr-9 py-1 text-xs outline-none dark:text-white font-bold h-8">
                     <button onclick="performSearch()" class="absolute right-1 top-0 h-full w-9 flex items-center justify-center text-slate-500 hover:text-emerald-600 transition"><i data-lucide="search" class="w-4 h-4"></i></button>
                 </div>
-                <div id="filter-panel" class="mt-1 bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-600 shadow-xl mx-1">
-                    <div class="p-2 space-y-1.5">
-                        <div class="flex justify-between items-center border-b border-slate-100 dark:border-slate-700 pb-1">
+                
+                <div id="filter-panel" class="mt-2 border-t border-slate-200 dark:border-slate-700 pt-2">
+                    <div class="space-y-1.5">
+                        <div class="flex justify-between items-center pb-1">
                             <h3 class="text-[10px] font-bold text-slate-700 dark:text-white flex items-center gap-1"><i data-lucide="filter" class="w-3 h-3"></i> تصفية</h3>
                             <button onclick="resetFilters()" class="text-[9px] text-red-500 font-bold underline">إعادة تعيين</button>
+                        </div>
+                        <!-- New Category Filter -->
+                        <div class="custom-select-wrapper">
+                            <select id="filter-cat" class="custom-select py-1 text-[10px]">
+                                <option value="">كل الأقسام</option>
+                                <option value="apartment">شقق</option><option value="villa">فلل</option><option value="chalet">شاليهات</option><option value="office">مكاتب</option><option value="shop">محلات</option><option value="land">أراضي</option><option value="building">عماير</option><option value="warehouse">مخازن</option>
+                            </select>
+                            <i data-lucide="chevron-down" class="custom-select-icon w-3 h-3"></i>
                         </div>
                         <div class="custom-select-wrapper">
                             <select id="filter-type" class="custom-select py-1 text-[10px]">
@@ -276,7 +274,7 @@
         </main>
 
         <!-- Floating Dock -->
-        <nav id="bottom-nav" class="fixed bottom-4 left-1/2 -translate-x-1/2 z-50 bg-white/90 dark:bg-slate-800/90 backdrop-blur-lg border border-slate-200 dark:border-slate-600 px-5 py-2 rounded-full flex items-center gap-6 shadow-xl transform transition-all hover:scale-105 transform-gpu">
+        <nav id="bottom-nav" class="fixed bottom-4 left-1/2 -translate-x-1/2 z-50 bg-white/90 dark:bg-slate-800/90 backdrop-blur-none border border-slate-200 dark:border-slate-600 px-5 py-2 rounded-full flex items-center gap-6 shadow-xl transform transition-all hover:scale-105 transform-gpu">
             <button onclick="resetFilters(); window.scrollTo({top:0, behavior:'smooth'})" class="flex items-center justify-center text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition group">
                 <i data-lucide="home" class="w-5 h-5 group-hover:scale-110 transition"></i>
             </button>
@@ -458,7 +456,17 @@
 
     <!-- Chat & Lightbox & Admin -->
     <div id="chat-modal" class="hidden modal-overlay"><div class="mobile-full-modal animate-pop border border-navy/10"><div class="bg-slate-900 dark:bg-emerald-600 p-3 text-white flex justify-between items-center shrink-0"><div class="flex items-center gap-2"><div class="bg-white/10 p-1.5 rounded-full"><i data-lucide="bot" class="w-5 h-5 text-yellow-400"></i></div><div><h4 class="font-bold text-xs">الدعم الفني</h4><span class="text-[9px] opacity-80">متصل الآن</span></div></div><button onclick="toggleChat()" class="bg-red-500 text-black p-1 rounded-full hover:bg-red-600 transition"><i data-lucide="x" class="w-4 h-4"></i></button></div><div id="chat-box" class="flex-1 bg-slate-100 dark:bg-slate-900 p-3 overflow-y-auto space-y-2 text-xs"></div><div class="p-3 bg-white dark:bg-slate-800 border-t dark:border-slate-700 flex items-center gap-2 shrink-0 pb-safe"><input id="chat-msg" type="text" class="flex-1 bg-slate-100 dark:bg-slate-700 border-0 rounded-full px-4 py-3 text-sm outline-none dark:text-white font-bold" placeholder="اكتب رسالتك..."><button onclick="sendMsg()" class="w-10 h-10 bg-slate-900 dark:bg-emerald-600 rounded-full text-white flex items-center justify-center shadow"><i data-lucide="send" class="w-4 h-4"></i></button></div></div></div>
-    <div id="lightbox" class="hidden fixed inset-0 bg-black/95 z-[100] flex flex-col items-center justify-center select-none"><button onclick="closeLightbox()" class="absolute top-4 left-4 bg-white/20 text-white p-2 rounded-full z-20"><i data-lucide="x" class="w-6 h-6"></i></button><div class="relative w-full h-full flex items-center justify-center"><img id="lightbox-img" src="" class="max-w-full max-h-[80vh] object-contain"></div></div>
+    
+    <!-- Optimized Lightbox with Navigation -->
+    <div id="lightbox" class="hidden fixed inset-0 bg-black/95 z-[100] flex flex-col items-center justify-center select-none">
+        <button onclick="closeLightbox()" class="absolute top-4 left-4 bg-white/20 text-white p-2 rounded-full z-20"><i data-lucide="x" class="w-6 h-6"></i></button>
+        <button onclick="changeLightboxImage(-1)" class="absolute right-2 top-1/2 -translate-y-1/2 bg-white/10 text-white p-3 rounded-full z-20 hover:bg-white/20"><i data-lucide="chevron-right" class="w-6 h-6"></i></button>
+        <button onclick="changeLightboxImage(1)" class="absolute left-2 top-1/2 -translate-y-1/2 bg-white/10 text-white p-3 rounded-full z-20 hover:bg-white/20"><i data-lucide="chevron-left" class="w-6 h-6"></i></button>
+        <div class="relative w-full h-full flex items-center justify-center">
+            <img id="lightbox-img" src="" class="max-w-full max-h-[80vh] object-contain transition-opacity duration-200">
+        </div>
+    </div>
+
     <div id="admin-panel" class="hidden fixed inset-0 bg-navy z-[90] flex flex-col text-white"><div class="p-3 border-b border-white/10 flex justify-between items-center bg-[#001a38]"><h2 class="font-bold flex items-center gap-2 text-sm"><i data-lucide="shield" class="w-4 h-4 text-emerald-400"></i> التحكم</h2><div class="flex gap-3"><button onclick="refreshAdmin()"><i data-lucide="refresh-cw" class="w-4 h-4"></i></button><button onclick="toggleAdminPanel()"><i data-lucide="x" class="w-5 h-5"></i></button></div></div><div class="flex-1 flex overflow-hidden"><div class="w-1/3 border-l border-white/10 bg-[#001f3f] overflow-y-auto p-2" id="admin-users-list"></div><div class="w-2/3 flex flex-col bg-navy relative"><div id="admin-chat-header" class="h-12 border-b border-white/10 flex items-center justify-between px-3 bg-[#001a38]"><span class="text-xs font-bold">اختر محادثة</span><button onclick="kickUser()" id="btn-end-chat" class="hidden bg-red-600 text-white text-[10px] font-bold px-2 py-1 rounded flex items-center gap-1"><i data-lucide="slash" class="w-3 h-3"></i> إنهاء</button></div><div id="admin-msg-area" class="flex-1 p-3 overflow-y-auto space-y-2 text-xs"></div><div class="p-2 border-t border-white/10 flex gap-2 bg-[#001a38]"><input id="admin-input" class="flex-1 bg-white/5 border border-white/20 rounded px-3 py-1.5 text-xs text-white outline-none" placeholder="الرد..."><button onclick="sendAdminMsg()" class="bg-blue-600 px-4 py-1.5 rounded text-xs font-bold">إرسال</button></div></div></div></div>
 
     <script type="module">
@@ -471,7 +479,8 @@
 
         const COLLECTION_NAME = "listings_v2"; 
 
-        let state = { user: null, listings: [], filesToUpload: [], chatId: null, chatStep: 0, tempName: '', activeAdminChat: null, isAdmin: false, welcomeSent: false, currentFilter: 'all', visibleLimit: 12 };
+        // Reduced visibleLimit to 6 for performance
+        let state = { user: null, listings: [], filesToUpload: [], chatId: null, chatStep: 0, tempName: '', activeAdminChat: null, isAdmin: false, welcomeSent: false, currentFilter: 'all', visibleLimit: 6, lightboxIndex: 0 };
 
         const ALL_AMENITIES = ["غاز طبيعي", "كهرباء", "مياه", "أسانسير", "واي فاي", "حمام سباحة", "حديقة", "جراج", "أمن وحراسة", "كاميرات مراقبة", "مطبخ أمريكاني", "غرفة خادمة", "مسموح بالحيوانات", "على ناصية"];
         const LAND_AMENITIES = ["كهرباء", "مياه", "غاز طبيعي", "على ناصية"];
@@ -666,6 +675,7 @@
             const filterGov = document.getElementById('filter-gov').value;
             const filterCity = document.getElementById('filter-city').value;
             const filterType = document.getElementById('filter-type').value;
+            const filterCat = document.getElementById('filter-cat').value; // New Category Filter
             const minPrice = Number(document.getElementById('filter-min-price').value) || 0;
             const maxPrice = Number(document.getElementById('filter-max-price').value) || Infinity;
 
@@ -683,6 +693,7 @@
                 if (state.currentFilter !== 'all' && item.type !== state.currentFilter) matchType = false;
 
                 if (filterType && item.type !== filterType) matchType = false;
+                if (filterCat && item.category !== filterCat) matchType = false; // Apply Category Filter
 
                 const catNameAr = CAT_MAP[item.category] || '';
                 const itemText = normalizeText(item.title + item.desc + item.phone + item.gov + item.city + item.location + (item.address || '') + catNameAr);
@@ -717,7 +728,7 @@
         };
 
         window.loadMore = () => {
-            state.visibleLimit += 12;
+            state.visibleLimit += 6; // Increase by 6
             performSearch();
         };
 
@@ -727,7 +738,7 @@
 
         window.filter = (t) => { 
             state.currentFilter = t; 
-            state.visibleLimit = 12; 
+            state.visibleLimit = 6; // Reset to 6
             performSearch(); 
         };
 
@@ -843,9 +854,10 @@
                 document.getElementById('d-call').href = `tel:${item.phone}`;
 
                 const slider = document.getElementById('details-slider'); 
-                slider.innerHTML = imgs.map(src => {
+                // Optimized Slider: Lazy load images inside modal too
+                slider.innerHTML = imgs.map((src, idx) => {
                     const isVid = src.includes('.mp4') || src.includes('.mov');
-                    return isVid ? `<video src="${src}" controls class="w-full h-full object-contain snap-center shrink-0 bg-black"></video>` : `<img src="${src}" class="w-full h-full object-cover snap-center shrink-0 cursor-pointer" onclick="openLightbox('${src}')">`
+                    return isVid ? `<video src="${src}" controls class="w-full h-full object-contain snap-center shrink-0 bg-black"></video>` : `<img src="${src}" loading="lazy" class="w-full h-full object-cover snap-center shrink-0 cursor-pointer" onclick="openLightbox('${src}', ${idx})">`
                 }).join('');
                 document.getElementById('details-arrows').style.display = imgs.length > 1 ? 'block' : 'none';
 
@@ -907,8 +919,35 @@
         };
 
         window.scrollDetails = (dir) => { const s = document.getElementById('details-slider'); s.scrollBy({ left: dir * s.clientWidth, behavior: 'smooth' }); }
-        window.openLightbox = (src) => { document.getElementById('lightbox-img').src = src; document.getElementById('lightbox').classList.remove('hidden'); }
+        
+        // --- Lightbox Logic ---
+        window.openLightbox = (src, idx = 0) => { 
+            state.lightboxIndex = idx;
+            updateLightboxImage();
+            document.getElementById('lightbox').classList.remove('hidden'); 
+        }
         window.closeLightbox = () => document.getElementById('lightbox').classList.add('hidden');
+        
+        window.changeLightboxImage = (dir) => {
+            if (!state.currentItem || !state.currentItem.images) return;
+            const len = state.currentItem.images.length;
+            state.lightboxIndex = (state.lightboxIndex + dir + len) % len;
+            updateLightboxImage();
+        };
+
+        function updateLightboxImage() {
+            const img = document.getElementById('lightbox-img');
+            const src = state.currentItem.images[state.lightboxIndex];
+            if (src.includes('.mp4') || src.includes('.mov')) {
+                 // Simple handling for video in lightbox, or skip videos
+                 img.src = ""; // Placeholder
+                 showToast("فيديو: يرجى المشاهدة في التفاصيل");
+            } else {
+                img.style.opacity = '0.5';
+                img.src = src;
+                img.onload = () => img.style.opacity = '1';
+            }
+        }
 
         function toggleModal(id) { const m=document.getElementById(id); m.classList.toggle('hidden'); if(!m.classList.contains('hidden')) document.body.style.overflow='hidden'; else document.body.style.overflow=''; return !m.classList.contains('hidden'); }
         window.toggleAddModal=()=>{if(toggleModal('add-modal')){state.filesToUpload=[];document.getElementById('preview-area').innerHTML=''; updateFormFields();}};
