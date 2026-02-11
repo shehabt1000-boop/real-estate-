@@ -56,7 +56,7 @@
         }
         #app-background::after {
             content: ''; position: absolute; inset: 0;
-            background: rgba(241, 245, 249, 0.15); /* No blur for performance */
+            background: rgba(241, 245, 249, 0.15); 
         }
         .dark #app-background::after { background: rgba(15, 23, 42, 0.15); }
 
@@ -82,21 +82,21 @@
 
         .sticky-header { 
             z-index: 50; transform: translateZ(0); 
-            background-color: rgba(255, 255, 255, 0.95); /* Solid color, no blur */
+            background-color: rgba(255, 255, 255, 0.95);
             border-bottom-left-radius: 1.5rem; border-bottom-right-radius: 1.5rem;
             box-shadow: 0 2px 4px rgba(0,0,0,0.05);
         }
         .dark .sticky-header { background-color: rgba(15, 23, 42, 0.95); }
 
-        /* --- Optimized Search Bar (No Blur, Spacing Added) --- */
+        /* --- Optimized Search Bar --- */
         .sticky-search-bar {
             position: sticky;
-            top: 3.5rem; /* Space from header */
+            top: 3.5rem; 
             z-index: 40;
-            margin: 0 0.5rem 0.5rem 0.5rem; /* Side margins */
+            margin: 0 0.5rem 0.5rem 0.5rem; 
             padding: 0.25rem;
             border-radius: 0.75rem;
-            background: rgba(255, 255, 255, 0.9); /* No backdrop-filter */
+            background: rgba(255, 255, 255, 0.9); 
             border: 1px solid rgba(0,0,0,0.1);
             box-shadow: 0 2px 5px rgba(0,0,0,0.05);
             transition: transform 0.2s;
@@ -151,9 +151,8 @@
 
         .amenity-tile input:checked + div { background-color: #10b981; color: white; border-color: #10b981; }
 
-        /* Optimized Filter Panel Transition */
         #filter-panel { 
-            display: none; /* Hidden by default for performance */
+            display: none; 
             opacity: 0;
             transform: scaleY(0.95);
             transform-origin: top;
@@ -222,7 +221,6 @@
                             <h3 class="text-[10px] font-bold text-slate-700 dark:text-white flex items-center gap-1"><i data-lucide="filter" class="w-3 h-3"></i> تصفية</h3>
                             <button onclick="resetFilters()" class="text-[9px] text-red-500 font-bold underline">إعادة تعيين</button>
                         </div>
-                        <!-- New Category Filter -->
                         <div class="custom-select-wrapper">
                             <select id="filter-cat" class="custom-select py-1 text-[10px]">
                                 <option value="">كل الأقسام</option>
@@ -254,13 +252,14 @@
                         </div>
                         <div class="flex gap-2">
                             <button onclick="performSearch(); toggleFilterPanel()" class="flex-1 bg-emerald-600 text-white py-1.5 rounded font-bold text-[10px] shadow hover:bg-emerald-700 transition">تطبيق</button>
-                            <button onclick="toggleFilterPanel()" class="w-16 bg-red-500 text-white py-1.5 rounded font-bold text-[10px] shadow hover:bg-red-600 transition flex items-center justify-center"><i data-lucide="x" class="w-3 h-3"></i> إغلاق</button>
+                            <button onclick="toggleFilterPanel()" class="w-16 bg-red-500 text-white py-1.5 rounded font-bold text-[10px] shadow hover:bg-red-600 transition flex items-center justify-center"><i data-lucide="x" class="w-4 h-4"></i> إغلاق</button>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <div id="grid-container" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 mt-2"></div>
+            <!-- Increased Margin Top here (mt-4) -->
+            <div id="grid-container" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 mt-4"></div>
 
             <div id="load-more-container" class="hidden mt-4 text-center">
                 <button onclick="loadMore()" class="bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 text-slate-700 dark:text-slate-200 px-6 py-2 rounded-full text-xs font-bold shadow-sm hover:bg-slate-50 dark:hover:bg-slate-700 transition">عرض المزيد</button>
@@ -293,13 +292,18 @@
     <div id="details-modal" class="hidden modal-overlay">
         <div class="mobile-full-modal animate-pop">
             <div class="relative h-44 bg-gray-200 dark:bg-slate-800 shrink-0 group">
-                <button onclick="closeDetails()" class="absolute top-2 left-2 bg-red-500 text-black p-1 rounded-full z-20 shadow-sm hover:bg-red-600 transition"><i data-lucide="x" class="w-4 h-4"></i></button>
+                <!-- Enlarged Close Button -->
+                <button onclick="closeDetails()" class="absolute top-2 left-2 bg-red-500 text-black p-2 rounded-full z-20 shadow-sm hover:bg-red-600 transition"><i data-lucide="x" class="w-5 h-5"></i></button>
                 <div class="absolute top-2 right-2 flex gap-2 z-20">
                     <button onclick="downloadImages()" class="bg-white/80 dark:bg-black/50 text-slate-800 dark:text-white p-1 rounded-full shadow-sm"><i data-lucide="download" class="w-4 h-4"></i></button>
                     <button onclick="shareListing()" class="bg-white/80 dark:bg-black/50 text-slate-800 dark:text-white p-1 rounded-full shadow-sm"><i data-lucide="share-2" class="w-4 h-4"></i></button>
                 </div>
                 <div id="details-slider" class="flex w-full h-full overflow-x-auto no-scrollbar snap-x scroll-smooth"></div>
-                <div id="details-arrows"><button onclick="scrollDetails(1)" class="absolute left-2 top-1/2 -translate-y-1/2 bg-black/30 text-white p-1 rounded-full z-10"><i data-lucide="chevron-left" class="w-4 h-4"></i></button><button onclick="scrollDetails(-1)" class="absolute right-2 top-1/2 -translate-y-1/2 bg-black/30 text-white p-1 rounded-full z-10"><i data-lucide="chevron-right" class="w-4 h-4"></i></button></div>
+                <!-- Enlarged Arrows -->
+                <div id="details-arrows">
+                    <button onclick="scrollDetails(1)" class="absolute left-2 top-1/2 -translate-y-1/2 bg-black/40 text-white p-2 rounded-full z-10"><i data-lucide="chevron-left" class="w-6 h-6"></i></button>
+                    <button onclick="scrollDetails(-1)" class="absolute right-2 top-1/2 -translate-y-1/2 bg-black/40 text-white p-2 rounded-full z-10"><i data-lucide="chevron-right" class="w-6 h-6"></i></button>
+                </div>
                 <span id="d-type-badge" class="absolute bottom-2 right-2 text-white px-2 py-0.5 rounded text-[10px] font-bold shadow backdrop-blur-sm"></span>
             </div>
             <div class="flex-1 overflow-y-auto bg-white dark:bg-darkbg">
@@ -334,7 +338,8 @@
         <div class="mobile-full-modal animate-pop">
             <div class="p-2.5 border-b border-slate-100 dark:border-slate-700 flex justify-between items-center bg-white dark:bg-darkbg shrink-0">
                 <h3 class="font-bold text-slate-800 dark:text-white text-sm">إضافة عقار</h3>
-                <button onclick="toggleAddModal()" class="bg-red-500 text-black p-1 rounded-full hover:bg-red-600 transition"><i data-lucide="x" class="w-4 h-4"></i></button>
+                <!-- Enlarged Close Button -->
+                <button onclick="toggleAddModal()" class="bg-red-500 text-black p-2 rounded-full hover:bg-red-600 transition"><i data-lucide="x" class="w-5 h-5"></i></button>
             </div>
             <div class="flex-1 overflow-y-auto p-2.5 bg-slate-50 dark:bg-darkbg">
                 <div class="space-y-2.5">
@@ -675,7 +680,7 @@
             const filterGov = document.getElementById('filter-gov').value;
             const filterCity = document.getElementById('filter-city').value;
             const filterType = document.getElementById('filter-type').value;
-            const filterCat = document.getElementById('filter-cat').value; // New Category Filter
+            const filterCat = document.getElementById('filter-cat').value; 
             const minPrice = Number(document.getElementById('filter-min-price').value) || 0;
             const maxPrice = Number(document.getElementById('filter-max-price').value) || Infinity;
 
@@ -693,7 +698,7 @@
                 if (state.currentFilter !== 'all' && item.type !== state.currentFilter) matchType = false;
 
                 if (filterType && item.type !== filterType) matchType = false;
-                if (filterCat && item.category !== filterCat) matchType = false; // Apply Category Filter
+                if (filterCat && item.category !== filterCat) matchType = false; 
 
                 const catNameAr = CAT_MAP[item.category] || '';
                 const itemText = normalizeText(item.title + item.desc + item.phone + item.gov + item.city + item.location + (item.address || '') + catNameAr);
@@ -728,7 +733,7 @@
         };
 
         window.loadMore = () => {
-            state.visibleLimit += 6; // Increase by 6
+            state.visibleLimit += 6; 
             performSearch();
         };
 
@@ -736,10 +741,19 @@
         document.getElementById('search-input').addEventListener('input', () => { clearTimeout(searchTimeout); searchTimeout = setTimeout(performSearch, 200); });
         document.getElementById('search-input').addEventListener('keydown', (e) => { if(e.key === 'Enter') { e.preventDefault(); performSearch(); document.getElementById('search-input').blur(); } });
 
-        window.filter = (t) => { 
-            state.currentFilter = t; 
-            state.visibleLimit = 6; // Reset to 6
-            performSearch(); 
+        // --- FIXED RESET FUNCTION ---
+        window.resetFilters = () => {
+            document.getElementById('search-input').value = '';
+            document.getElementById('filter-cat').value = '';
+            document.getElementById('filter-type').value = '';
+            document.getElementById('filter-gov').value = '';
+            document.getElementById('filter-city').innerHTML = '<option value="">كل المراكز</option>';
+            document.getElementById('filter-city').value = '';
+            document.getElementById('filter-min-price').value = '';
+            document.getElementById('filter-max-price').value = '';
+            state.currentFilter = 'all';
+            state.visibleLimit = 6;
+            performSearch();
         };
 
         const getOptimizedUrl = (url, isVideo = false) => {
@@ -811,6 +825,7 @@
                             <i data-lucide="map-pin" class="w-2.5 h-2.5 text-emerald-500 shrink-0"></i> 
                             <span class="truncate leading-tight">${locDisplay}</span>
                         </div>
+                        ${item.address ? `<div class="flex items-center gap-0.5 text-[9px] text-slate-500 dark:text-slate-400 mb-0.5"><i data-lucide="map" class="w-2.5 h-2.5 text-slate-400 shrink-0"></i><span class="truncate leading-tight">${item.address}</span></div>` : ''}
                         <div class="flex items-center gap-2 text-[9px] text-slate-600 dark:text-slate-300 font-bold mb-1.5 h-4">
                             ${iconsHtml}
                         </div>
@@ -823,81 +838,88 @@
             </div>`;
         }
 
+        // --- Optimized Open Details with requestAnimationFrame ---
         window.openDetails = (id) => {
-            try {
-                const item = state.listings.find(i => i.id === id); if(!item) return;
-                state.currentItem = item; document.getElementById('d-title').innerText = item.title; document.getElementById('d-price').innerText = Number(item.price).toLocaleString() + ' جنيه'; document.getElementById('d-desc').innerText = item.desc; document.getElementById('d-time-badge').innerText = timeAgo(item.createdAt);
+            if(toggleModal('details-modal')){
+                // Use requestAnimationFrame to let the modal open smoothly first
+                requestAnimationFrame(() => {
+                    setTimeout(() => {
+                         try {
+                            const item = state.listings.find(i => i.id === id); if(!item) return;
+                            state.currentItem = item; document.getElementById('d-title').innerText = item.title; document.getElementById('d-price').innerText = Number(item.price).toLocaleString() + ' جنيه'; document.getElementById('d-desc').innerText = item.desc; document.getElementById('d-time-badge').innerText = timeAgo(item.createdAt);
 
-                const amCont = document.getElementById('d-amenities'); 
-                amCont.innerHTML=''; 
-                if(item.amenities && Array.isArray(item.amenities) && item.amenities.length > 0) {
-                    item.amenities.forEach(a => {
-                        amCont.innerHTML += `<div class="p-1.5 text-center text-[9px] font-bold text-slate-700 dark:text-slate-300 border-r border-b border-slate-200 dark:border-slate-700 last:border-r-0">${a}</div>`;
-                    });
-                } else {
-                    amCont.innerHTML = `<div class="col-span-3 p-2 text-center text-[9px] text-slate-400">لا توجد مميزات إضافية</div>`;
-                }
+                            const amCont = document.getElementById('d-amenities'); 
+                            amCont.innerHTML=''; 
+                            if(item.amenities && Array.isArray(item.amenities) && item.amenities.length > 0) {
+                                item.amenities.forEach(a => {
+                                    amCont.innerHTML += `<div class="p-1.5 text-center text-[9px] font-bold text-slate-700 dark:text-slate-300 border-r border-b border-slate-200 dark:border-slate-700 last:border-r-0">${a}</div>`;
+                                });
+                            } else {
+                                amCont.innerHTML = `<div class="col-span-3 p-2 text-center text-[9px] text-slate-400">لا توجد مميزات إضافية</div>`;
+                            }
 
-                const mapBtn = document.getElementById('d-map'); if(item.mapLink) { mapBtn.classList.remove('hidden'); mapBtn.classList.add('flex'); mapBtn.href = item.mapLink; } else { mapBtn.classList.add('hidden'); mapBtn.classList.remove('flex'); }
-                const typeEl = document.getElementById('d-type-badge'); typeEl.innerText = item.type === 'sale' ? 'للبيع' : 'للإيجار'; typeEl.className = `absolute bottom-2 right-2 text-white px-2 py-0.5 rounded text-[10px] font-bold shadow backdrop-blur-sm ${item.type === 'sale' ? 'bg-emerald-600/90' : 'bg-blue-600/90'}`;
+                            const mapBtn = document.getElementById('d-map'); if(item.mapLink) { mapBtn.classList.remove('hidden'); mapBtn.classList.add('flex'); mapBtn.href = item.mapLink; } else { mapBtn.classList.add('hidden'); mapBtn.classList.remove('flex'); }
+                            const typeEl = document.getElementById('d-type-badge'); typeEl.innerText = item.type === 'sale' ? 'للبيع' : 'للإيجار'; typeEl.className = `absolute bottom-2 right-2 text-white px-2 py-0.5 rounded text-[10px] font-bold shadow backdrop-blur-sm ${item.type === 'sale' ? 'bg-emerald-600/90' : 'bg-blue-600/90'}`;
 
-                const imgs = Array.isArray(item.images) ? item.images : [item.image]; 
+                            const imgs = Array.isArray(item.images) ? item.images : [item.image]; 
 
-                // WhatsApp Link
-                const updateWaLink = () => {
-                    const shareUrl = window.location.origin + window.location.pathname + '?id=' + item.id;
-                    const waMsg = `مهتم بهذا العقار: ${item.title} (${Number(item.price).toLocaleString()} ج)\nالرابط: ${shareUrl}`;
-                    document.getElementById('d-wa').href = `https://wa.me/20${item.phone}?text=${encodeURIComponent(waMsg)}`; 
-                };
+                            // WhatsApp Link
+                            const updateWaLink = () => {
+                                const shareUrl = window.location.origin + window.location.pathname + '?id=' + item.id;
+                                const waMsg = `مهتم بهذا العقار: ${item.title} (${Number(item.price).toLocaleString()} ج)\nالرابط: ${shareUrl}`;
+                                document.getElementById('d-wa').href = `https://wa.me/20${item.phone}?text=${encodeURIComponent(waMsg)}`; 
+                            };
 
-                updateWaLink();
-                document.getElementById('d-call').href = `tel:${item.phone}`;
+                            updateWaLink();
+                            document.getElementById('d-call').href = `tel:${item.phone}`;
 
-                const slider = document.getElementById('details-slider'); 
-                // Optimized Slider: Lazy load images inside modal too
-                slider.innerHTML = imgs.map((src, idx) => {
-                    const isVid = src.includes('.mp4') || src.includes('.mov');
-                    return isVid ? `<video src="${src}" controls class="w-full h-full object-contain snap-center shrink-0 bg-black"></video>` : `<img src="${src}" loading="lazy" class="w-full h-full object-cover snap-center shrink-0 cursor-pointer" onclick="openLightbox('${src}', ${idx})">`
-                }).join('');
-                document.getElementById('details-arrows').style.display = imgs.length > 1 ? 'block' : 'none';
+                            const slider = document.getElementById('details-slider'); 
+                            // Optimized Slider: Lazy load images inside modal too
+                            slider.innerHTML = imgs.map((src, idx) => {
+                                const isVid = src.includes('.mp4') || src.includes('.mov');
+                                return isVid ? `<video src="${src}" controls class="w-full h-full object-contain snap-center shrink-0 bg-black"></video>` : `<img src="${src}" loading="lazy" class="w-full h-full object-cover snap-center shrink-0 cursor-pointer" onclick="openLightbox('${src}', ${idx})">`
+                            }).join('');
+                            document.getElementById('details-arrows').style.display = imgs.length > 1 ? 'block' : 'none';
 
-                const locDisplay = item.gov ? `${item.gov}، ${item.city}` : item.location;
+                            const locDisplay = item.gov ? `${item.gov}، ${item.city}` : item.location;
 
-                let tableHtml = `<tr><th class="w-1/3 text-slate-500 dark:text-slate-400 font-normal bg-slate-50 dark:bg-slate-800/50 text-[10px] flex items-center gap-1"><i data-lucide="home" class="w-3 h-3"></i> نوع العقار</th><td class="font-bold text-slate-800 dark:text-slate-200">${CAT_MAP[item.category] || 'عقار'}</td></tr>`;
-                tableHtml += `<tr><th class="text-slate-500 dark:text-slate-400 font-normal bg-slate-50 dark:bg-slate-800/50 text-[10px] flex items-center gap-1"><i data-lucide="map-pin" class="w-3 h-3"></i> الموقع</th><td class="font-bold text-slate-800 dark:text-slate-200">${locDisplay}</td></tr>`;
+                            let tableHtml = `<tr><th class="w-1/3 text-slate-500 dark:text-slate-400 font-normal bg-slate-50 dark:bg-slate-800/50 text-[10px] flex items-center gap-1"><i data-lucide="home" class="w-3 h-3"></i> نوع العقار</th><td class="font-bold text-slate-800 dark:text-slate-200">${CAT_MAP[item.category] || 'عقار'}</td></tr>`;
+                            tableHtml += `<tr><th class="text-slate-500 dark:text-slate-400 font-normal bg-slate-50 dark:bg-slate-800/50 text-[10px] flex items-center gap-1"><i data-lucide="map-pin" class="w-3 h-3"></i> الموقع</th><td class="font-bold text-slate-800 dark:text-slate-200">${locDisplay}</td></tr>`;
 
-                if(item.address) tableHtml += `<tr><th class="text-slate-500 dark:text-slate-400 font-normal bg-slate-50 dark:bg-slate-800/50 text-[10px] flex items-center gap-1"><i data-lucide="map" class="w-3 h-3"></i> العنوان</th><td class="font-bold text-slate-800 dark:text-slate-200">${item.address}</td></tr>`;
+                            if(item.address) tableHtml += `<tr><th class="text-slate-500 dark:text-slate-400 font-normal bg-slate-50 dark:bg-slate-800/50 text-[10px] flex items-center gap-1"><i data-lucide="map" class="w-3 h-3"></i> العنوان</th><td class="font-bold text-slate-800 dark:text-slate-200">${item.address}</td></tr>`;
 
-                if(item.area) tableHtml += `<tr><th class="text-slate-500 dark:text-slate-400 font-normal bg-slate-50 dark:bg-slate-800/50 text-[10px] flex items-center gap-1"><i data-lucide="ruler" class="w-3 h-3"></i> المساحة</th><td class="font-bold text-slate-800 dark:text-slate-200">${item.area} م²</td></tr>`;
+                            if(item.area) tableHtml += `<tr><th class="text-slate-500 dark:text-slate-400 font-normal bg-slate-50 dark:bg-slate-800/50 text-[10px] flex items-center gap-1"><i data-lucide="ruler" class="w-3 h-3"></i> المساحة</th><td class="font-bold text-slate-800 dark:text-slate-200">${item.area} م²</td></tr>`;
 
-                if(item.category === 'land') {
-                    if(item.landType) tableHtml += `<tr><th class="text-slate-500 dark:text-slate-400 font-normal bg-slate-50 dark:bg-slate-800/50 text-[10px] flex items-center gap-1"><i data-lucide="sprout" class="w-3 h-3"></i> نوع الأرض</th><td class="font-bold text-slate-800 dark:text-slate-200">${item.landType==='building'?'مباني':'زراعية'}</td></tr>`;
-                    if(item.feddan) tableHtml += `<tr><th class="text-slate-500 dark:text-slate-400 font-normal bg-slate-50 dark:bg-slate-800/50 text-[10px] flex items-center gap-1"><i data-lucide="maximize" class="w-3 h-3"></i> فدان</th><td class="font-bold text-slate-800 dark:text-slate-200">${item.feddan}</td></tr>`;
-                    if(item.qirat) tableHtml += `<tr><th class="text-slate-500 dark:text-slate-400 font-normal bg-slate-50 dark:bg-slate-800/50 text-[10px] flex items-center gap-1"><i data-lucide="minimize" class="w-3 h-3"></i> قيراط</th><td class="font-bold text-slate-800 dark:text-slate-200">${item.qirat}</td></tr>`;
-                } else if (item.category === 'building') {
-                    if(item.floors) tableHtml += `<tr><th class="text-slate-500 dark:text-slate-400 font-normal bg-slate-50 dark:bg-slate-800/50 text-[10px] flex items-center gap-1"><i data-lucide="layers" class="w-3 h-3"></i> عدد الأدوار</th><td class="font-bold text-slate-800 dark:text-slate-200">${item.floors}</td></tr>`;
-                    if(item.apartments) tableHtml += `<tr><th class="text-slate-500 dark:text-slate-400 font-normal bg-slate-50 dark:bg-slate-800/50 text-[10px] flex items-center gap-1"><i data-lucide="grid" class="w-3 h-3"></i> عدد الشقق</th><td class="font-bold text-slate-800 dark:text-slate-200">${item.apartments}</td></tr>`;
-                } else {
-                    if(item.rooms) tableHtml += `<tr><th class="text-slate-500 dark:text-slate-400 font-normal bg-slate-50 dark:bg-slate-800/50 text-[10px] flex items-center gap-1"><i data-lucide="bed-double" class="w-3 h-3"></i> الغرف</th><td class="font-bold text-slate-800 dark:text-slate-200">${item.rooms}</td></tr>`;
-                    if(item.baths) tableHtml += `<tr><th class="text-slate-500 dark:text-slate-400 font-normal bg-slate-50 dark:bg-slate-800/50 text-[10px] flex items-center gap-1"><i data-lucide="bath" class="w-3 h-3"></i> الحمامات</th><td class="font-bold text-slate-800 dark:text-slate-200">${item.baths}</td></tr>`;
-                    if(item.balconies) tableHtml += `<tr><th class="text-slate-500 dark:text-slate-400 font-normal bg-slate-50 dark:bg-slate-800/50 text-[10px] flex items-center gap-1"><i data-lucide="wind" class="w-3 h-3"></i> البلكونات</th><td class="font-bold text-slate-800 dark:text-slate-200">${item.balconies}</td></tr>`;
-                    if(item.finishing) tableHtml += `<tr><th class="text-slate-500 dark:text-slate-400 font-normal bg-slate-50 dark:bg-slate-800/50 text-[10px] flex items-center gap-1"><i data-lucide="paint-bucket" class="w-3 h-3"></i> التشطيب</th><td class="font-bold text-slate-800 dark:text-slate-200">${FINISH_MAP[item.finishing] || item.finishing}</td></tr>`;
-                    if(item.level) tableHtml += `<tr><th class="text-slate-500 dark:text-slate-400 font-normal bg-slate-50 dark:bg-slate-800/50 text-[10px] flex items-center gap-1"><i data-lucide="arrow-up-circle" class="w-3 h-3"></i> الدور</th><td class="font-bold text-slate-800 dark:text-slate-200">${item.level}</td></tr>`;
-                    if(item.furnished) tableHtml += `<tr><th class="text-slate-500 dark:text-slate-400 font-normal bg-slate-50 dark:bg-slate-800/50 text-[10px] flex items-center gap-1"><i data-lucide="sofa" class="w-3 h-3"></i> الفرش</th><td class="font-bold text-slate-800 dark:text-slate-200">${item.furnished==='yes'?'مفروش':'غير مفروش'}</td></tr>`;
-                }
-                tableHtml += `<tr><th class="text-slate-500 dark:text-slate-400 font-normal bg-slate-50 dark:bg-slate-800/50 text-[10px] flex items-center gap-1"><i data-lucide="info" class="w-3 h-3"></i> الحالة</th><td class="font-bold text-slate-800 dark:text-slate-200">متاح</td></tr>`;
-                document.getElementById('d-table-body').innerHTML = tableHtml;
+                            if(item.category === 'land') {
+                                if(item.landType) tableHtml += `<tr><th class="text-slate-500 dark:text-slate-400 font-normal bg-slate-50 dark:bg-slate-800/50 text-[10px] flex items-center gap-1"><i data-lucide="sprout" class="w-3 h-3"></i> نوع الأرض</th><td class="font-bold text-slate-800 dark:text-slate-200">${item.landType==='building'?'مباني':'زراعية'}</td></tr>`;
+                                if(item.feddan) tableHtml += `<tr><th class="text-slate-500 dark:text-slate-400 font-normal bg-slate-50 dark:bg-slate-800/50 text-[10px] flex items-center gap-1"><i data-lucide="maximize" class="w-3 h-3"></i> فدان</th><td class="font-bold text-slate-800 dark:text-slate-200">${item.feddan}</td></tr>`;
+                                if(item.qirat) tableHtml += `<tr><th class="text-slate-500 dark:text-slate-400 font-normal bg-slate-50 dark:bg-slate-800/50 text-[10px] flex items-center gap-1"><i data-lucide="minimize" class="w-3 h-3"></i> قيراط</th><td class="font-bold text-slate-800 dark:text-slate-200">${item.qirat}</td></tr>`;
+                            } else if (item.category === 'building') {
+                                if(item.floors) tableHtml += `<tr><th class="text-slate-500 dark:text-slate-400 font-normal bg-slate-50 dark:bg-slate-800/50 text-[10px] flex items-center gap-1"><i data-lucide="layers" class="w-3 h-3"></i> عدد الأدوار</th><td class="font-bold text-slate-800 dark:text-slate-200">${item.floors}</td></tr>`;
+                                if(item.apartments) tableHtml += `<tr><th class="text-slate-500 dark:text-slate-400 font-normal bg-slate-50 dark:bg-slate-800/50 text-[10px] flex items-center gap-1"><i data-lucide="grid" class="w-3 h-3"></i> عدد الشقق</th><td class="font-bold text-slate-800 dark:text-slate-200">${item.apartments}</td></tr>`;
+                            } else {
+                                if(item.rooms) tableHtml += `<tr><th class="text-slate-500 dark:text-slate-400 font-normal bg-slate-50 dark:bg-slate-800/50 text-[10px] flex items-center gap-1"><i data-lucide="bed-double" class="w-3 h-3"></i> الغرف</th><td class="font-bold text-slate-800 dark:text-slate-200">${item.rooms}</td></tr>`;
+                                if(item.baths) tableHtml += `<tr><th class="text-slate-500 dark:text-slate-400 font-normal bg-slate-50 dark:bg-slate-800/50 text-[10px] flex items-center gap-1"><i data-lucide="bath" class="w-3 h-3"></i> الحمامات</th><td class="font-bold text-slate-800 dark:text-slate-200">${item.baths}</td></tr>`;
+                                if(item.balconies) tableHtml += `<tr><th class="text-slate-500 dark:text-slate-400 font-normal bg-slate-50 dark:bg-slate-800/50 text-[10px] flex items-center gap-1"><i data-lucide="wind" class="w-3 h-3"></i> البلكونات</th><td class="font-bold text-slate-800 dark:text-slate-200">${item.balconies}</td></tr>`;
+                                if(item.finishing) tableHtml += `<tr><th class="text-slate-500 dark:text-slate-400 font-normal bg-slate-50 dark:bg-slate-800/50 text-[10px] flex items-center gap-1"><i data-lucide="paint-bucket" class="w-3 h-3"></i> التشطيب</th><td class="font-bold text-slate-800 dark:text-slate-200">${FINISH_MAP[item.finishing] || item.finishing}</td></tr>`;
+                                if(item.level) tableHtml += `<tr><th class="text-slate-500 dark:text-slate-400 font-normal bg-slate-50 dark:bg-slate-800/50 text-[10px] flex items-center gap-1"><i data-lucide="arrow-up-circle" class="w-3 h-3"></i> الدور</th><td class="font-bold text-slate-800 dark:text-slate-200">${item.level}</td></tr>`;
+                                if(item.furnished) tableHtml += `<tr><th class="text-slate-500 dark:text-slate-400 font-normal bg-slate-50 dark:bg-slate-800/50 text-[10px] flex items-center gap-1"><i data-lucide="sofa" class="w-3 h-3"></i> الفرش</th><td class="font-bold text-slate-800 dark:text-slate-200">${item.furnished==='yes'?'مفروش':'غير مفروش'}</td></tr>`;
+                            }
+                            tableHtml += `<tr><th class="text-slate-500 dark:text-slate-400 font-normal bg-slate-50 dark:bg-slate-800/50 text-[10px] flex items-center gap-1"><i data-lucide="info" class="w-3 h-3"></i> الحالة</th><td class="font-bold text-slate-800 dark:text-slate-200">متاح</td></tr>`;
+                            document.getElementById('d-table-body').innerHTML = tableHtml;
 
-                const isOwner = state.user && state.user.uid === item.authorId;
-                const showControls = state.isAdmin || isOwner;
-                const controlsDiv = document.getElementById('d-controls');
-                if(showControls) {
-                    controlsDiv.classList.remove('hidden');
-                    controlsDiv.innerHTML = `<button onclick="del(event,'${item.id}')" class="bg-red-50 text-red-600 border border-red-200 py-1 px-3 rounded text-[9px] font-bold flex items-center justify-center gap-1"><i data-lucide="trash-2" class="w-3 h-3"></i> حذف</button><button onclick="toggleStatus(event,'${item.id}','${item.status||'available'}','${item.type}')" class="bg-blue-50 text-blue-600 border border-blue-200 py-1 px-3 rounded text-[9px] font-bold flex items-center justify-center gap-1"><i data-lucide="edit-3" class="w-3 h-3"></i> حالة</button>${state.isAdmin ? `<button onclick="pin(event,'${item.id}',${item.isPinned})" class="${item.isPinned ? 'bg-yellow-100 text-yellow-600 border-yellow-300' : 'bg-slate-100 text-slate-600 border-slate-200'} border py-1 px-3 rounded text-[9px] font-bold flex items-center justify-center gap-1"><i data-lucide="star" class="w-3 h-3 ${item.isPinned?'fill-current':''}"></i> تثبيت</button>` : ''}`;
-                } else { controlsDiv.classList.add('hidden'); }
-
-                toggleModal('details-modal'); lucide.createIcons();
-            } catch(e) { console.error(e); showToast('حدث خطأ في عرض التفاصيل', 'e'); }
+                            const isOwner = state.user && state.user.uid === item.authorId;
+                            const showControls = state.isAdmin || isOwner;
+                            const controlsDiv = document.getElementById('d-controls');
+                            if(showControls) {
+                                controlsDiv.classList.remove('hidden');
+                                controlsDiv.innerHTML = `<button onclick="del(event,'${item.id}')" class="bg-red-50 text-red-600 border border-red-200 py-1 px-3 rounded text-[9px] font-bold flex items-center justify-center gap-1"><i data-lucide="trash-2" class="w-3 h-3"></i> حذف</button><button onclick="toggleStatus(event,'${item.id}','${item.status||'available'}','${item.type}')" class="bg-blue-50 text-blue-600 border border-blue-200 py-1 px-3 rounded text-[9px] font-bold flex items-center justify-center gap-1"><i data-lucide="edit-3" class="w-3 h-3"></i> حالة</button>${state.isAdmin ? `<button onclick="pin(event,'${item.id}',${item.isPinned})" class="${item.isPinned ? 'bg-yellow-100 text-yellow-600 border-yellow-300' : 'bg-slate-100 text-slate-600 border-slate-200'} border py-1 px-3 rounded text-[9px] font-bold flex items-center justify-center gap-1"><i data-lucide="star" class="w-3 h-3 ${item.isPinned?'fill-current':''}"></i> تثبيت</button>` : ''}`;
+                            } else { controlsDiv.classList.add('hidden'); }
+                            lucide.createIcons();
+                        } catch(e) { console.error(e); showToast('حدث خطأ في عرض التفاصيل', 'e'); }
+                    }, 50); // Small delay to allow animation
+                });
+            }
         }
         window.closeDetails = () => toggleModal('details-modal');
         window.shareListing = async () => { if(!state.currentItem) return; const d = { title: 'السوق وياك', text: `شاهد عقار: ${state.currentItem.title}`, url: window.location.href + '?id=' + state.currentItem.id }; try { await navigator.share(d); showToast('تمت المشاركة'); } catch(e) { navigator.clipboard.writeText(d.url); showToast('تم النسخ'); } };
@@ -939,7 +961,6 @@
             const img = document.getElementById('lightbox-img');
             const src = state.currentItem.images[state.lightboxIndex];
             if (src.includes('.mp4') || src.includes('.mov')) {
-                 // Simple handling for video in lightbox, or skip videos
                  img.src = ""; // Placeholder
                  showToast("فيديو: يرجى المشاهدة في التفاصيل");
             } else {
@@ -952,10 +973,14 @@
         function toggleModal(id) { const m=document.getElementById(id); m.classList.toggle('hidden'); if(!m.classList.contains('hidden')) document.body.style.overflow='hidden'; else document.body.style.overflow=''; return !m.classList.contains('hidden'); }
         window.toggleAddModal=()=>{if(toggleModal('add-modal')){state.filesToUpload=[];document.getElementById('preview-area').innerHTML=''; updateFormFields();}};
 
-        window.handleUpload=async(input)=>{
-            if(input.files.length+state.filesToUpload.length>5)return showToast('5 ملفات كحد أقصى','e');
+        // --- Optimized Upload (Non-blocking) ---
+        window.handleUpload = async (input) => {
+            if(input.files.length + state.filesToUpload.length > 5) return showToast('5 ملفات كحد أقصى','e');
+            
+            // Process files one by one with a small delay to let UI breathe
             for(let f of input.files){
                 state.filesToUpload.push(f);
+                await new Promise(resolve => setTimeout(resolve, 10)); // Yield to main thread
             }
             renderPreview();
         }; 
@@ -985,9 +1010,10 @@
             return data.secure_url;
         }
 
-        window.submitListing=async()=>{
+        // --- Optimized Submit (No Reload) ---
+        window.submitListing = async () => {
             try {
-                if(!state.filesToUpload.length)return showToast('مطلوب صورة أو فيديو','e');
+                if(!state.filesToUpload.length) return showToast('مطلوب صورة أو فيديو','e');
                 const btn = document.getElementById('btn-publish');
                 const originalText = btn.innerText;
                 btn.innerText='جاري الرفع والنشر...';
@@ -999,8 +1025,8 @@
                     uploadedUrls.push(url);
                 }
 
-                const bdg=document.querySelector('input[name="badge"]:checked').value;
-                const am=[];document.querySelectorAll('.amenity-check:checked').forEach(c=>am.push(c.value));
+                const bdg = document.querySelector('input[name="badge"]:checked').value;
+                const am = []; document.querySelectorAll('.amenity-check:checked').forEach(c => am.push(c.value));
                 const cat = document.getElementById('in-category').value;
                 const furnished = document.querySelector('input[name="furnished"]:checked')?.value;
                 const landType = document.getElementById('in-land-type').value;
@@ -1015,9 +1041,9 @@
                 }
 
                 await addDoc(collection(db, COLLECTION_NAME),{
-                    title:document.getElementById('in-title').value,
-                    price:Number(document.getElementById('in-price').value),
-                    type:document.getElementById('in-type').value,
+                    title: document.getElementById('in-title').value,
+                    price: Number(document.getElementById('in-price').value),
+                    type: document.getElementById('in-type').value,
                     category: cat,
                     area: Number(document.getElementById('in-area').value) || 0,
                     feddan: Number(document.getElementById('in-feddan').value) || 0,
@@ -1034,24 +1060,36 @@
                     gov: gov,
                     city: city,
                     address: document.getElementById('in-address').value,
-                    location:document.getElementById('in-loc')?.value || '', 
-                    phone:document.getElementById('in-phone').value,
-                    desc:document.getElementById('in-desc').value,
-                    mapLink:document.getElementById('in-map').value,
-                    amenities:am,
-                    images:uploadedUrls,
-                    image:uploadedUrls[0],
-                    badge:bdg,
-                    status:'available',
-                    isPinned:false,
-                    createdAt:serverTimestamp(),
-                    authorId:state.user.uid
+                    location: document.getElementById('in-loc')?.value || '', 
+                    phone: document.getElementById('in-phone').value,
+                    desc: document.getElementById('in-desc').value,
+                    mapLink: document.getElementById('in-map').value,
+                    amenities: am,
+                    images: uploadedUrls,
+                    image: uploadedUrls[0],
+                    badge: bdg,
+                    status: 'available',
+                    isPinned: false,
+                    createdAt: serverTimestamp(),
+                    authorId: state.user.uid
                 });
+                
                 showToast('تم النشر بنجاح');
                 toggleModal('add-modal');
+                
+                // Reset Form
+                state.filesToUpload = [];
+                document.getElementById('preview-area').innerHTML = '';
+                document.getElementById('in-title').value = '';
+                document.getElementById('in-price').value = '';
+                document.getElementById('in-area').value = '';
+                document.getElementById('in-desc').value = '';
+                // ... reset other fields if needed ...
+
                 btn.innerText = originalText;
                 btn.disabled = false;
-                location.reload();
+                
+                // No reload needed, onSnapshot will update the list
             } catch(e) {
                 console.error(e);
                 showToast('حدث خطأ أثناء النشر', 'e');
