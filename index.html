@@ -11,9 +11,9 @@
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 
-    <!-- Preload Critical Assets (Compressed) -->
-    <link rel="preload" as="image" href="https://images.pexels.com/photos/19213018/pexels-photo-19213018.jpeg?auto=compress&cs=tinysrgb&w=100&h=60&dpr=1">
-    <link rel="preload" as="image" href="https://images.pexels.com/photos/14270540/pexels-photo-14270540.jpeg?auto=compress&cs=tinysrgb&w=600&h=400&dpr=1">
+    <!-- Preload Critical Assets (High Quality) -->
+    <link rel="preload" as="image" href="https://images.pexels.com/photos/19213018/pexels-photo-19213018.jpeg?auto=compress&cs=tinysrgb&w=800&h=600&dpr=1">
+    <link rel="preload" as="image" href="https://images.pexels.com/photos/14270540/pexels-photo-14270540.jpeg?auto=compress&cs=tinysrgb&w=1600&h=900&dpr=1">
 
     <!-- Meta Tags -->
     <meta property="og:title" content="السوق وياك">
@@ -50,12 +50,12 @@
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .select-none { user-select: none; }
 
-        /* --- Fixed Background Optimization --- */
+        /* --- Fixed Background Optimization (High Quality) --- */
         #app-background {
             position: fixed; top: 0; left: 0; width: 100%; height: 100vh; height: 100lvh; 
             z-index: -50;
-            /* Compressed Background Image */
-            background-image: url('https://images.pexels.com/photos/14270540/pexels-photo-14270540.jpeg?auto=compress&cs=tinysrgb&w=600&h=400&dpr=1');
+            /* High Res Image */
+            background-image: url('https://images.pexels.com/photos/14270540/pexels-photo-14270540.jpeg?auto=compress&cs=tinysrgb&w=1600&h=900&dpr=1');
             background-size: cover; background-position: center; background-repeat: no-repeat;
             pointer-events: none; will-change: transform; transform: translate3d(0,0,0);
         }
@@ -73,7 +73,6 @@
         @keyframes popIn { from { transform: scale(0.95); opacity: 0; } to { transform: scale(1); opacity: 1; } }
         .animate-pop { animation: popIn 0.15s ease-out forwards; will-change: transform, opacity; }
 
-        /* Fixed White Flash: Set background color immediately */
         .mobile-full-modal { position: fixed; inset: 0; z-index: 60; background-color: white; display: flex; flex-direction: column; height: 100dvh; }
         .dark .mobile-full-modal { background-color: #1e293b; }
         
@@ -106,7 +105,8 @@
 
         #splash-screen { 
             position: fixed; inset: 0; z-index: 10000; background-color: #0f172a;
-            background-image: linear-gradient(rgba(15, 23, 42, 0.40), rgba(15, 23, 42, 0.60)), url('https://images.pexels.com/photos/19213018/pexels-photo-19213018.jpeg?auto=compress&cs=tinysrgb&w=100&h=60&dpr=1');
+            /* High Res Splash */
+            background-image: linear-gradient(rgba(15, 23, 42, 0.40), rgba(15, 23, 42, 0.60)), url('https://images.pexels.com/photos/19213018/pexels-photo-19213018.jpeg?auto=compress&cs=tinysrgb&w=800&h=600&dpr=1');
             background-size: cover; background-position: center;
             display: flex; flex-direction: column; justify-content: center; align-items: center; 
             transition: opacity 0.3s ease-out, visibility 0.3s; 
@@ -122,11 +122,11 @@
         #app-content-wrapper { transition: opacity 0.4s ease-in-out; opacity: 1; }
 
         .input-box {
-            width: 100%; background: white; border: 1px solid #000000; border-radius: 0.4rem;
-            padding: 0.4rem 0.5rem; font-size: 0.8rem; font-weight: 700; outline: none; color: #0f172a; transition: border-color 0.2s;
+            width: 100%; background: white; border: 1px solid #cbd5e1; border-radius: 0.5rem;
+            padding: 0.6rem 0.8rem; font-size: 0.85rem; font-weight: 700; outline: none; color: #0f172a; transition: all 0.2s;
         }
-        .dark .input-box { background: #1e293b; border-color: #94a3b8; color: white; }
-        .input-box:focus { border-color: #10b981; box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.2); }
+        .dark .input-box { background: #1e293b; border-color: #475569; color: white; }
+        .input-box:focus { border-color: #10b981; box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1); }
 
         .custom-select-wrapper { position: relative; }
         .custom-select {
@@ -203,7 +203,7 @@
 
         <!-- Main Content -->
         <main class="pt-[3rem] pb-20 container mx-auto px-2 max-w-5xl min-h-screen">
-            <!-- Search Bar & Filters (Same as before) -->
+            <!-- Search Bar & Filters -->
             <div class="sticky-search-bar">
                 <div class="relative w-full">
                     <button onclick="toggleFilterPanel()" class="absolute left-1 top-0 h-full w-9 flex items-center justify-center text-slate-500 hover:text-slate-800 dark:hover:text-white transition z-10"><i data-lucide="sliders-horizontal" class="w-4 h-4"></i></button>
@@ -211,7 +211,6 @@
                     <button onclick="performSearch()" class="absolute right-1 top-0 h-full w-9 flex items-center justify-center text-slate-500 hover:text-emerald-600 transition"><i data-lucide="search" class="w-4 h-4"></i></button>
                 </div>
                 <div id="filter-panel" class="mt-2 border-t border-slate-200 dark:border-slate-700 pt-2">
-                    <!-- Filter Content (Same as before) -->
                     <div class="space-y-1.5">
                         <div class="flex justify-between items-center pb-1">
                             <h3 class="text-[10px] font-bold text-slate-700 dark:text-white flex items-center gap-1"><i data-lucide="filter" class="w-3 h-3"></i> تصفية</h3>
@@ -238,53 +237,65 @@
             <button onclick="toggleChat()" class="flex items-center justify-center text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition group relative"><div id="chat-badge" class="hidden absolute top-0 right-0 w-2 h-2 bg-red-500 rounded-full border border-white dark:border-slate-800"></div><i data-lucide="message-circle" class="w-5 h-5 group-hover:scale-110 transition"></i></button>
         </nav>
 
-    <!-- Auth Modal -->
+    <!-- Auth Modal (Redesigned as Card) -->
     <div id="auth-modal" class="hidden modal-overlay">
-        <div class="mobile-full-modal animate-pop p-4 justify-center items-center bg-white dark:bg-darkbg">
-            <button onclick="toggleModal('auth-modal')" class="absolute top-4 left-4 bg-red-500 text-white p-2 rounded-full shadow"><i data-lucide="x" class="w-5 h-5"></i></button>
+        <div class="relative w-full max-w-sm bg-white dark:bg-slate-800 rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-700 p-6 overflow-hidden animate-pop">
+            <button onclick="toggleModal('auth-modal')" class="absolute top-3 left-3 text-slate-400 hover:text-red-500 transition"><i data-lucide="x" class="w-5 h-5"></i></button>
             
-            <div class="w-full max-w-sm space-y-4">
-                <div class="flex justify-center mb-4">
-                    <div class="bg-slate-100 dark:bg-slate-800 p-1 rounded-full flex">
-                        <button onclick="switchAuthMode('login')" id="tab-login" class="px-6 py-2 rounded-full text-xs font-bold transition bg-white dark:bg-slate-600 shadow text-emerald-600 dark:text-white">دخول</button>
-                        <button onclick="switchAuthMode('register')" id="tab-register" class="px-6 py-2 rounded-full text-xs font-bold transition text-slate-500 dark:text-slate-400">إنشاء حساب</button>
-                    </div>
+            <!-- Logo Icon -->
+            <div class="flex justify-center mb-6">
+                <div class="w-16 h-16 bg-slate-50 dark:bg-slate-700 rounded-full flex items-center justify-center border-2 border-emerald-500 shadow-lg">
+                    <i data-lucide="building-2" class="w-8 h-8 text-emerald-600 dark:text-emerald-400"></i>
                 </div>
+            </div>
 
-                <!-- Login Form -->
-                <div id="form-login" class="space-y-3">
-                    <h3 class="text-center font-bold text-lg text-slate-800 dark:text-white">تسجيل الدخول</h3>
+            <div class="flex justify-center mb-6">
+                <div class="bg-slate-100 dark:bg-slate-900 p-1 rounded-xl flex w-full">
+                    <button onclick="switchAuthMode('login')" id="tab-login" class="flex-1 py-2 rounded-lg text-xs font-bold transition bg-white dark:bg-slate-700 shadow text-emerald-600 dark:text-white">دخول</button>
+                    <button onclick="switchAuthMode('register')" id="tab-register" class="flex-1 py-2 rounded-lg text-xs font-bold transition text-slate-500 dark:text-slate-400">إنشاء حساب</button>
+                </div>
+            </div>
+
+            <!-- Login Form -->
+            <div id="form-login" class="space-y-4">
+                <div class="space-y-1">
+                    <label class="text-[10px] font-bold text-slate-500">رقم الهاتف</label>
                     <div class="relative">
-                        <span class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 font-bold text-xs">+20</span>
-                        <input id="login-phone" type="tel" class="input-box pl-10 text-left" placeholder="رقم الهاتف (بدون 0)" oninput="formatPhone(this)">
+                        <span class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 font-bold text-xs bg-slate-100 dark:bg-slate-700 px-1.5 rounded">+20</span>
+                        <input id="login-phone" type="tel" class="input-box pl-12 text-left" placeholder="1xxxxxxxxx" oninput="formatPhone(this)">
                     </div>
-                    <input id="login-pass" type="password" class="input-box" placeholder="كلمة المرور">
-                    <button onclick="loginUser()" class="w-full bg-emerald-600 text-white py-2.5 rounded-lg font-bold text-sm shadow hover:bg-emerald-700 transition">دخول</button>
+                </div>
+                <div class="space-y-1">
+                    <label class="text-[10px] font-bold text-slate-500">كلمة المرور</label>
+                    <input id="login-pass" type="password" class="input-box" placeholder="••••••••">
+                </div>
+                <button onclick="loginUser()" class="w-full bg-emerald-600 text-white py-3 rounded-xl font-bold text-sm shadow-lg hover:bg-emerald-700 transition transform active:scale-95">تسجيل الدخول</button>
+            </div>
+
+            <!-- Register Form -->
+            <div id="form-register" class="hidden space-y-4">
+                <div class="flex justify-center">
+                    <label class="relative w-20 h-20 rounded-full border-2 border-dashed border-emerald-500 flex items-center justify-center cursor-pointer overflow-hidden bg-slate-50 dark:bg-slate-900 group hover:bg-emerald-50 transition">
+                        <input type="file" accept="image/*" class="hidden" onchange="previewProfileImage(this)">
+                        <img id="reg-img-preview" class="absolute inset-0 w-full h-full object-cover hidden">
+                        <div id="reg-img-placeholder" class="flex flex-col items-center text-emerald-500">
+                            <i data-lucide="camera" class="w-6 h-6 mb-1"></i>
+                            <span class="text-[8px] font-bold">صورة</span>
+                        </div>
+                    </label>
                 </div>
 
-                <!-- Register Form -->
-                <div id="form-register" class="hidden space-y-3">
-                    <h3 class="text-center font-bold text-lg text-slate-800 dark:text-white">حساب جديد</h3>
-                    
-                    <div class="flex justify-center mb-2">
-                        <label class="relative w-20 h-20 rounded-full border-2 border-dashed border-emerald-500 flex items-center justify-center cursor-pointer overflow-hidden bg-slate-50 dark:bg-slate-800 group">
-                            <input type="file" accept="image/*" class="hidden" onchange="previewProfileImage(this)">
-                            <img id="reg-img-preview" class="absolute inset-0 w-full h-full object-cover hidden">
-                            <div id="reg-img-placeholder" class="flex flex-col items-center text-emerald-500">
-                                <i data-lucide="camera" class="w-6 h-6"></i>
-                                <span class="text-[8px] font-bold">صورة</span>
-                            </div>
-                        </label>
-                    </div>
-
-                    <input id="reg-name" type="text" class="input-box" placeholder="الاسم بالكامل">
-                    <div class="relative">
-                        <span class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 font-bold text-xs">+20</span>
-                        <input id="reg-phone" type="tel" class="input-box pl-10 text-left" placeholder="رقم الهاتف (بدون 0)" oninput="formatPhone(this)">
-                    </div>
-                    <input id="reg-pass" type="password" class="input-box" placeholder="كلمة المرور">
-                    <button onclick="registerUser()" id="btn-register" class="w-full bg-slate-900 dark:bg-emerald-600 text-white py-2.5 rounded-lg font-bold text-sm shadow hover:opacity-90 transition">حفظ وإنشاء</button>
+                <div class="space-y-1">
+                    <input id="reg-name" type="text" class="input-box text-center" placeholder="الاسم بالكامل">
                 </div>
+                
+                <div class="relative">
+                    <span class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 font-bold text-xs bg-slate-100 dark:bg-slate-700 px-1.5 rounded">+20</span>
+                    <input id="reg-phone" type="tel" class="input-box pl-12 text-left" placeholder="رقم الهاتف" oninput="formatPhone(this)">
+                </div>
+                <input id="reg-pass" type="password" class="input-box" placeholder="كلمة المرور">
+                
+                <button onclick="registerUser()" id="btn-register" class="w-full bg-slate-900 dark:bg-emerald-600 text-white py-3 rounded-xl font-bold text-sm shadow-lg hover:opacity-90 transition transform active:scale-95">إنشاء حساب جديد</button>
             </div>
         </div>
     </div>
@@ -322,9 +333,11 @@
             </div>
             
             <div class="flex-1 overflow-y-auto bg-white dark:bg-darkbg">
-                <!-- Publisher Bar -->
+                <!-- Publisher Bar (Cached) -->
                 <div id="publisher-bar" class="flex items-center gap-2 p-2 bg-slate-50 dark:bg-slate-800/50 border-b border-slate-100 dark:border-slate-700 cursor-pointer hover:bg-slate-100 dark:hover:bg-slate-800 transition" onclick="openPublisherProfile()">
-                    <img id="d-pub-img" src="" class="w-8 h-8 rounded-full object-cover border border-slate-300">
+                    <div id="d-pub-img-container" class="w-8 h-8 rounded-full border border-slate-300 overflow-hidden bg-slate-200">
+                        <img id="d-pub-img" src="" class="w-full h-full object-cover hidden">
+                    </div>
                     <div class="flex-1">
                         <h4 id="d-pub-name" class="text-[10px] font-bold text-slate-800 dark:text-white leading-tight"></h4>
                         <span class="text-[8px] text-emerald-600 dark:text-emerald-400 font-bold">عرض البروفايل</span>
@@ -358,7 +371,7 @@
         </div>
     </div>
 
-    <!-- Add Modal (Same as before) -->
+    <!-- Add Modal -->
     <div id="add-modal" class="hidden modal-overlay">
         <div class="mobile-full-modal animate-pop">
             <div class="p-2.5 border-b border-slate-100 dark:border-slate-700 flex justify-between items-center bg-white dark:bg-darkbg shrink-0">
@@ -376,7 +389,7 @@
                             <div id="preview-area" class="col-span-3 flex gap-1.5 overflow-x-auto no-scrollbar py-0.5"></div>
                         </div>
                     </div>
-                    <!-- ... Rest of Add Form (Same as previous code) ... -->
+                    <!-- Form Fields -->
                     <div class="bg-white dark:bg-slate-800 p-2.5 rounded-lg border border-black dark:border-slate-500 shadow-sm space-y-1.5">
                         <h4 class="text-[9px] font-bold text-slate-400 uppercase tracking-wider border-b border-slate-100 dark:border-slate-700 pb-0.5 mb-0.5">بيانات أساسية</h4>
                         <div class="flex gap-1.5"><div class="custom-select-wrapper flex-1"><select id="in-category" onchange="updateFormFields()" class="custom-select"><option value="apartment">شقة</option><option value="villa">فيلا</option><option value="chalet">شالية</option><option value="office">مكتب</option><option value="shop">محل</option><option value="land">أرض</option><option value="building">عمارة</option><option value="warehouse">مخزن</option></select><i data-lucide="chevron-down" class="custom-select-icon w-3 h-3"></i></div><div class="custom-select-wrapper w-20 shrink-0"><select id="in-type" class="custom-select"><option value="sale">بيع</option><option value="rent">إيجار</option></select><i data-lucide="chevron-down" class="custom-select-icon w-3 h-3"></i></div></div>
@@ -424,7 +437,7 @@
 
         const COLLECTION_NAME = "listings_v2"; 
 
-        let state = { user: null, userProfile: null, listings: [], filesToUpload: [], regImage: null, chatId: null, chatStep: 0, tempName: '', activeAdminChat: null, isAdmin: false, welcomeSent: false, currentFilter: 'all', visibleLimit: 6, lightboxIndex: 0, activeDetailsId: null, currentDetailIndex: 0 };
+        let state = { user: null, userProfile: null, listings: [], filesToUpload: [], regImage: null, chatId: null, chatStep: 0, tempName: '', activeAdminChat: null, isAdmin: false, welcomeSent: false, currentFilter: 'all', visibleLimit: 6, lightboxIndex: 0, activeDetailsId: null, currentDetailIndex: 0, publisherCache: {} };
 
         const ALL_AMENITIES = ["غاز طبيعي", "كهرباء", "مياه", "أسانسير", "واي فاي", "حمام سباحة", "حديقة", "جراج", "أمن وحراسة", "كاميرات مراقبة", "مطبخ أمريكاني", "غرفة خادمة", "مسموح بالحيوانات", "على ناصية"];
         const LAND_AMENITIES = ["كهرباء", "مياه", "غاز طبيعي", "على ناصية"];
@@ -468,7 +481,6 @@
                             openDetails(id);
                             clearInterval(checkInterval);
                         } else {
-                            // Invalid ID, clear URL
                              clearInterval(checkInterval);
                              const newUrl = new URL(window.location);
                              newUrl.searchParams.delete('id');
@@ -485,7 +497,6 @@
         onAuthStateChanged(auth, async (u) => { 
             if(u) { 
                 state.user = u;
-                // Fetch User Profile Data
                 if(!u.isAnonymous) {
                     const userDoc = await getDoc(doc(db, "users", u.uid));
                     if(userDoc.exists()) {
@@ -517,20 +528,15 @@
                     el.addEventListener('blur', () => document.body.classList.remove('keyboard-open'));
                 });
             } else {
-                // No user (should not happen with anonymous login, but handle it)
                 state.user = null;
                 state.userProfile = null;
                 updateHeader();
             }
         });
 
-        // --- Auth & Profile Logic ---
         window.handleProfileClick = () => {
             if(state.user && !state.user.isAnonymous) {
-                // Already logged in? Maybe show profile edit or just nothing (header shows info)
-                // For now, let's just show a toast or open settings (not requested)
-                // Or re-open auth modal to switch accounts?
-                // Let's assume clicking profile when logged in does nothing or shows simple info
+                // Already logged in
             } else {
                 toggleModal('auth-modal');
             }
@@ -539,14 +545,14 @@
         window.switchAuthMode = (mode) => {
             document.getElementById('form-login').classList.add('hidden');
             document.getElementById('form-register').classList.add('hidden');
-            document.getElementById('tab-login').classList.remove('bg-white', 'dark:bg-slate-600', 'shadow', 'text-emerald-600', 'dark:text-white');
-            document.getElementById('tab-register').classList.remove('bg-white', 'dark:bg-slate-600', 'shadow', 'text-emerald-600', 'dark:text-white');
+            document.getElementById('tab-login').classList.remove('bg-white', 'dark:bg-slate-700', 'shadow', 'text-emerald-600', 'dark:text-white');
+            document.getElementById('tab-register').classList.remove('bg-white', 'dark:bg-slate-700', 'shadow', 'text-emerald-600', 'dark:text-white');
             document.getElementById('tab-login').classList.add('text-slate-500', 'dark:text-slate-400');
             document.getElementById('tab-register').classList.add('text-slate-500', 'dark:text-slate-400');
 
             document.getElementById(`form-${mode}`).classList.remove('hidden');
             const activeTab = document.getElementById(`tab-${mode}`);
-            activeTab.classList.add('bg-white', 'dark:bg-slate-600', 'shadow', 'text-emerald-600', 'dark:text-white');
+            activeTab.classList.add('bg-white', 'dark:bg-slate-700', 'shadow', 'text-emerald-600', 'dark:text-white');
             activeTab.classList.remove('text-slate-500', 'dark:text-slate-400');
         };
 
@@ -581,13 +587,10 @@
             btn.disabled = true;
 
             try {
-                // Upload Image
                 const photoURL = await uploadToCloudinary(state.regImage);
-                // Create Auth User (Dummy Email)
                 const email = `0${phone}@souq.com`;
                 const cred = await createUserWithEmailAndPassword(auth, email, pass);
                 
-                // Create Firestore Doc
                 const userData = {
                     uid: cred.user.uid,
                     displayName: name,
@@ -603,9 +606,13 @@
                 showToast(`مرحباً ${name}`);
             } catch(e) {
                 console.error(e);
-                showToast('خطأ في التسجيل: ' + e.message, 'e');
+                if(e.code === 'auth/operation-not-allowed') {
+                    showToast('يجب تفعيل Email/Password في لوحة تحكم Firebase', 'e');
+                } else {
+                    showToast('خطأ في التسجيل: ' + e.message, 'e');
+                }
             } finally {
-                btn.innerText = 'حفظ وإنشاء';
+                btn.innerText = 'إنشاء حساب جديد';
                 btn.disabled = false;
             }
         };
@@ -620,7 +627,6 @@
                 await signInWithEmailAndPassword(auth, email, pass);
                 toggleModal('auth-modal');
                 showToast('تم تسجيل الدخول');
-                // state update handled by onAuthStateChanged
             } catch(e) {
                 showToast('بيانات الدخول غير صحيحة', 'e');
             }
@@ -629,7 +635,7 @@
         window.logoutUser = async () => {
             if(confirm('تسجيل خروج؟')) {
                 await signOut(auth);
-                window.location.reload(); // Reload to reset state cleanly
+                window.location.reload(); 
             }
         };
 
@@ -638,8 +644,6 @@
             const logoutBtn = document.getElementById('btn-logout');
 
             if(state.userProfile) {
-                // Authenticated
-                // Use optimized image for profile icon
                 const optimizedProfile = getOptimizedUrl(state.userProfile.photoURL).replace('w_512,h_512', 'w_100,h_100,r_max');
                 container.innerHTML = `
                     <div class="profile-btn-header">
@@ -651,14 +655,12 @@
                 `;
                 logoutBtn.classList.remove('hidden');
             } else {
-                // Guest / Anonymous
                 container.innerHTML = `<button class="p-1.5 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-white hover:bg-slate-200 transition"><i data-lucide="user" class="w-4 h-4"></i></button>`;
                 logoutBtn.classList.add('hidden');
             }
             lucide.createIcons();
         }
 
-        // --- Publisher Profile Logic ---
         window.openPublisherProfile = async () => {
             if(!state.currentPublisher) return;
             document.getElementById('pub-img').src = getOptimizedUrl(state.currentPublisher.photoURL).replace('w_512,h_512', 'w_200,h_200,r_max');
@@ -667,7 +669,6 @@
             toggleModal('publisher-modal');
         };
 
-        // --- Helper Functions ---
         function renderAmenities(list) { 
             document.getElementById('amenities-grid').innerHTML = list.map(a => `<label class="amenity-tile cursor-pointer"><input type="checkbox" class="amenity-check hidden" value="${a}"><div class="text-center py-1 border border-slate-200 dark:border-slate-600 rounded-lg text-[8px] font-bold text-slate-600 dark:text-slate-300 transition hover:bg-slate-50 dark:hover:bg-slate-700 truncate">${a}</div></label>`).join(''); 
         }
@@ -776,7 +777,6 @@
         let searchTimeout; document.getElementById('search-input').addEventListener('input', () => { clearTimeout(searchTimeout); searchTimeout = setTimeout(performSearch, 200); }); document.getElementById('search-input').addEventListener('keydown', (e) => { if(e.key === 'Enter') { e.preventDefault(); performSearch(); document.getElementById('search-input').blur(); } });
         window.resetFilters = () => { ['filter-cat', 'filter-type', 'filter-gov'].forEach(id => document.getElementById(id).selectedIndex = 0); document.getElementById('filter-city').innerHTML = '<option value="">كل المراكز</option>'; document.getElementById('filter-min-price').value = ''; document.getElementById('filter-max-price').value = ''; state.currentFilter = 'all'; state.visibleLimit = 6; performSearch(); };
 
-        // Optimized URL for Thumbnails (512x512)
         const getOptimizedUrl = (url, isVideo = false) => {
             if (!url || !url.includes('cloudinary.com')) return url;
             const parts = url.split('/upload/');
@@ -833,8 +833,9 @@
 
         function clearDetailsData() {
             document.getElementById('d-title').innerText = ''; document.getElementById('d-price').innerText = ''; document.getElementById('d-desc').innerText = ''; document.getElementById('d-time-badge').innerText = ''; document.getElementById('d-amenities').innerHTML = ''; document.getElementById('d-table-body').innerHTML = ''; document.getElementById('details-slider').innerHTML = '';
-            document.getElementById('d-pub-name').innerText = 'جاري التحميل...';
+            document.getElementById('d-pub-name').innerText = '';
             document.getElementById('d-pub-img').src = '';
+            document.getElementById('d-pub-img').classList.add('hidden');
             const slider = document.getElementById('details-slider'); if(slider) slider.scrollLeft = 0;
         }
 
@@ -850,16 +851,29 @@
                             const item = state.listings.find(i => i.id === id); if(!item) return;
                             state.activeDetailsId = id; state.currentItem = item; state.currentDetailIndex = 0; 
 
-                            // Fetch Publisher Data
+                            // Publisher Caching Logic
+                            const renderPublisher = (pubData) => {
+                                document.getElementById('d-pub-name').innerText = pubData.displayName;
+                                const img = document.getElementById('d-pub-img');
+                                img.src = getOptimizedUrl(pubData.photoURL).replace('w_512,h_512', 'w_100,h_100,r_max');
+                                img.classList.remove('hidden');
+                            };
+
                             state.currentPublisher = null;
                             if(item.authorId) {
-                                const pubDoc = await getDoc(doc(db, "users", item.authorId));
-                                if(pubDoc.exists()) {
-                                    state.currentPublisher = pubDoc.data();
-                                    document.getElementById('d-pub-name').innerText = state.currentPublisher.displayName;
-                                    document.getElementById('d-pub-img').src = getOptimizedUrl(state.currentPublisher.photoURL).replace('w_512,h_512', 'w_100,h_100,r_max');
+                                if(state.publisherCache[item.authorId]) {
+                                    state.currentPublisher = state.publisherCache[item.authorId];
+                                    renderPublisher(state.currentPublisher);
                                 } else {
-                                    document.getElementById('d-pub-name').innerText = 'ناشر غير معروف';
+                                    document.getElementById('d-pub-name').innerText = '...'; // Minimal loading indicator
+                                    const pubDoc = await getDoc(doc(db, "users", item.authorId));
+                                    if(pubDoc.exists()) {
+                                        state.currentPublisher = pubDoc.data();
+                                        state.publisherCache[item.authorId] = state.currentPublisher; // Cache it
+                                        renderPublisher(state.currentPublisher);
+                                    } else {
+                                        document.getElementById('d-pub-name').innerText = 'ناشر غير معروف';
+                                    }
                                 }
                             }
 
