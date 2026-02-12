@@ -11,7 +11,7 @@
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 
-    <!-- Preload Critical Assets (High Quality) -->
+    <!-- Preload Critical Assets -->
     <link rel="preload" as="image" href="https://images.pexels.com/photos/19213018/pexels-photo-19213018.jpeg?auto=compress&cs=tinysrgb&w=800&h=600&dpr=1">
     <link rel="preload" as="image" href="https://images.pexels.com/photos/14270540/pexels-photo-14270540.jpeg?auto=compress&cs=tinysrgb&w=1600&h=900&dpr=1">
 
@@ -50,7 +50,7 @@
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .select-none { user-select: none; }
 
-        /* --- Fixed Background Optimization (High Quality) --- */
+        /* --- Fixed Background Optimization --- */
         #app-background {
             position: fixed; top: 0; left: 0; width: 100%; height: 100vh; height: 100lvh; 
             z-index: -50;
@@ -78,8 +78,6 @@
         @media (min-width: 768px) { 
             .mobile-full-modal { position: relative; inset: auto; width: 100%; max-width: 32rem; height: 750px; max-height: 90vh; border-radius: 1.5rem; overflow: hidden; } 
         }
-        
-        /* Modal Overlay - Always Centered */
         .modal-overlay { position: fixed; inset: 0; z-index: 60; background-color: rgba(0,0,0,0.8); display: flex; align-items: center; justify-content: center; padding: 1rem; } 
 
         @keyframes slideInDown { from { transform: translateY(-100%); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
@@ -149,10 +147,12 @@
 
         body.keyboard-open #bottom-nav { display: none; }
 
-        .profile-btn-header { display: flex; align-items: center; gap: 4px; cursor: pointer; }
-        .profile-img-header { width: 32px; height: 32px; border-radius: 50%; object-fit: cover; border: 2px solid #10b981; }
-        .profile-name-header { font-size: 0.6rem; font-weight: 700; color: #334155; display: flex; flex-direction: column; line-height: 1; }
-        .dark .profile-name-header { color: #e2e8f0; }
+        .profile-btn-header { display: flex; align-items: center; gap: 8px; cursor: pointer; }
+        .profile-img-header { width: 36px; height: 36px; border-radius: 50%; object-fit: cover; border: 2px solid #10b981; }
+        .profile-name-header { font-size: 0.75rem; font-weight: 800; color: #0f172a; display: flex; flex-direction: column; line-height: 1.2; }
+        .dark .profile-name-header { color: #ffffff; }
+        .profile-welcome-sub { font-size: 0.6rem; color: #64748b; font-weight: 600; }
+        .dark .profile-welcome-sub { color: #94a3b8; }
     </style>
 </head>
 <body class="text-slate-800 dark:text-slate-100 select-none">
@@ -174,7 +174,9 @@
 
         <!-- Header -->
         <header class="fixed top-0 w-full sticky-header flex items-center justify-between px-4 h-12 shadow-sm z-50 border-b border-slate-100 dark:border-slate-800">
-            <div class="flex flex-col justify-center">
+            <!-- Dynamic Welcome / Profile Section -->
+            <div class="flex flex-col justify-center" id="header-welcome-section">
+                <!-- Default Content (Will be replaced if logged in) -->
                 <span class="text-[9px] font-bold text-slate-500 dark:text-slate-400 leading-none">مرحبا بكم في</span>
                 <span class="text-[10px] font-black text-slate-800 dark:text-white leading-tight">سوق <span class="text-emerald-600 dark:text-emerald-400">العقارات</span></span>
             </div>
@@ -186,10 +188,12 @@
             </div>
 
             <div class="flex gap-2 items-center">
-                <div id="header-profile-container" onclick="handleProfileClick()">
-                    <button class="p-1.5 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-white hover:bg-slate-200 transition"><i data-lucide="user" class="w-4 h-4"></i></button>
-                </div>
+                <!-- Login Button (Only shown if NOT logged in) -->
+                <button id="btn-header-login" onclick="toggleModal('auth-modal')" class="p-1.5 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-white hover:bg-slate-200 transition"><i data-lucide="user" class="w-4 h-4"></i></button>
+
+                <!-- Logout Button (Hidden by default) -->
                 <button id="btn-logout" onclick="logoutUser()" class="hidden p-1.5 rounded-full bg-red-50 dark:bg-red-900/20 text-red-600 hover:bg-red-100 transition"><i data-lucide="log-out" class="w-4 h-4"></i></button>
+
                 <button onclick="toggleDarkMode()" class="p-1.5 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-yellow-400 hover:bg-slate-200 transition"><i data-lucide="moon" class="w-3.5 h-3.5 block dark:hidden"></i><i data-lucide="sun" class="w-3.5 h-3.5 hidden dark:block"></i></button>
                 <button onclick="toggleAdminPanel()" id="btn-admin-top" class="hidden bg-slate-100 dark:bg-slate-800 p-1.5 rounded-full text-slate-600 dark:text-white"><i data-lucide="shield" class="w-3.5 h-3.5"></i></button>
             </div>
@@ -438,13 +442,18 @@
             }
         }
 
+        // Force Splash Screen Hide (Safety Net)
+        setTimeout(() => {
+            document.getElementById('splash-screen').classList.add('hidden-splash');
+            document.body.classList.add('app-loaded');
+        }, 5000);
+
         function restoreState() {
             const urlParams = new URLSearchParams(window.location.search);
             const id = urlParams.get('id');
             const mode = urlParams.get('mode');
 
             if(mode === 'add') {
-                // Only open add modal if user is logged in, otherwise clear param
                 if(state.user && !state.user.isAnonymous) {
                     toggleAddModal();
                 } else {
@@ -619,23 +628,32 @@
         };
 
         function updateHeader() {
-            const container = document.getElementById('header-profile-container');
+            const welcomeSection = document.getElementById('header-welcome-section');
             const logoutBtn = document.getElementById('btn-logout');
+            const loginBtn = document.getElementById('btn-header-login');
 
             if(state.userProfile) {
+                // Logged In: Show Profile & Name
                 const optimizedProfile = getOptimizedUrl(state.userProfile.photoURL).replace('w_512,h_512', 'w_100,h_100,r_max');
-                container.innerHTML = `
-                    <div class="profile-btn-header">
+                welcomeSection.innerHTML = `
+                    <div class="profile-btn-header" onclick="handleProfileClick()">
                         <img src="${optimizedProfile}" class="profile-img-header">
                         <div class="profile-name-header">
-                            <span>${state.userProfile.displayName.split(' ')[0]}</span>
+                            <span>${state.userProfile.displayName}</span>
+                            <span class="profile-welcome-sub">أهلاً بك</span>
                         </div>
                     </div>
                 `;
                 logoutBtn.classList.remove('hidden');
+                loginBtn.classList.add('hidden');
             } else {
-                container.innerHTML = `<button class="p-1.5 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-white hover:bg-slate-200 transition"><i data-lucide="user" class="w-4 h-4"></i></button>`;
+                // Guest: Show Default Welcome
+                welcomeSection.innerHTML = `
+                    <span class="text-[9px] font-bold text-slate-500 dark:text-slate-400 leading-none">مرحبا بكم في</span>
+                    <span class="text-[10px] font-black text-slate-800 dark:text-white leading-tight">سوق <span class="text-emerald-600 dark:text-emerald-400">العقارات</span></span>
+                `;
                 logoutBtn.classList.add('hidden');
+                loginBtn.classList.remove('hidden');
             }
             lucide.createIcons();
         }
@@ -870,7 +888,12 @@
                             updateWaLink(); document.getElementById('d-call').href = `tel:${item.phone}`;
 
                             const slider = document.getElementById('details-slider'); 
-                            slider.innerHTML = imgs.map((src, idx) => { const isVid = src.includes('.mp4') || src.includes('.mov'); const thumb = getOptimizedUrl(src, isVid); return isVid ? `<video src="${src}" controls class="w-full h-full object-contain snap-center shrink-0 bg-black"></video>` : `<img src="${thumb}" loading="lazy" class="w-full h-full object-cover snap-center shrink-0 cursor-pointer" onclick="openLightbox('${src}', ${idx})">` }).join('');
+                            slider.innerHTML = imgs.map((src, idx) => { 
+                                const isVid = src.includes('.mp4') || src.includes('.mov'); 
+                                // Use compressed thumbnail for slider (w_500)
+                                const thumb = getOptimizedUrl(src, isVid).replace('w_512', 'w_500'); 
+                                return isVid ? `<video src="${src}" controls class="w-full h-full object-contain snap-center shrink-0 bg-black"></video>` : `<img src="${thumb}" loading="lazy" class="w-full h-full object-cover snap-center shrink-0 cursor-pointer" onclick="openLightbox('${src}', ${idx})">` 
+                            }).join('');
                             document.getElementById('details-arrows').style.display = imgs.length > 1 ? 'block' : 'none';
 
                             const locDisplay = item.gov ? `${item.gov}، ${item.city}` : item.location;
