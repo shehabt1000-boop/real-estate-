@@ -11,6 +11,10 @@
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 
+    <!-- Preload Critical Assets (Caching Strategy) -->
+    <link rel="preload" as="image" href="https://images.pexels.com/photos/19213018/pexels-photo-19213018.jpeg?auto=compress&cs=tinysrgb&w=500&h=300&dpr=1">
+    <link rel="preload" as="image" href="https://images.pexels.com/photos/14270540/pexels-photo-14270540.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1">
+
     <!-- Meta Tags -->
     <meta property="og:title" content="السوق وياك">
     <meta property="og:description" content="عقارات مصر">
@@ -109,9 +113,10 @@
         /* Listing Card Optimization */
         .listing-card { content-visibility: auto; contain-intrinsic-size: 300px; will-change: transform; }
 
-        /* Splash Screen */
+        /* Splash Screen - Optimized for Speed (Smaller Image) */
         #splash-screen { 
             position: fixed; inset: 0; z-index: 10000; background-color: #0f172a;
+            /* تم استخدام صورة مصغرة w=500 للتحميل الفوري */
             background-image: linear-gradient(rgba(15, 23, 42, 0.40), rgba(15, 23, 42, 0.60)), url('https://images.pexels.com/photos/19213018/pexels-photo-19213018.jpeg?auto=compress&cs=tinysrgb&w=500&h=300&dpr=1');
             background-size: cover; background-position: center;
             display: flex; flex-direction: column; justify-content: center; align-items: center; 
@@ -300,8 +305,8 @@
                 <div id="details-slider" class="flex w-full h-full overflow-x-auto no-scrollbar snap-x scroll-smooth"></div>
                 <!-- Enlarged Arrows -->
                 <div id="details-arrows">
-                    <button onclick="scrollDetails(1)" class="absolute left-2 top-1/2 -translate-y-1/2 bg-black/40 text-white p-2 rounded-full z-10"><i data-lucide="chevron-left" class="w-6 h-6"></i></button>
-                    <button onclick="scrollDetails(-1)" class="absolute right-2 top-1/2 -translate-y-1/2 bg-black/40 text-white p-2 rounded-full z-10"><i data-lucide="chevron-right" class="w-6 h-6"></i></button>
+                    <button onclick="scrollDetails(-1)" class="absolute left-2 top-1/2 -translate-y-1/2 bg-black/40 text-white p-2 rounded-full z-10"><i data-lucide="chevron-left" class="w-6 h-6"></i></button>
+                    <button onclick="scrollDetails(1)" class="absolute right-2 top-1/2 -translate-y-1/2 bg-black/40 text-white p-2 rounded-full z-10"><i data-lucide="chevron-right" class="w-6 h-6"></i></button>
                 </div>
                 <span id="d-type-badge" class="absolute bottom-2 right-2 text-white px-2 py-0.5 rounded text-[10px] font-bold shadow backdrop-blur-sm"></span>
             </div>
@@ -343,7 +348,7 @@
             <div class="flex-1 overflow-y-auto p-2.5 bg-slate-50 dark:bg-darkbg">
                 <div class="space-y-2.5">
                     <div class="bg-white dark:bg-slate-800 p-2.5 rounded-lg border border-black dark:border-slate-500 shadow-sm">
-                        <label class="block text-[10px] font-bold text-slate-700 dark:text-slate-300 mb-1.5">صور وفيديوهات العقار <span class="text-red-500">*</span></label>
+                        <label class="block text-[10px] font-bold text-slate-700 dark:text-slate-300 mb-1.5">صور وفيديوهات العقار (بحد أقصى 10) <span class="text-red-500">*</span></label>
                         <div class="grid grid-cols-4 gap-1.5">
                             <label class="aspect-square border-2 border-dashed border-emerald-300 dark:border-emerald-700 bg-emerald-50 dark:bg-emerald-900/20 rounded-lg flex flex-col items-center justify-center cursor-pointer hover:bg-emerald-100 transition text-emerald-600 dark:text-emerald-400 relative overflow-hidden">
                                 <input type="file" multiple accept="image/*,video/*" onchange="handleUpload(this)" class="absolute inset-0 opacity-0 z-10"><i data-lucide="camera" class="w-4 h-4 mb-0.5"></i><span class="text-[8px] font-bold">إضافة</span>
@@ -483,7 +488,7 @@
 
         const COLLECTION_NAME = "listings_v2"; 
 
-        let state = { user: null, listings: [], filesToUpload: [], chatId: null, chatStep: 0, tempName: '', activeAdminChat: null, isAdmin: false, welcomeSent: false, currentFilter: 'all', visibleLimit: 6, lightboxIndex: 0, activeDetailsId: null };
+        let state = { user: null, listings: [], filesToUpload: [], chatId: null, chatStep: 0, tempName: '', activeAdminChat: null, isAdmin: false, welcomeSent: false, currentFilter: 'all', visibleLimit: 6, lightboxIndex: 0, activeDetailsId: null, currentDetailIndex: 0 };
 
         const ALL_AMENITIES = ["غاز طبيعي", "كهرباء", "مياه", "أسانسير", "واي فاي", "حمام سباحة", "حديقة", "جراج", "أمن وحراسة", "كاميرات مراقبة", "مطبخ أمريكاني", "غرفة خادمة", "مسموح بالحيوانات", "على ناصية"];
         const LAND_AMENITIES = ["كهرباء", "مياه", "غاز طبيعي", "على ناصية"];
@@ -886,6 +891,7 @@
                             // Set active ID for caching
                             state.activeDetailsId = id;
                             state.currentItem = item; 
+                            state.currentDetailIndex = 0; // Reset slider index
 
                             document.getElementById('d-title').innerText = item.title; document.getElementById('d-price').innerText = Number(item.price).toLocaleString() + ' جنيه'; document.getElementById('d-desc').innerText = item.desc; document.getElementById('d-time-badge').innerText = timeAgo(item.createdAt);
 
@@ -989,7 +995,23 @@
             }
         };
 
-        window.scrollDetails = (dir) => { const s = document.getElementById('details-slider'); s.scrollBy({ left: dir * s.clientWidth, behavior: 'smooth' }); }
+        // --- Infinite Slider Logic ---
+        window.scrollDetails = (dir) => {
+            const slider = document.getElementById('details-slider');
+            const count = slider.children.length;
+            if(count === 0) return;
+
+            // Calculate new index with loop
+            let newIndex = state.currentDetailIndex + dir;
+            if (newIndex >= count) newIndex = 0;
+            if (newIndex < 0) newIndex = count - 1;
+
+            state.currentDetailIndex = newIndex;
+
+            // Scroll to specific element
+            const target = slider.children[newIndex];
+            target.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'start' });
+        }
         
         // --- Lightbox Logic ---
         window.openLightbox = (src, idx = 0) => { 
@@ -1023,13 +1045,54 @@
         function toggleModal(id) { const m=document.getElementById(id); m.classList.toggle('hidden'); if(!m.classList.contains('hidden')) document.body.style.overflow='hidden'; else document.body.style.overflow=''; return !m.classList.contains('hidden'); }
         window.toggleAddModal=()=>{if(toggleModal('add-modal')){state.filesToUpload=[];document.getElementById('preview-area').innerHTML=''; updateFormFields();}};
 
-        // --- Optimized Upload (Non-blocking) ---
+        // --- Client-Side Image Compression ---
+        async function compressImage(file) {
+            if (file.type.startsWith('video')) return file; // Skip videos
+            return new Promise((resolve) => {
+                const reader = new FileReader();
+                reader.readAsDataURL(file);
+                reader.onload = (e) => {
+                    const img = new Image();
+                    img.src = e.target.result;
+                    img.onload = () => {
+                        const canvas = document.createElement('canvas');
+                        const ctx = canvas.getContext('2d');
+                        
+                        // Resize logic (Max width 1024px)
+                        const maxWidth = 1024;
+                        let width = img.width;
+                        let height = img.height;
+                        
+                        if (width > maxWidth) {
+                            height *= maxWidth / width;
+                            width = maxWidth;
+                        }
+
+                        canvas.width = width;
+                        canvas.height = height;
+                        ctx.drawImage(img, 0, 0, width, height);
+                        
+                        // Compress to JPEG with 70% quality
+                        canvas.toBlob((blob) => {
+                            resolve(new File([blob], file.name, { type: 'image/jpeg', lastModified: Date.now() }));
+                        }, 'image/jpeg', 0.7);
+                    };
+                };
+            });
+        }
+
+        // --- Optimized Upload (Non-blocking with Compression) ---
         window.handleUpload = async (input) => {
-            if(input.files.length + state.filesToUpload.length > 5) return showToast('5 ملفات كحد أقصى','e');
+            // Limit increased to 10
+            if(input.files.length + state.filesToUpload.length > 10) return showToast('10 ملفات كحد أقصى','e');
             
-            // Process files one by one with a small delay to let UI breathe
+            showToast('جاري معالجة الصور...');
+            
+            // Process files one by one
             for(let f of input.files){
-                state.filesToUpload.push(f);
+                // Compress before adding to state
+                const compressedFile = await compressImage(f);
+                state.filesToUpload.push(compressedFile);
                 await new Promise(resolve => setTimeout(resolve, 10)); // Yield to main thread
             }
             renderPreview();
