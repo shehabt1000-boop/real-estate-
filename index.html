@@ -54,7 +54,6 @@
         #app-background {
             position: fixed; top: 0; left: 0; width: 100%; height: 100vh; height: 100lvh; 
             z-index: -50;
-            /* High Res Image */
             background-image: url('https://images.pexels.com/photos/14270540/pexels-photo-14270540.jpeg?auto=compress&cs=tinysrgb&w=1600&h=900&dpr=1');
             background-size: cover; background-position: center; background-repeat: no-repeat;
             pointer-events: none; will-change: transform; transform: translate3d(0,0,0);
@@ -78,8 +77,10 @@
         
         @media (min-width: 768px) { 
             .mobile-full-modal { position: relative; inset: auto; width: 100%; max-width: 32rem; height: 750px; max-height: 90vh; border-radius: 1.5rem; overflow: hidden; } 
-            .modal-overlay { position: fixed; inset: 0; z-index: 60; background-color: rgba(0,0,0,0.8); display: flex; align-items: center; justify-content: center; padding: 1rem; } 
         }
+        
+        /* Modal Overlay - Always Centered */
+        .modal-overlay { position: fixed; inset: 0; z-index: 60; background-color: rgba(0,0,0,0.8); display: flex; align-items: center; justify-content: center; padding: 1rem; } 
 
         @keyframes slideInDown { from { transform: translateY(-100%); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
         @keyframes fadeOut { from { opacity: 1; } to { opacity: 0; } }
@@ -105,7 +106,6 @@
 
         #splash-screen { 
             position: fixed; inset: 0; z-index: 10000; background-color: #0f172a;
-            /* High Res Splash */
             background-image: linear-gradient(rgba(15, 23, 42, 0.40), rgba(15, 23, 42, 0.60)), url('https://images.pexels.com/photos/19213018/pexels-photo-19213018.jpeg?auto=compress&cs=tinysrgb&w=800&h=600&dpr=1');
             background-size: cover; background-position: center;
             display: flex; flex-direction: column; justify-content: center; align-items: center; 
@@ -149,7 +149,6 @@
 
         body.keyboard-open #bottom-nav { display: none; }
 
-        /* Profile Styles */
         .profile-btn-header { display: flex; align-items: center; gap: 4px; cursor: pointer; }
         .profile-img-header { width: 32px; height: 32px; border-radius: 50%; object-fit: cover; border: 2px solid #10b981; }
         .profile-name-header { font-size: 0.6rem; font-weight: 700; color: #334155; display: flex; flex-direction: column; line-height: 1; }
@@ -187,15 +186,10 @@
             </div>
 
             <div class="flex gap-2 items-center">
-                <!-- Profile / Login Button -->
                 <div id="header-profile-container" onclick="handleProfileClick()">
-                    <!-- Injected via JS -->
                     <button class="p-1.5 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-white hover:bg-slate-200 transition"><i data-lucide="user" class="w-4 h-4"></i></button>
                 </div>
-
-                <!-- Logout Button (Hidden by default) -->
                 <button id="btn-logout" onclick="logoutUser()" class="hidden p-1.5 rounded-full bg-red-50 dark:bg-red-900/20 text-red-600 hover:bg-red-100 transition"><i data-lucide="log-out" class="w-4 h-4"></i></button>
-
                 <button onclick="toggleDarkMode()" class="p-1.5 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-yellow-400 hover:bg-slate-200 transition"><i data-lucide="moon" class="w-3.5 h-3.5 block dark:hidden"></i><i data-lucide="sun" class="w-3.5 h-3.5 hidden dark:block"></i></button>
                 <button onclick="toggleAdminPanel()" id="btn-admin-top" class="hidden bg-slate-100 dark:bg-slate-800 p-1.5 rounded-full text-slate-600 dark:text-white"><i data-lucide="shield" class="w-3.5 h-3.5"></i></button>
             </div>
@@ -203,7 +197,6 @@
 
         <!-- Main Content -->
         <main class="pt-[3rem] pb-20 container mx-auto px-2 max-w-5xl min-h-screen">
-            <!-- Search Bar & Filters -->
             <div class="sticky-search-bar">
                 <div class="relative w-full">
                     <button onclick="toggleFilterPanel()" class="absolute left-1 top-0 h-full w-9 flex items-center justify-center text-slate-500 hover:text-slate-800 dark:hover:text-white transition z-10"><i data-lucide="sliders-horizontal" class="w-4 h-4"></i></button>
@@ -237,26 +230,21 @@
             <button onclick="toggleChat()" class="flex items-center justify-center text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition group relative"><div id="chat-badge" class="hidden absolute top-0 right-0 w-2 h-2 bg-red-500 rounded-full border border-white dark:border-slate-800"></div><i data-lucide="message-circle" class="w-5 h-5 group-hover:scale-110 transition"></i></button>
         </nav>
 
-    <!-- Auth Modal (Redesigned as Card) -->
+    <!-- Auth Modal (Card Style) -->
     <div id="auth-modal" class="hidden modal-overlay">
         <div class="relative w-full max-w-sm bg-white dark:bg-slate-800 rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-700 p-6 overflow-hidden animate-pop">
             <button onclick="toggleModal('auth-modal')" class="absolute top-3 left-3 text-slate-400 hover:text-red-500 transition"><i data-lucide="x" class="w-5 h-5"></i></button>
-            
-            <!-- Logo Icon -->
             <div class="flex justify-center mb-6">
                 <div class="w-16 h-16 bg-slate-50 dark:bg-slate-700 rounded-full flex items-center justify-center border-2 border-emerald-500 shadow-lg">
                     <i data-lucide="building-2" class="w-8 h-8 text-emerald-600 dark:text-emerald-400"></i>
                 </div>
             </div>
-
             <div class="flex justify-center mb-6">
                 <div class="bg-slate-100 dark:bg-slate-900 p-1 rounded-xl flex w-full">
                     <button onclick="switchAuthMode('login')" id="tab-login" class="flex-1 py-2 rounded-lg text-xs font-bold transition bg-white dark:bg-slate-700 shadow text-emerald-600 dark:text-white">دخول</button>
                     <button onclick="switchAuthMode('register')" id="tab-register" class="flex-1 py-2 rounded-lg text-xs font-bold transition text-slate-500 dark:text-slate-400">إنشاء حساب</button>
                 </div>
             </div>
-
-            <!-- Login Form -->
             <div id="form-login" class="space-y-4">
                 <div class="space-y-1">
                     <label class="text-[10px] font-bold text-slate-500">رقم الهاتف</label>
@@ -271,8 +259,6 @@
                 </div>
                 <button onclick="loginUser()" class="w-full bg-emerald-600 text-white py-3 rounded-xl font-bold text-sm shadow-lg hover:bg-emerald-700 transition transform active:scale-95">تسجيل الدخول</button>
             </div>
-
-            <!-- Register Form -->
             <div id="form-register" class="hidden space-y-4">
                 <div class="flex justify-center">
                     <label class="relative w-20 h-20 rounded-full border-2 border-dashed border-emerald-500 flex items-center justify-center cursor-pointer overflow-hidden bg-slate-50 dark:bg-slate-900 group hover:bg-emerald-50 transition">
@@ -284,26 +270,21 @@
                         </div>
                     </label>
                 </div>
-
-                <div class="space-y-1">
-                    <input id="reg-name" type="text" class="input-box text-center" placeholder="الاسم بالكامل">
-                </div>
-                
+                <div class="space-y-1"><input id="reg-name" type="text" class="input-box text-center" placeholder="الاسم بالكامل"></div>
                 <div class="relative">
                     <span class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 font-bold text-xs bg-slate-100 dark:bg-slate-700 px-1.5 rounded">+20</span>
                     <input id="reg-phone" type="tel" class="input-box pl-12 text-left" placeholder="رقم الهاتف" oninput="formatPhone(this)">
                 </div>
                 <input id="reg-pass" type="password" class="input-box" placeholder="كلمة المرور">
-                
                 <button onclick="registerUser()" id="btn-register" class="w-full bg-slate-900 dark:bg-emerald-600 text-white py-3 rounded-xl font-bold text-sm shadow-lg hover:opacity-90 transition transform active:scale-95">إنشاء حساب جديد</button>
             </div>
         </div>
     </div>
 
-    <!-- Publisher Profile Modal (Read Only) -->
+    <!-- Publisher Profile Modal (Card Style) -->
     <div id="publisher-modal" class="hidden modal-overlay">
-        <div class="mobile-full-modal animate-pop p-4 justify-center items-center bg-white dark:bg-darkbg text-center">
-            <button onclick="toggleModal('publisher-modal')" class="absolute top-4 left-4 bg-red-500 text-white p-2 rounded-full shadow"><i data-lucide="x" class="w-5 h-5"></i></button>
+        <div class="relative w-full max-w-sm bg-white dark:bg-slate-800 rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-700 p-6 overflow-hidden animate-pop text-center">
+            <button onclick="toggleModal('publisher-modal')" class="absolute top-3 left-3 text-slate-400 hover:text-red-500 transition"><i data-lucide="x" class="w-5 h-5"></i></button>
             <div class="w-24 h-24 rounded-full border-4 border-emerald-500 p-1 mx-auto mb-4">
                 <img id="pub-img" src="" class="w-full h-full rounded-full object-cover bg-slate-200">
             </div>
@@ -333,7 +314,6 @@
             </div>
             
             <div class="flex-1 overflow-y-auto bg-white dark:bg-darkbg">
-                <!-- Publisher Bar (Cached) -->
                 <div id="publisher-bar" class="flex items-center gap-2 p-2 bg-slate-50 dark:bg-slate-800/50 border-b border-slate-100 dark:border-slate-700 cursor-pointer hover:bg-slate-100 dark:hover:bg-slate-800 transition" onclick="openPublisherProfile()">
                     <div id="d-pub-img-container" class="w-8 h-8 rounded-full border border-slate-300 overflow-hidden bg-slate-200">
                         <img id="d-pub-img" src="" class="w-full h-full object-cover hidden">
@@ -389,7 +369,6 @@
                             <div id="preview-area" class="col-span-3 flex gap-1.5 overflow-x-auto no-scrollbar py-0.5"></div>
                         </div>
                     </div>
-                    <!-- Form Fields -->
                     <div class="bg-white dark:bg-slate-800 p-2.5 rounded-lg border border-black dark:border-slate-500 shadow-sm space-y-1.5">
                         <h4 class="text-[9px] font-bold text-slate-400 uppercase tracking-wider border-b border-slate-100 dark:border-slate-700 pb-0.5 mb-0.5">بيانات أساسية</h4>
                         <div class="flex gap-1.5"><div class="custom-select-wrapper flex-1"><select id="in-category" onchange="updateFormFields()" class="custom-select"><option value="apartment">شقة</option><option value="villa">فيلا</option><option value="chalet">شالية</option><option value="office">مكتب</option><option value="shop">محل</option><option value="land">أرض</option><option value="building">عمارة</option><option value="warehouse">مخزن</option></select><i data-lucide="chevron-down" class="custom-select-icon w-3 h-3"></i></div><div class="custom-select-wrapper w-20 shrink-0"><select id="in-type" class="custom-select"><option value="sale">بيع</option><option value="rent">إيجار</option></select><i data-lucide="chevron-down" class="custom-select-icon w-3 h-3"></i></div></div>
