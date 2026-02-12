@@ -15,12 +15,6 @@
     <link rel="preload" as="image" href="https://images.pexels.com/photos/19213018/pexels-photo-19213018.jpeg?auto=compress&cs=tinysrgb&w=800&h=600&dpr=1">
     <link rel="preload" as="image" href="https://images.pexels.com/photos/14270540/pexels-photo-14270540.jpeg?auto=compress&cs=tinysrgb&w=1600&h=900&dpr=1">
 
-    <!-- Meta Tags -->
-    <meta property="og:title" content="السوق وياك">
-    <meta property="og:description" content="عقارات مصر">
-    <meta property="og:image" content="https://images.pexels.com/photos/14270540/pexels-photo-14270540.jpeg?auto=compress&cs=tinysrgb&w=512&h=512&dpr=1">
-    <meta property="og:type" content="website">
-
     <title>السوق وياك | عقارات مصر</title>
 
     <script src="https://cdn.tailwindcss.com"></script>
@@ -31,7 +25,8 @@
                 extend: { 
                     colors: { navy: '#0f172a', darkbg: '#1e293b', brand: '#10b981' },
                     fontFamily: { sans: ['Cairo', 'sans-serif'] },
-                    screens: { 'xs': '400px' }
+                    screens: { 'xs': '400px' },
+                    zIndex: { '60': '60', '70': '70', '100': '100' }
                 } 
             }
         }
@@ -50,7 +45,7 @@
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .select-none { user-select: none; }
 
-        /* --- Fixed Background Optimization --- */
+        /* Background */
         #app-background {
             position: fixed; top: 0; left: 0; width: 100%; height: 100vh; height: 100lvh; 
             z-index: -50;
@@ -58,35 +53,42 @@
             background-size: cover; background-position: center; background-repeat: no-repeat;
             pointer-events: none; will-change: transform; transform: translate3d(0,0,0);
         }
-        #app-background::after {
-            content: ''; position: absolute; inset: 0;
-            background: rgba(241, 245, 249, 0.15); 
-        }
+        #app-background::after { content: ''; position: absolute; inset: 0; background: rgba(241, 245, 249, 0.15); }
         .dark #app-background::after { background: rgba(15, 23, 42, 0.15); }
 
         /* Animations */
         @keyframes shimmer { 0% { background-position: -1000px 0; } 100% { background-position: 1000px 0; } }
         .skeleton { animation: shimmer 1.5s infinite linear; background: linear-gradient(to right, #f1f5f9 4%, #e2e8f0 25%, #f1f5f9 36%); background-size: 1000px 100%; }
         .dark .skeleton { background: linear-gradient(to right, #1e293b 4%, #334155 25%, #1e293b 36%); }
-
         @keyframes popIn { from { transform: scale(0.95); opacity: 0; } to { transform: scale(1); opacity: 1; } }
         .animate-pop { animation: popIn 0.15s ease-out forwards; will-change: transform, opacity; }
 
-        .mobile-full-modal { position: fixed; inset: 0; z-index: 60; background-color: white; display: flex; flex-direction: column; height: 100dvh; }
-        .dark .mobile-full-modal { background-color: #1e293b; }
-        
-        @media (min-width: 768px) { 
-            .mobile-full-modal { position: relative; inset: auto; width: 100%; max-width: 32rem; height: 750px; max-height: 90vh; border-radius: 1.5rem; overflow: hidden; } 
+        /* Modals - High Z-Index */
+        .modal-overlay { 
+            position: fixed; inset: 0; z-index: 100; 
+            background-color: rgba(0,0,0,0.8); 
+            display: flex; align-items: center; justify-content: center; 
+            padding: 1rem; 
+            backdrop-filter: blur(2px);
         }
-        .modal-overlay { position: fixed; inset: 0; z-index: 60; background-color: rgba(0,0,0,0.8); display: flex; align-items: center; justify-content: center; padding: 1rem; } 
+        .mobile-full-modal { 
+            position: relative; width: 100%; max-width: 32rem; 
+            background-color: white; 
+            display: flex; flex-direction: column; 
+            max-height: 90vh; height: auto;
+            border-radius: 1.5rem; overflow: hidden; 
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+        /* Mobile Full Screen Override */
+        @media (max-width: 767px) {
+            .mobile-full-modal { height: 100dvh; max-height: 100dvh; border-radius: 0; }
+            .modal-overlay { padding: 0; }
+        }
+        .dark .mobile-full-modal { background-color: #1e293b; }
 
-        @keyframes slideInDown { from { transform: translateY(-100%); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-        @keyframes fadeOut { from { opacity: 1; } to { opacity: 0; } }
-        .toast { animation: slideInDown 0.2s ease-out forwards; }
-        .toast.hiding { animation: fadeOut 0.2s ease-in forwards; }
-
+        /* Header & Nav - Lower Z-Index than Modal */
         .sticky-header { 
-            z-index: 50; transform: translateZ(0); 
+            z-index: 40; transform: translateZ(0); 
             background-color: rgba(255, 255, 255, 0.95);
             border-bottom-left-radius: 1.5rem; border-bottom-right-radius: 1.5rem;
             box-shadow: 0 2px 4px rgba(0,0,0,0.05);
@@ -94,44 +96,32 @@
         .dark .sticky-header { background-color: rgba(15, 23, 42, 0.95); }
 
         .sticky-search-bar {
-            position: sticky; top: 3.5rem; z-index: 40; margin: 0 0.5rem 0.5rem 0.5rem; 
+            position: sticky; top: 3.5rem; z-index: 30; margin: 0 0.5rem 0.5rem 0.5rem; 
             padding: 0.25rem; border-radius: 0.75rem; background: rgba(255, 255, 255, 0.9); 
             border: 1px solid rgba(0,0,0,0.1); box-shadow: 0 2px 5px rgba(0,0,0,0.05); transition: transform 0.2s;
         }
         .dark .sticky-search-bar { background: rgba(30, 41, 59, 0.9); border-color: rgba(255,255,255,0.1); }
 
-        .listing-card { content-visibility: auto; contain-intrinsic-size: 300px; will-change: transform; }
+        #bottom-nav { z-index: 40; }
 
+        /* Splash */
         #splash-screen { 
-            position: fixed; inset: 0; z-index: 10000; background-color: #0f172a;
+            position: fixed; inset: 0; z-index: 9999; background-color: #0f172a;
             background-image: linear-gradient(rgba(15, 23, 42, 0.40), rgba(15, 23, 42, 0.60)), url('https://images.pexels.com/photos/19213018/pexels-photo-19213018.jpeg?auto=compress&cs=tinysrgb&w=800&h=600&dpr=1');
             background-size: cover; background-position: center;
             display: flex; flex-direction: column; justify-content: center; align-items: center; 
             transition: opacity 0.3s ease-out, visibility 0.3s; 
         }
-        .splash-icon-container { position: relative; width: 80px; height: 80px; display: flex; justify-content: center; align-items: center; }
-        .splash-ring { position: absolute; inset: 0; border-radius: 50%; border: 2px solid rgba(16, 185, 129, 0.3); border-top-color: #10b981; animation: spin 1s infinite linear; }
-        .splash-logo { color: white; z-index: 10; animation: pulse 2s infinite; }
-        @keyframes spin { 100% { transform: rotate(360deg); } }
-        @keyframes pulse { 50% { transform: scale(0.9); opacity: 0.8; } }
         .hidden-splash { opacity: 0; visibility: hidden; pointer-events: none; }
 
-        body:not(.app-loaded) #app-content-wrapper { opacity: 0; visibility: hidden; }
-        #app-content-wrapper { transition: opacity 0.4s ease-in-out; opacity: 1; }
-
-        .input-box {
-            width: 100%; background: white; border: 1px solid #cbd5e1; border-radius: 0.5rem;
-            padding: 0.6rem 0.8rem; font-size: 0.85rem; font-weight: 700; outline: none; color: #0f172a; transition: all 0.2s;
-        }
+        /* UI Elements */
+        .input-box { width: 100%; background: white; border: 1px solid #cbd5e1; border-radius: 0.5rem; padding: 0.6rem 0.8rem; font-size: 0.85rem; font-weight: 700; outline: none; color: #0f172a; transition: all 0.2s; }
         .dark .input-box { background: #1e293b; border-color: #475569; color: white; }
         .input-box:focus { border-color: #10b981; box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1); }
-
-        .custom-select-wrapper { position: relative; }
-        .custom-select {
-            appearance: none; background-color: #f8fafc; border: 1px solid #000; border-radius: 0.4rem;
-            padding: 0.4rem 1.5rem 0.4rem 0.5rem; width: 100%; font-weight: 700; font-size: 0.75rem; color: #334155; cursor: pointer;
-        }
+        
+        .custom-select { appearance: none; background-color: #f8fafc; border: 1px solid #000; border-radius: 0.4rem; padding: 0.4rem 1.5rem 0.4rem 0.5rem; width: 100%; font-weight: 700; font-size: 0.75rem; color: #334155; cursor: pointer; }
         .dark .custom-select { background-color: #1e293b; color: white; border-color: #94a3b8; }
+        .custom-select-wrapper { position: relative; }
         .custom-select-icon { position: absolute; left: 0.5rem; top: 50%; transform: translateY(-50%); pointer-events: none; color: #64748b; width: 0.8rem; height: 0.8rem; }
 
         .modern-table { border-collapse: collapse; width: 100%; }
@@ -139,12 +129,10 @@
         .dark .modern-table td, .dark .modern-table th { border-color: #334155; }
         .modern-table tr:nth-child(even) { background-color: #f8fafc; }
         .dark .modern-table tr:nth-child(even) { background-color: #1e293b; }
-
         .amenity-tile input:checked + div { background-color: #10b981; color: white; border-color: #10b981; }
-
+        
         #filter-panel { display: none; opacity: 0; transform: scaleY(0.95); transform-origin: top; transition: opacity 0.15s ease, transform 0.15s ease; }
         #filter-panel.open { display: block; opacity: 1; transform: scaleY(1); }
-
         body.keyboard-open #bottom-nav { display: none; }
 
         .profile-btn-header { display: flex; align-items: center; gap: 8px; cursor: pointer; }
@@ -153,6 +141,10 @@
         .dark .profile-name-header { color: #ffffff; }
         .profile-welcome-sub { font-size: 0.6rem; color: #64748b; font-weight: 600; }
         .dark .profile-welcome-sub { color: #94a3b8; }
+        
+        /* Toast */
+        .toast { animation: slideInDown 0.2s ease-out forwards; }
+        .toast.hiding { animation: fadeOut 0.2s ease-in forwards; }
     </style>
 </head>
 <body class="text-slate-800 dark:text-slate-100 select-none">
@@ -169,14 +161,11 @@
     <!-- Wrapper -->
     <div id="app-content-wrapper">
         <div id="app-background"></div>
-
-        <div id="toast-container" class="fixed top-4 left-0 right-0 z-[100] flex flex-col items-center gap-2 pointer-events-none px-4"></div>
+        <div id="toast-container" class="fixed top-4 left-0 right-0 z-[110] flex flex-col items-center gap-2 pointer-events-none px-4"></div>
 
         <!-- Header -->
-        <header class="fixed top-0 w-full sticky-header flex items-center justify-between px-4 h-12 shadow-sm z-50 border-b border-slate-100 dark:border-slate-800">
-            <!-- Dynamic Welcome / Profile Section -->
+        <header class="fixed top-0 w-full sticky-header flex items-center justify-between px-4 h-12 shadow-sm border-b border-slate-100 dark:border-slate-800">
             <div class="flex flex-col justify-center" id="header-welcome-section">
-                <!-- Default Content (Will be replaced if logged in) -->
                 <span class="text-[9px] font-bold text-slate-500 dark:text-slate-400 leading-none">مرحبا بكم في</span>
                 <span class="text-[10px] font-black text-slate-800 dark:text-white leading-tight">سوق <span class="text-emerald-600 dark:text-emerald-400">العقارات</span></span>
             </div>
@@ -188,12 +177,8 @@
             </div>
 
             <div class="flex gap-2 items-center">
-                <!-- Login Button (Only shown if NOT logged in) -->
                 <button id="btn-header-login" onclick="toggleModal('auth-modal')" class="p-1.5 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-white hover:bg-slate-200 transition"><i data-lucide="user" class="w-4 h-4"></i></button>
-
-                <!-- Logout Button (Hidden by default) -->
                 <button id="btn-logout" onclick="logoutUser()" class="hidden p-1.5 rounded-full bg-red-50 dark:bg-red-900/20 text-red-600 hover:bg-red-100 transition"><i data-lucide="log-out" class="w-4 h-4"></i></button>
-
                 <button onclick="toggleDarkMode()" class="p-1.5 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-yellow-400 hover:bg-slate-200 transition"><i data-lucide="moon" class="w-3.5 h-3.5 block dark:hidden"></i><i data-lucide="sun" class="w-3.5 h-3.5 hidden dark:block"></i></button>
                 <button onclick="toggleAdminPanel()" id="btn-admin-top" class="hidden bg-slate-100 dark:bg-slate-800 p-1.5 rounded-full text-slate-600 dark:text-white"><i data-lucide="shield" class="w-3.5 h-3.5"></i></button>
             </div>
@@ -228,16 +213,16 @@
         </main>
 
         <!-- Floating Dock -->
-        <nav id="bottom-nav" class="fixed bottom-4 left-1/2 -translate-x-1/2 z-50 bg-white/90 dark:bg-slate-800/90 backdrop-blur-none border border-slate-200 dark:border-slate-600 px-5 py-2 rounded-full flex items-center gap-6 shadow-xl transform transition-all hover:scale-105 transform-gpu">
+        <nav id="bottom-nav" class="fixed bottom-4 left-1/2 -translate-x-1/2 bg-white/90 dark:bg-slate-800/90 backdrop-blur-none border border-slate-200 dark:border-slate-600 px-5 py-2 rounded-full flex items-center gap-6 shadow-xl transform transition-all hover:scale-105 transform-gpu">
             <button onclick="resetFilters(); window.scrollTo({top:0, behavior:'smooth'})" class="flex items-center justify-center text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition group"><i data-lucide="home" class="w-5 h-5 group-hover:scale-110 transition"></i></button>
             <button onclick="toggleAddModal()" class="w-10 h-10 bg-slate-900 text-white rounded-full flex items-center justify-center shadow-lg shadow-slate-900/20 transform -translate-y-4 border-2 border-emerald-600 dark:border-emerald-500 hover:scale-110 transition active:scale-90"><i data-lucide="plus" class="w-5 h-5"></i></button>
             <button onclick="toggleChat()" class="flex items-center justify-center text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition group relative"><div id="chat-badge" class="hidden absolute top-0 right-0 w-2 h-2 bg-red-500 rounded-full border border-white dark:border-slate-800"></div><i data-lucide="message-circle" class="w-5 h-5 group-hover:scale-110 transition"></i></button>
         </nav>
 
-    <!-- Auth Modal (Card Style) -->
+    <!-- Auth Modal -->
     <div id="auth-modal" class="hidden modal-overlay">
-        <div class="relative w-full max-w-sm bg-white dark:bg-slate-800 rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-700 p-6 overflow-hidden animate-pop">
-            <button onclick="toggleModal('auth-modal')" class="absolute top-3 left-3 text-slate-400 hover:text-red-500 transition"><i data-lucide="x" class="w-5 h-5"></i></button>
+        <div class="relative w-full max-w-sm bg-white dark:bg-slate-800 rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-700 p-6 overflow-hidden animate-pop z-50">
+            <button onclick="toggleModal('auth-modal')" class="absolute top-3 left-3 text-slate-400 hover:text-red-500 transition z-10"><i data-lucide="x" class="w-5 h-5"></i></button>
             <div class="flex justify-center mb-6">
                 <div class="w-16 h-16 bg-slate-50 dark:bg-slate-700 rounded-full flex items-center justify-center border-2 border-emerald-500 shadow-lg">
                     <i data-lucide="building-2" class="w-8 h-8 text-emerald-600 dark:text-emerald-400"></i>
@@ -285,10 +270,10 @@
         </div>
     </div>
 
-    <!-- Publisher Profile Modal (Card Style) -->
+    <!-- Publisher Profile Modal -->
     <div id="publisher-modal" class="hidden modal-overlay">
-        <div class="relative w-full max-w-sm bg-white dark:bg-slate-800 rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-700 p-6 overflow-hidden animate-pop text-center">
-            <button onclick="toggleModal('publisher-modal')" class="absolute top-3 left-3 text-slate-400 hover:text-red-500 transition"><i data-lucide="x" class="w-5 h-5"></i></button>
+        <div class="relative w-full max-w-sm bg-white dark:bg-slate-800 rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-700 p-6 overflow-hidden animate-pop text-center z-50">
+            <button onclick="toggleModal('publisher-modal')" class="absolute top-3 left-3 text-slate-400 hover:text-red-500 transition z-10"><i data-lucide="x" class="w-5 h-5"></i></button>
             <div class="w-24 h-24 rounded-full border-4 border-emerald-500 p-1 mx-auto mb-4">
                 <img id="pub-img" src="" class="w-full h-full rounded-full object-cover bg-slate-200">
             </div>
@@ -399,7 +384,7 @@
     <div id="chat-modal" class="hidden modal-overlay"><div class="mobile-full-modal animate-pop border border-navy/10"><div class="bg-slate-900 dark:bg-emerald-600 p-3 text-white flex justify-between items-center shrink-0"><div class="flex items-center gap-2"><div class="bg-white/10 p-1.5 rounded-full"><i data-lucide="bot" class="w-5 h-5 text-yellow-400"></i></div><div><h4 class="font-bold text-xs">الدعم الفني</h4><span class="text-[9px] opacity-80">متصل الآن</span></div></div><button onclick="toggleChat()" class="bg-red-500 text-black p-1 rounded-full hover:bg-red-600 transition"><i data-lucide="x" class="w-4 h-4"></i></button></div><div id="chat-box" class="flex-1 bg-slate-100 dark:bg-slate-900 p-3 overflow-y-auto space-y-2 text-xs"></div><div class="p-3 bg-white dark:bg-slate-800 border-t dark:border-slate-700 flex items-center gap-2 shrink-0 pb-safe"><input id="chat-msg" type="text" class="flex-1 bg-slate-100 dark:bg-slate-700 border-0 rounded-full px-4 py-3 text-sm outline-none dark:text-white font-bold" placeholder="اكتب رسالتك..."><button onclick="sendMsg()" class="w-10 h-10 bg-slate-900 dark:bg-emerald-600 rounded-full text-white flex items-center justify-center shadow"><i data-lucide="send" class="w-4 h-4"></i></button></div></div></div>
     
     <!-- Lightbox -->
-    <div id="lightbox" class="hidden fixed inset-0 bg-black/95 z-[100] flex flex-col items-center justify-center select-none">
+    <div id="lightbox" class="hidden fixed inset-0 bg-black/95 z-[120] flex flex-col items-center justify-center select-none">
         <button onclick="closeLightbox()" class="absolute top-4 left-4 bg-white/20 text-white p-2 rounded-full z-20"><i data-lucide="x" class="w-6 h-6"></i></button>
         <button onclick="changeLightboxImage(-1)" class="absolute right-2 top-1/2 -translate-y-1/2 bg-white/10 text-white p-3 rounded-full z-20 hover:bg-white/20"><i data-lucide="chevron-right" class="w-6 h-6"></i></button>
         <button onclick="changeLightboxImage(1)" class="absolute left-2 top-1/2 -translate-y-1/2 bg-white/10 text-white p-3 rounded-full z-20 hover:bg-white/20"><i data-lucide="chevron-left" class="w-6 h-6"></i></button>
@@ -412,13 +397,14 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signInAnonymously, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { getFirestore, doc, setDoc, getDoc, addDoc, updateDoc, deleteDoc, onSnapshot, collection, query, where, serverTimestamp, getDocs } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
         const firebaseConfig = { apiKey: "AIzaSyC7zHuH8LK-yQAKG-Nm7dh31fXtVLxuCLM", authDomain: "sharqia-81030.firebaseapp.com", projectId: "sharqia-81030", storageBucket: "sharqia-81030.firebasestorage.app", messagingSenderId: "581888625195", appId: "1:581888625195:web:1667ba1e439e8e6c1fb86e" };
         const app = initializeApp(firebaseConfig); const db = getFirestore(app); const auth = getAuth(app);
 
         const COLLECTION_NAME = "listings_v2"; 
+        const DUMMY_PUBLISHER = { displayName: "وسيط السوق", phoneNumber: "01206244875", photoURL: "https://cdn-icons-png.flaticon.com/512/609/609803.png" };
 
         let state = { user: null, userProfile: null, listings: [], filesToUpload: [], regImage: null, chatId: null, chatStep: 0, tempName: '', activeAdminChat: null, isAdmin: false, welcomeSent: false, currentFilter: 'all', visibleLimit: 6, lightboxIndex: 0, activeDetailsId: null, currentDetailIndex: 0, publisherCache: {} };
 
@@ -482,43 +468,32 @@
 
         loadCachedData();
 
+        // Auth Listener - Handles Guests & Registered Users
         onAuthStateChanged(auth, async (u) => { 
             if(u) { 
                 state.user = u;
                 if(!u.isAnonymous) {
+                    // Registered User
                     const userDoc = await getDoc(doc(db, "users", u.uid));
                     if(userDoc.exists()) {
                         state.userProfile = userDoc.data();
                         updateHeader();
                     }
                 } else {
+                    // Guest User
                     state.userProfile = null;
                     updateHeader();
                 }
-
+                // Load listings for everyone (Guest or Registered)
                 loadListings(); 
                 checkUserChat(); 
                 checkAdminStatus(); 
                 renderAmenities(ALL_AMENITIES); 
                 initLocations();
                 restoreState();
-
-                const originalHeight = window.innerHeight;
-                window.addEventListener('resize', () => {
-                    if (window.innerHeight < originalHeight * 0.8) {
-                        document.body.classList.add('keyboard-open');
-                    } else {
-                        document.body.classList.remove('keyboard-open');
-                    }
-                });
-                document.querySelectorAll('input, textarea').forEach(el => {
-                    el.addEventListener('focus', () => document.body.classList.add('keyboard-open'));
-                    el.addEventListener('blur', () => document.body.classList.remove('keyboard-open'));
-                });
             } else {
-                state.user = null;
-                state.userProfile = null;
-                updateHeader();
+                // No User? Sign in Anonymously to allow read access
+                signInAnonymously(auth).catch(console.error);
             }
         });
 
@@ -862,16 +837,22 @@
                                     state.currentPublisher = state.publisherCache[item.authorId];
                                     renderPublisher(state.currentPublisher);
                                 } else {
-                                    document.getElementById('d-pub-name').innerText = '...'; // Minimal loading indicator
+                                    document.getElementById('d-pub-name').innerText = '...'; 
                                     const pubDoc = await getDoc(doc(db, "users", item.authorId));
                                     if(pubDoc.exists()) {
                                         state.currentPublisher = pubDoc.data();
-                                        state.publisherCache[item.authorId] = state.currentPublisher; // Cache it
+                                        state.publisherCache[item.authorId] = state.currentPublisher; 
                                         renderPublisher(state.currentPublisher);
                                     } else {
-                                        document.getElementById('d-pub-name').innerText = 'ناشر غير معروف';
+                                        // Fallback for old listings or missing users
+                                        state.currentPublisher = DUMMY_PUBLISHER;
+                                        renderPublisher(DUMMY_PUBLISHER);
                                     }
                                 }
+                            } else {
+                                // No author ID (Old listing)
+                                state.currentPublisher = DUMMY_PUBLISHER;
+                                renderPublisher(DUMMY_PUBLISHER);
                             }
 
                             document.getElementById('d-title').innerText = item.title; document.getElementById('d-price').innerText = Number(item.price).toLocaleString() + ' جنيه'; document.getElementById('d-desc').innerText = item.desc; document.getElementById('d-time-badge').innerText = timeAgo(item.createdAt);
@@ -890,8 +871,8 @@
                             const slider = document.getElementById('details-slider'); 
                             slider.innerHTML = imgs.map((src, idx) => { 
                                 const isVid = src.includes('.mp4') || src.includes('.mov'); 
-                                // Use compressed thumbnail for slider (w_500)
-                                const thumb = getOptimizedUrl(src, isVid).replace('w_512', 'w_500'); 
+                                // Use compressed thumbnail for slider (w_500, q_auto:low)
+                                const thumb = getOptimizedUrl(src, isVid).replace('w_512', 'w_500,q_auto:low'); 
                                 return isVid ? `<video src="${src}" controls class="w-full h-full object-contain snap-center shrink-0 bg-black"></video>` : `<img src="${thumb}" loading="lazy" class="w-full h-full object-cover snap-center shrink-0 cursor-pointer" onclick="openLightbox('${src}', ${idx})">` 
                             }).join('');
                             document.getElementById('details-arrows').style.display = imgs.length > 1 ? 'block' : 'none';
