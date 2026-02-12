@@ -11,7 +11,7 @@
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 
-    <!-- Preload Critical Assets (Caching Strategy) -->
+    <!-- Preload Critical Assets -->
     <link rel="preload" as="image" href="https://images.pexels.com/photos/19213018/pexels-photo-19213018.jpeg?auto=compress&cs=tinysrgb&w=500&h=300&dpr=1">
     <link rel="preload" as="image" href="https://images.pexels.com/photos/14270540/pexels-photo-14270540.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1">
 
@@ -113,10 +113,9 @@
         /* Listing Card Optimization */
         .listing-card { content-visibility: auto; contain-intrinsic-size: 300px; will-change: transform; }
 
-        /* Splash Screen - Optimized for Speed (Smaller Image) */
+        /* Splash Screen */
         #splash-screen { 
             position: fixed; inset: 0; z-index: 10000; background-color: #0f172a;
-            /* تم استخدام صورة مصغرة w=500 للتحميل الفوري */
             background-image: linear-gradient(rgba(15, 23, 42, 0.40), rgba(15, 23, 42, 0.60)), url('https://images.pexels.com/photos/19213018/pexels-photo-19213018.jpeg?auto=compress&cs=tinysrgb&w=500&h=300&dpr=1');
             background-size: cover; background-position: center;
             display: flex; flex-direction: column; justify-content: center; align-items: center; 
@@ -296,17 +295,19 @@
     <div id="details-modal" class="hidden modal-overlay">
         <div class="mobile-full-modal animate-pop">
             <div class="relative h-44 bg-gray-200 dark:bg-slate-800 shrink-0 group">
-                <!-- Enlarged Close Button -->
+                <!-- Close Button -->
                 <button onclick="closeDetails()" class="absolute top-2 left-2 bg-red-500 text-black p-2 rounded-full z-20 shadow-sm hover:bg-red-600 transition"><i data-lucide="x" class="w-5 h-5"></i></button>
                 <div class="absolute top-2 right-2 flex gap-2 z-20">
                     <button onclick="downloadImages()" class="bg-white/80 dark:bg-black/50 text-slate-800 dark:text-white p-1 rounded-full shadow-sm"><i data-lucide="download" class="w-4 h-4"></i></button>
                     <button onclick="shareListing()" class="bg-white/80 dark:bg-black/50 text-slate-800 dark:text-white p-1 rounded-full shadow-sm"><i data-lucide="share-2" class="w-4 h-4"></i></button>
                 </div>
                 <div id="details-slider" class="flex w-full h-full overflow-x-auto no-scrollbar snap-x scroll-smooth"></div>
-                <!-- Enlarged Arrows -->
+                <!-- Arrows (Fixed for RTL) -->
                 <div id="details-arrows">
-                    <button onclick="scrollDetails(-1)" class="absolute left-2 top-1/2 -translate-y-1/2 bg-black/40 text-white p-2 rounded-full z-10"><i data-lucide="chevron-left" class="w-6 h-6"></i></button>
-                    <button onclick="scrollDetails(1)" class="absolute right-2 top-1/2 -translate-y-1/2 bg-black/40 text-white p-2 rounded-full z-10"><i data-lucide="chevron-right" class="w-6 h-6"></i></button>
+                    <!-- Right Arrow (Previous in RTL) -->
+                    <button onclick="scrollDetails(-1)" class="absolute right-2 top-1/2 -translate-y-1/2 bg-black/40 text-white p-2 rounded-full z-10"><i data-lucide="chevron-right" class="w-6 h-6"></i></button>
+                    <!-- Left Arrow (Next in RTL) -->
+                    <button onclick="scrollDetails(1)" class="absolute left-2 top-1/2 -translate-y-1/2 bg-black/40 text-white p-2 rounded-full z-10"><i data-lucide="chevron-left" class="w-6 h-6"></i></button>
                 </div>
                 <span id="d-type-badge" class="absolute bottom-2 right-2 text-white px-2 py-0.5 rounded text-[10px] font-bold shadow backdrop-blur-sm"></span>
             </div>
@@ -342,7 +343,6 @@
         <div class="mobile-full-modal animate-pop">
             <div class="p-2.5 border-b border-slate-100 dark:border-slate-700 flex justify-between items-center bg-white dark:bg-darkbg shrink-0">
                 <h3 class="font-bold text-slate-800 dark:text-white text-sm">إضافة عقار</h3>
-                <!-- Enlarged Close Button -->
                 <button onclick="toggleAddModal()" class="bg-red-500 text-black p-2 rounded-full hover:bg-red-600 transition"><i data-lucide="x" class="w-5 h-5"></i></button>
             </div>
             <div class="flex-1 overflow-y-auto p-2.5 bg-slate-50 dark:bg-darkbg">
@@ -466,7 +466,7 @@
     <!-- Chat & Lightbox & Admin -->
     <div id="chat-modal" class="hidden modal-overlay"><div class="mobile-full-modal animate-pop border border-navy/10"><div class="bg-slate-900 dark:bg-emerald-600 p-3 text-white flex justify-between items-center shrink-0"><div class="flex items-center gap-2"><div class="bg-white/10 p-1.5 rounded-full"><i data-lucide="bot" class="w-5 h-5 text-yellow-400"></i></div><div><h4 class="font-bold text-xs">الدعم الفني</h4><span class="text-[9px] opacity-80">متصل الآن</span></div></div><button onclick="toggleChat()" class="bg-red-500 text-black p-1 rounded-full hover:bg-red-600 transition"><i data-lucide="x" class="w-4 h-4"></i></button></div><div id="chat-box" class="flex-1 bg-slate-100 dark:bg-slate-900 p-3 overflow-y-auto space-y-2 text-xs"></div><div class="p-3 bg-white dark:bg-slate-800 border-t dark:border-slate-700 flex items-center gap-2 shrink-0 pb-safe"><input id="chat-msg" type="text" class="flex-1 bg-slate-100 dark:bg-slate-700 border-0 rounded-full px-4 py-3 text-sm outline-none dark:text-white font-bold" placeholder="اكتب رسالتك..."><button onclick="sendMsg()" class="w-10 h-10 bg-slate-900 dark:bg-emerald-600 rounded-full text-white flex items-center justify-center shadow"><i data-lucide="send" class="w-4 h-4"></i></button></div></div></div>
     
-    <!-- Optimized Lightbox with Navigation -->
+    <!-- Lightbox -->
     <div id="lightbox" class="hidden fixed inset-0 bg-black/95 z-[100] flex flex-col items-center justify-center select-none">
         <button onclick="closeLightbox()" class="absolute top-4 left-4 bg-white/20 text-white p-2 rounded-full z-20"><i data-lucide="x" class="w-6 h-6"></i></button>
         <button onclick="changeLightboxImage(-1)" class="absolute right-2 top-1/2 -translate-y-1/2 bg-white/10 text-white p-3 rounded-full z-20 hover:bg-white/20"><i data-lucide="chevron-right" class="w-6 h-6"></i></button>
@@ -744,41 +744,33 @@
         document.getElementById('search-input').addEventListener('input', () => { clearTimeout(searchTimeout); searchTimeout = setTimeout(performSearch, 200); });
         document.getElementById('search-input').addEventListener('keydown', (e) => { if(e.key === 'Enter') { e.preventDefault(); performSearch(); document.getElementById('search-input').blur(); } });
 
-        // --- UPDATED RESET FUNCTION (Does NOT clear search input) ---
         window.resetFilters = () => {
-            // 1. Reset All Selects to Index 0
             const selects = ['filter-cat', 'filter-type', 'filter-gov'];
             selects.forEach(id => {
                 const el = document.getElementById(id);
                 if (el) el.selectedIndex = 0;
             });
-
-            // 2. Reset City Select specifically (rebuild it)
             const citySelect = document.getElementById('filter-city');
             if (citySelect) {
                 citySelect.innerHTML = '<option value="">كل المراكز</option>';
                 citySelect.value = '';
             }
-
-            // 3. Clear Price Inputs
             const minPrice = document.getElementById('filter-min-price');
             const maxPrice = document.getElementById('filter-max-price');
             if (minPrice) minPrice.value = '';
             if (maxPrice) maxPrice.value = '';
-
-            // 4. Reset Internal State
             state.currentFilter = 'all';
             state.visibleLimit = 6;
-
-            // 5. Force Update (Keeps search text intact)
             performSearch();
         };
 
+        // --- Optimized Image URL (512x512) ---
         const getOptimizedUrl = (url, isVideo = false) => {
             if (!url || !url.includes('cloudinary.com')) return url;
             const parts = url.split('/upload/');
             if (parts.length < 2) return url;
-            let params = 'w_500,h_350,c_fill,q_auto,f_auto';
+            // Force 512x512 for thumbnails/cards
+            let params = 'w_512,h_512,c_fill,q_auto,f_auto';
             if (isVideo) {
                 let cleanUrl = parts[1];
                 const lastDot = cleanUrl.lastIndexOf('.');
@@ -856,7 +848,6 @@
             </div>`;
         }
 
-        // --- Function to Clear Modal Data (Prevents Ghosting) ---
         function clearDetailsData() {
             document.getElementById('d-title').innerText = '';
             document.getElementById('d-price').innerText = '';
@@ -865,33 +856,25 @@
             document.getElementById('d-amenities').innerHTML = '';
             document.getElementById('d-table-body').innerHTML = '';
             document.getElementById('details-slider').innerHTML = '';
-            // Reset scroll position
             const slider = document.getElementById('details-slider');
             if(slider) slider.scrollLeft = 0;
         }
 
-        // --- Optimized Open Details with Caching Logic ---
         window.openDetails = (id) => {
-            // Check if we are opening the same item that is already loaded in DOM
             if (state.activeDetailsId === id) {
                 toggleModal('details-modal');
-                return; // Data is already there, just show it
+                return; 
             }
-
-            // If different item, clear old data first
             clearDetailsData();
 
             if(toggleModal('details-modal')){
-                // Use requestAnimationFrame to let the modal open smoothly first
                 requestAnimationFrame(() => {
                     setTimeout(() => {
                          try {
                             const item = state.listings.find(i => i.id === id); if(!item) return;
-                            
-                            // Set active ID for caching
                             state.activeDetailsId = id;
                             state.currentItem = item; 
-                            state.currentDetailIndex = 0; // Reset slider index
+                            state.currentDetailIndex = 0; 
 
                             document.getElementById('d-title').innerText = item.title; document.getElementById('d-price').innerText = Number(item.price).toLocaleString() + ' جنيه'; document.getElementById('d-desc').innerText = item.desc; document.getElementById('d-time-badge').innerText = timeAgo(item.createdAt);
 
@@ -910,7 +893,6 @@
 
                             const imgs = Array.isArray(item.images) ? item.images : [item.image]; 
 
-                            // WhatsApp Link
                             const updateWaLink = () => {
                                 const shareUrl = window.location.origin + window.location.pathname + '?id=' + item.id;
                                 const waMsg = `مهتم بهذا العقار: ${item.title} (${Number(item.price).toLocaleString()} ج)\nالرابط: ${shareUrl}`;
@@ -921,12 +903,9 @@
                             document.getElementById('d-call').href = `tel:${item.phone}`;
 
                             const slider = document.getElementById('details-slider'); 
-                            // Optimized Slider: Use Thumbnails for display, but keep original for Lightbox
                             slider.innerHTML = imgs.map((src, idx) => {
                                 const isVid = src.includes('.mp4') || src.includes('.mov');
-                                // Generate optimized thumbnail URL for the slider
                                 const thumb = getOptimizedUrl(src, isVid);
-                                
                                 return isVid 
                                     ? `<video src="${src}" controls class="w-full h-full object-contain snap-center shrink-0 bg-black"></video>` 
                                     : `<img src="${thumb}" loading="lazy" class="w-full h-full object-cover snap-center shrink-0 cursor-pointer" onclick="openLightbox('${src}', ${idx})">`
@@ -957,7 +936,7 @@
                                 if(item.level) tableHtml += `<tr><th class="text-slate-500 dark:text-slate-400 font-normal bg-slate-50 dark:bg-slate-800/50 text-[10px] flex items-center gap-1"><i data-lucide="arrow-up-circle" class="w-3 h-3"></i> الدور</th><td class="font-bold text-slate-800 dark:text-slate-200">${item.level}</td></tr>`;
                                 if(item.furnished) tableHtml += `<tr><th class="text-slate-500 dark:text-slate-400 font-normal bg-slate-50 dark:bg-slate-800/50 text-[10px] flex items-center gap-1"><i data-lucide="sofa" class="w-3 h-3"></i> الفرش</th><td class="font-bold text-slate-800 dark:text-slate-200">${item.furnished==='yes'?'مفروش':'غير مفروش'}</td></tr>`;
                             }
-                            tableHtml += `<tr><th class="text-slate-500 dark:text-slate-400 font-normal bg-slate-50 dark:bg-slate-800/50 text-[10px] flex items-center gap-1"><i data-lucide="info" class="w-3 h-3"></i> الحالة</th><td class="font-bold text-slate-800 dark:text-slate-200">متاح</td></tr>`;
+                            tableHtml += `<tr><th class="text-slate-500 dark:text-slate-400 font-normal bg-slate-50 dark:bg-slate-800/50 text-[10px] flex items-center gap-1"><i data-lucide="info" class="w-3 h-3"></i> الحالة</th><td class="font-bold text-slate-800 dark:text-slate-200">${item.status==='available'?'متاح':(item.status==='sold'?'مباع':'مؤجر')}</td></tr>`;
                             document.getElementById('d-table-body').innerHTML = tableHtml;
 
                             const isOwner = state.user && state.user.uid === item.authorId;
@@ -969,13 +948,12 @@
                             } else { controlsDiv.classList.add('hidden'); }
                             lucide.createIcons();
                         } catch(e) { console.error(e); showToast('حدث خطأ في عرض التفاصيل', 'e'); }
-                    }, 50); // Small delay to allow animation
+                    }, 50); 
                 });
             }
         }
         window.closeDetails = () => {
             toggleModal('details-modal');
-            // Removed clearDetailsData() to keep data cached in DOM
         }
         window.shareListing = async () => { if(!state.currentItem) return; const d = { title: 'السوق وياك', text: `شاهد عقار: ${state.currentItem.title}`, url: window.location.href + '?id=' + state.currentItem.id }; try { await navigator.share(d); showToast('تمت المشاركة'); } catch(e) { navigator.clipboard.writeText(d.url); showToast('تم النسخ'); } };
 
@@ -995,25 +973,22 @@
             }
         };
 
-        // --- Infinite Slider Logic ---
+        // --- Fixed Slider Logic (RTL) ---
         window.scrollDetails = (dir) => {
             const slider = document.getElementById('details-slider');
             const count = slider.children.length;
             if(count === 0) return;
 
-            // Calculate new index with loop
             let newIndex = state.currentDetailIndex + dir;
             if (newIndex >= count) newIndex = 0;
             if (newIndex < 0) newIndex = count - 1;
 
             state.currentDetailIndex = newIndex;
 
-            // Scroll to specific element
             const target = slider.children[newIndex];
             target.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'start' });
         }
         
-        // --- Lightbox Logic ---
         window.openLightbox = (src, idx = 0) => { 
             state.lightboxIndex = idx;
             updateLightboxImage();
@@ -1030,10 +1005,9 @@
 
         function updateLightboxImage() {
             const img = document.getElementById('lightbox-img');
-            // Always use the original image for the lightbox
             const src = state.currentItem.images[state.lightboxIndex];
             if (src.includes('.mp4') || src.includes('.mov')) {
-                 img.src = ""; // Placeholder
+                 img.src = ""; 
                  showToast("فيديو: يرجى المشاهدة في التفاصيل");
             } else {
                 img.style.opacity = '0.5';
@@ -1045,9 +1019,8 @@
         function toggleModal(id) { const m=document.getElementById(id); m.classList.toggle('hidden'); if(!m.classList.contains('hidden')) document.body.style.overflow='hidden'; else document.body.style.overflow=''; return !m.classList.contains('hidden'); }
         window.toggleAddModal=()=>{if(toggleModal('add-modal')){state.filesToUpload=[];document.getElementById('preview-area').innerHTML=''; updateFormFields();}};
 
-        // --- Client-Side Image Compression ---
         async function compressImage(file) {
-            if (file.type.startsWith('video')) return file; // Skip videos
+            if (file.type.startsWith('video')) return file; 
             return new Promise((resolve) => {
                 const reader = new FileReader();
                 reader.readAsDataURL(file);
@@ -1057,22 +1030,16 @@
                     img.onload = () => {
                         const canvas = document.createElement('canvas');
                         const ctx = canvas.getContext('2d');
-                        
-                        // Resize logic (Max width 1024px)
                         const maxWidth = 1024;
                         let width = img.width;
                         let height = img.height;
-                        
                         if (width > maxWidth) {
                             height *= maxWidth / width;
                             width = maxWidth;
                         }
-
                         canvas.width = width;
                         canvas.height = height;
                         ctx.drawImage(img, 0, 0, width, height);
-                        
-                        // Compress to JPEG with 70% quality
                         canvas.toBlob((blob) => {
                             resolve(new File([blob], file.name, { type: 'image/jpeg', lastModified: Date.now() }));
                         }, 'image/jpeg', 0.7);
@@ -1081,19 +1048,13 @@
             });
         }
 
-        // --- Optimized Upload (Non-blocking with Compression) ---
         window.handleUpload = async (input) => {
-            // Limit increased to 10
             if(input.files.length + state.filesToUpload.length > 10) return showToast('10 ملفات كحد أقصى','e');
-            
             showToast('جاري معالجة الصور...');
-            
-            // Process files one by one
             for(let f of input.files){
-                // Compress before adding to state
                 const compressedFile = await compressImage(f);
                 state.filesToUpload.push(compressedFile);
-                await new Promise(resolve => setTimeout(resolve, 10)); // Yield to main thread
+                await new Promise(resolve => setTimeout(resolve, 10)); 
             }
             renderPreview();
         }; 
@@ -1123,10 +1084,16 @@
             return data.secure_url;
         }
 
-        // --- Optimized Submit (No Reload) ---
+        // --- Fixed Validation & Loading Logic ---
         window.submitListing = async () => {
             try {
+                // 1. Validation First
+                const gov = document.getElementById('in-gov').value;
+                const city = document.getElementById('in-city').value;
+                if(!gov || !city) return showToast('يرجى اختيار المحافظة والمركز', 'e');
                 if(!state.filesToUpload.length) return showToast('مطلوب صورة أو فيديو','e');
+
+                // 2. Then Loading State
                 const btn = document.getElementById('btn-publish');
                 const originalText = btn.innerText;
                 btn.innerText='جاري الرفع والنشر...';
@@ -1143,15 +1110,6 @@
                 const cat = document.getElementById('in-category').value;
                 const furnished = document.querySelector('input[name="furnished"]:checked')?.value;
                 const landType = document.getElementById('in-land-type').value;
-                const gov = document.getElementById('in-gov').value;
-                const city = document.getElementById('in-city').value;
-
-                if(!gov || !city) {
-                    showToast('يرجى اختيار المحافظة والمركز', 'e');
-                    btn.innerText = originalText;
-                    btn.disabled = false;
-                    return;
-                }
 
                 await addDoc(collection(db, COLLECTION_NAME),{
                     title: document.getElementById('in-title').value,
@@ -1190,19 +1148,16 @@
                 showToast('تم النشر بنجاح');
                 toggleModal('add-modal');
                 
-                // Reset Form
                 state.filesToUpload = [];
                 document.getElementById('preview-area').innerHTML = '';
                 document.getElementById('in-title').value = '';
                 document.getElementById('in-price').value = '';
                 document.getElementById('in-area').value = '';
                 document.getElementById('in-desc').value = '';
-                // ... reset other fields if needed ...
 
                 btn.innerText = originalText;
                 btn.disabled = false;
                 
-                // No reload needed, onSnapshot will update the list
             } catch(e) {
                 console.error(e);
                 showToast('حدث خطأ أثناء النشر', 'e');
@@ -1213,7 +1168,26 @@
 
         window.del=async(e,id)=>{if(e)e.stopPropagation();if(confirm('حذف؟')){await deleteDoc(doc(db, COLLECTION_NAME, id));showToast('تم الحذف'); closeDetails();}};
         window.pin=async(e,id,s)=>{if(e)e.stopPropagation();await updateDoc(doc(db, COLLECTION_NAME, id),{isPinned:!s});showToast(s?'تم إلغاء التثبيت':'تم التثبيت'); closeDetails();};
-        window.toggleStatus=async(e,id,currentStatus,type)=>{if(e)e.stopPropagation();let nextStatus='available';if(currentStatus==='available'){nextStatus=type==='sale'?'sold':'rented'};await updateDoc(doc(db, COLLECTION_NAME, id),{status:nextStatus});showToast(`الحالة: ${nextStatus==='available'?'متاح':(nextStatus==='sold'?'تم البيع':'تم التأجير')}`); closeDetails();};
+        
+        // --- Fixed Status Toggle Logic ---
+        window.toggleStatus = async (e, id, currentStatus, type) => {
+            if(e) {
+                e.stopPropagation();
+                e.target.disabled = true; // Prevent double clicks
+            }
+            
+            // Correct Logic: If available -> Sold/Rented. If Sold/Rented -> Available.
+            let nextStatus = (currentStatus === 'available') ? (type === 'sale' ? 'sold' : 'rented') : 'available';
+            
+            try {
+                await updateDoc(doc(db, COLLECTION_NAME, id), { status: nextStatus });
+                showToast(`الحالة: ${nextStatus === 'available' ? 'متاح' : (nextStatus === 'sold' ? 'تم البيع' : 'تم التأجير')}`);
+                closeDetails();
+            } catch(err) {
+                showToast('خطأ في تحديث الحالة', 'e');
+                if(e) e.target.disabled = false;
+            }
+        };
 
         window.toggleChat=()=>{if(toggleModal('chat-modal')){if(!state.chatId&&state.chatStep===0&&!state.welcomeSent){state.welcomeSent=true;setTimeout(()=>botMsg('مرحباً! 👋<br>ما هو الاسم؟'),100)}}};
         window.sendMsg=async()=>{const t=document.getElementById('chat-msg').value.trim();if(!t)return;document.getElementById('chat-msg').value='';userMsg(t);if(!state.chatId){if(state.chatStep===0){state.tempName=t;state.chatStep=1;setTimeout(()=>botMsg(`أهلاً ${t}، كيف نساعدك؟`),200)}else if(state.chatStep===1){state.chatStep=2;setTimeout(()=>botMsg('جاري تحويلك للدعم الفني...'),200);const r=await addDoc(collection(db,"chats"),{userId:state.user.uid,userName:state.tempName,lastMsg:t,status:'waiting',messages:[{s:'bot',t:`الاسم: ${state.tempName}`,d:new Date()},{s:'user',t,d:new Date()},{s:'bot',t:'جاري تحويلك للدعم الفني...',d:new Date()}],createdAt:serverTimestamp()});state.chatId=r.id;listenChat(r.id)}}else{const s=await getDocs(query(collection(db,"chats"),where('__name__','==',state.chatId)));if(!s.empty){const m=s.docs[0].data().messages;m.push({s:'user',t,d:new Date()});await updateDoc(doc(db,"chats",state.chatId),{messages:m,lastMsg:t,status:'waiting'})}}};
@@ -1229,7 +1203,6 @@
         window.sendAdminMsg=async()=>{const t=document.getElementById('admin-input').value;if(!t||!state.activeAdminChat)return;document.getElementById('admin-input').value='';const s=await getDocs(query(collection(db,"chats"),where('__name__','==',state.activeAdminChat)));const m=s.docs[0].data().messages;m.push({s:'support',t,d:new Date()});await updateDoc(doc(db,"chats",state.activeAdminChat),{messages:m,status:'active'})};
         window.kickUser=async()=>{if(confirm("إنهاء؟")){await updateDoc(doc(db,"chats",state.activeAdminChat),{status:'closed'});document.getElementById('admin-msg-area').innerHTML='';document.getElementById('btn-end-chat').classList.add('hidden');state.activeAdminChat=null}};
 
-        // Register Service Worker
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
                 navigator.serviceWorker.register('./service-worker.js')
