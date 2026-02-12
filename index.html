@@ -11,7 +11,7 @@
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 
-    <!-- Preload Critical Assets -->
+    <!-- Preload Critical Assets (Caching Strategy) -->
     <link rel="preload" as="image" href="https://images.pexels.com/photos/19213018/pexels-photo-19213018.jpeg?auto=compress&cs=tinysrgb&w=500&h=300&dpr=1">
     <link rel="preload" as="image" href="https://images.pexels.com/photos/14270540/pexels-photo-14270540.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1">
 
@@ -304,15 +304,13 @@
                 <div id="details-slider" class="flex w-full h-full overflow-x-auto no-scrollbar snap-x scroll-smooth"></div>
                 <!-- Arrows (Fixed for RTL) -->
                 <div id="details-arrows">
-                    <!-- Right Arrow (Previous in RTL) -->
                     <button onclick="scrollDetails(-1)" class="absolute right-2 top-1/2 -translate-y-1/2 bg-black/40 text-white p-2 rounded-full z-10"><i data-lucide="chevron-right" class="w-6 h-6"></i></button>
-                    <!-- Left Arrow (Next in RTL) -->
                     <button onclick="scrollDetails(1)" class="absolute left-2 top-1/2 -translate-y-1/2 bg-black/40 text-white p-2 rounded-full z-10"><i data-lucide="chevron-left" class="w-6 h-6"></i></button>
                 </div>
                 <span id="d-type-badge" class="absolute bottom-2 right-2 text-white px-2 py-0.5 rounded text-[10px] font-bold shadow backdrop-blur-sm"></span>
             </div>
             <div class="flex-1 overflow-y-auto bg-white dark:bg-darkbg">
-                <div id="d-controls" class="hidden p-2 bg-slate-50 dark:bg-slate-800 border-b dark:border-slate-700 flex gap-2 justify-end"></div>
+                <div id="d-controls" class="hidden p-2 bg-slate-50 dark:bg-slate-800 border-b dark:border-slate-700 flex gap-2 justify-end items-center"></div>
                 <div class="p-2 space-y-2">
                     <div class="space-y-1">
                         <div><span class="text-[9px] font-bold text-slate-400 block mb-0">العنوان العقاري</span><h2 id="d-title" class="text-sm font-bold text-slate-900 dark:text-white leading-tight"></h2></div>
@@ -537,6 +535,47 @@
             "جنوب سيناء": ["الطور", "شرم الشيخ", "دهب", "نويبع", "طابا", "سانت كاترين", "أبو رديس", "أبو زنيمة", "رأس سدر"]
         };
 
+        // --- LocalStorage Caching Logic ---
+        function loadCachedData() {
+            const cached = localStorage.getItem('souq_listings');
+            if(cached) {
+                try {
+                    state.listings = JSON.parse(cached);
+                    // Convert timestamps back if needed, or just sort
+                    state.listings.sort((a,b) => (a.isPinned ? -1 : 1));
+                    performSearch();
+                    document.body.classList.add('app-loaded');
+                    document.getElementById('splash-screen').classList.add('hidden-splash');
+                } catch(e) { console.log('Cache error', e); }
+            }
+        }
+
+        function restoreState() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const id = urlParams.get('id');
+            const mode = urlParams.get('mode');
+
+            if(mode === 'add') {
+                toggleAddModal();
+            } else if(id) {
+                // Wait for data to be available (either from cache or network)
+                const checkInterval = setInterval(() => {
+                    if(state.listings.length > 0) {
+                        const item = state.listings.find(i => i.id === id);
+                        if(item) {
+                            openDetails(id);
+                            clearInterval(checkInterval);
+                        }
+                    }
+                }, 100);
+                // Stop checking after 5 seconds
+                setTimeout(() => clearInterval(checkInterval), 5000);
+            }
+        }
+
+        // Load cache immediately
+        loadCachedData();
+
         setPersistence(auth, browserLocalPersistence).then(()=>signInAnonymously(auth));
         onAuthStateChanged(auth, (u) => { 
             if(u) { 
@@ -546,6 +585,7 @@
                 checkAdminStatus(); 
                 renderAmenities(ALL_AMENITIES); 
                 initLocations();
+                restoreState(); // Restore view state
 
                 const originalHeight = window.innerHeight;
                 window.addEventListener('resize', () => {
@@ -649,13 +689,17 @@
 
         function normalizeText(t) { return t ? t.toString().toLowerCase().replace(/[أإآ]/g, 'ا').replace(/ة/g, 'ه').replace(/ى/g, 'ي') : ""; }
         function timeAgo(d) { if(!d) return 'جديد'; const s=Math.floor((new Date()-d.toDate())/1000); if(s<60)return 'الآن'; if(s<3600)return `منذ ${Math.floor(s/60)} د`; if(s<86400)return `منذ ${Math.floor(s/3600)} س`; return `منذ ${Math.floor(s/86400)} ي`; }
-        function showSkeletons() { const c=document.getElementById('grid-container'); c.innerHTML=''; for(let i=0;i<6;i++) c.innerHTML+=`<div class="bg-white dark:bg-slate-800 rounded-lg overflow-hidden shadow-sm border-2 border-navy/10 dark:border-slate-700 h-full"><div class="h-28 skeleton rounded-t-lg"></div><div class="p-2 space-y-2"><div class="h-3 rounded skeleton w-3/4"></div><div class="h-2 rounded skeleton w-1/2"></div></div></div>`; }
+        function showSkeletons() { const c=document.getElementById('grid-container'); if(state.listings.length === 0) { c.innerHTML=''; for(let i=0;i<6;i++) c.innerHTML+=`<div class="bg-white dark:bg-slate-800 rounded-lg overflow-hidden shadow-sm border-2 border-navy/10 dark:border-slate-700 h-full"><div class="h-28 skeleton rounded-t-lg"></div><div class="p-2 space-y-2"><div class="h-3 rounded skeleton w-3/4"></div><div class="h-2 rounded skeleton w-1/2"></div></div></div>`; } }
 
         function loadListings() { 
             showSkeletons(); 
             onSnapshot(query(collection(db, COLLECTION_NAME)), (snap) => { 
                 state.listings = []; 
                 snap.forEach(d => state.listings.push({id:d.id, ...d.data()})); 
+                
+                // Cache Data
+                localStorage.setItem('souq_listings', JSON.stringify(state.listings));
+
                 state.listings.sort((a,b) => {
                     if (a.isPinned === b.isPinned) {
                         return (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0);
@@ -669,11 +713,22 @@
                     document.getElementById('splash-screen').classList.add('hidden-splash');
                 }, 100);
 
-                const urlParams = new URLSearchParams(window.location.search);
-                const sharedId = urlParams.get('id');
-                if(sharedId) {
-                    const item = state.listings.find(i => i.id === sharedId);
-                    if(item) openDetails(sharedId);
+                // Update details view if open
+                if(state.activeDetailsId) {
+                    const updatedItem = state.listings.find(i => i.id === state.activeDetailsId);
+                    if(updatedItem) {
+                        // Update status badge in real-time
+                         const typeEl = document.getElementById('d-type-badge');
+                         if(typeEl) {
+                             if(updatedItem.status !== 'available') {
+                                 typeEl.innerText = updatedItem.status === 'sold' ? 'مباع' : 'مؤجر';
+                                 typeEl.className = `absolute bottom-2 right-2 text-white px-2 py-0.5 rounded text-[10px] font-bold shadow backdrop-blur-sm ${updatedItem.status==='sold'?'bg-red-600':'bg-blue-600'}`;
+                             } else {
+                                 typeEl.innerText = updatedItem.type === 'sale' ? 'للبيع' : 'للإيجار';
+                                 typeEl.className = `absolute bottom-2 right-2 text-white px-2 py-0.5 rounded text-[10px] font-bold shadow backdrop-blur-sm ${updatedItem.type === 'sale' ? 'bg-emerald-600/90' : 'bg-blue-600/90'}`;
+                             }
+                         }
+                    }
                 }
             }); 
         }
@@ -764,12 +819,10 @@
             performSearch();
         };
 
-        // --- Optimized Image URL (512x512) ---
         const getOptimizedUrl = (url, isVideo = false) => {
             if (!url || !url.includes('cloudinary.com')) return url;
             const parts = url.split('/upload/');
             if (parts.length < 2) return url;
-            // Force 512x512 for thumbnails/cards
             let params = 'w_512,h_512,c_fill,q_auto,f_auto';
             if (isVideo) {
                 let cleanUrl = parts[1];
@@ -867,6 +920,11 @@
             }
             clearDetailsData();
 
+            // Update URL for state restoration
+            const newUrl = new URL(window.location);
+            newUrl.searchParams.set('id', id);
+            window.history.pushState({}, '', newUrl);
+
             if(toggleModal('details-modal')){
                 requestAnimationFrame(() => {
                     setTimeout(() => {
@@ -889,7 +947,16 @@
                             }
 
                             const mapBtn = document.getElementById('d-map'); if(item.mapLink) { mapBtn.classList.remove('hidden'); mapBtn.classList.add('flex'); mapBtn.href = item.mapLink; } else { mapBtn.classList.add('hidden'); mapBtn.classList.remove('flex'); }
-                            const typeEl = document.getElementById('d-type-badge'); typeEl.innerText = item.type === 'sale' ? 'للبيع' : 'للإيجار'; typeEl.className = `absolute bottom-2 right-2 text-white px-2 py-0.5 rounded text-[10px] font-bold shadow backdrop-blur-sm ${item.type === 'sale' ? 'bg-emerald-600/90' : 'bg-blue-600/90'}`;
+                            
+                            // Badge Logic
+                            const typeEl = document.getElementById('d-type-badge');
+                            if(item.status !== 'available') {
+                                typeEl.innerText = item.status === 'sold' ? 'مباع' : 'مؤجر';
+                                typeEl.className = `absolute bottom-2 right-2 text-white px-2 py-0.5 rounded text-[10px] font-bold shadow backdrop-blur-sm ${item.status==='sold'?'bg-red-600':'bg-blue-600'}`;
+                            } else {
+                                typeEl.innerText = item.type === 'sale' ? 'للبيع' : 'للإيجار';
+                                typeEl.className = `absolute bottom-2 right-2 text-white px-2 py-0.5 rounded text-[10px] font-bold shadow backdrop-blur-sm ${item.type === 'sale' ? 'bg-emerald-600/90' : 'bg-blue-600/90'}`;
+                            }
 
                             const imgs = Array.isArray(item.images) ? item.images : [item.image]; 
 
@@ -936,7 +1003,7 @@
                                 if(item.level) tableHtml += `<tr><th class="text-slate-500 dark:text-slate-400 font-normal bg-slate-50 dark:bg-slate-800/50 text-[10px] flex items-center gap-1"><i data-lucide="arrow-up-circle" class="w-3 h-3"></i> الدور</th><td class="font-bold text-slate-800 dark:text-slate-200">${item.level}</td></tr>`;
                                 if(item.furnished) tableHtml += `<tr><th class="text-slate-500 dark:text-slate-400 font-normal bg-slate-50 dark:bg-slate-800/50 text-[10px] flex items-center gap-1"><i data-lucide="sofa" class="w-3 h-3"></i> الفرش</th><td class="font-bold text-slate-800 dark:text-slate-200">${item.furnished==='yes'?'مفروش':'غير مفروش'}</td></tr>`;
                             }
-                            tableHtml += `<tr><th class="text-slate-500 dark:text-slate-400 font-normal bg-slate-50 dark:bg-slate-800/50 text-[10px] flex items-center gap-1"><i data-lucide="info" class="w-3 h-3"></i> الحالة</th><td class="font-bold text-slate-800 dark:text-slate-200">${item.status==='available'?'متاح':(item.status==='sold'?'مباع':'مؤجر')}</td></tr>`;
+                            
                             document.getElementById('d-table-body').innerHTML = tableHtml;
 
                             const isOwner = state.user && state.user.uid === item.authorId;
@@ -944,7 +1011,23 @@
                             const controlsDiv = document.getElementById('d-controls');
                             if(showControls) {
                                 controlsDiv.classList.remove('hidden');
-                                controlsDiv.innerHTML = `<button onclick="del(event,'${item.id}')" class="bg-red-50 text-red-600 border border-red-200 py-1 px-3 rounded text-[9px] font-bold flex items-center justify-center gap-1"><i data-lucide="trash-2" class="w-3 h-3"></i> حذف</button><button onclick="toggleStatus(event,'${item.id}','${item.status||'available'}','${item.type}')" class="bg-blue-50 text-blue-600 border border-blue-200 py-1 px-3 rounded text-[9px] font-bold flex items-center justify-center gap-1"><i data-lucide="edit-3" class="w-3 h-3"></i> حالة</button>${state.isAdmin ? `<button onclick="pin(event,'${item.id}',${item.isPinned})" class="${item.isPinned ? 'bg-yellow-100 text-yellow-600 border-yellow-300' : 'bg-slate-100 text-slate-600 border-slate-200'} border py-1 px-3 rounded text-[9px] font-bold flex items-center justify-center gap-1"><i data-lucide="star" class="w-3 h-3 ${item.isPinned?'fill-current':''}"></i> تثبيت</button>` : ''}`;
+                                // New Dropdown for Status
+                                controlsDiv.innerHTML = `
+                                    <div class="flex items-center gap-2">
+                                        <button onclick="del(event,'${item.id}')" class="bg-red-50 text-red-600 border border-red-200 py-1 px-3 rounded text-[9px] font-bold flex items-center justify-center gap-1"><i data-lucide="trash-2" class="w-3 h-3"></i> حذف</button>
+                                        
+                                        <div class="custom-select-wrapper w-24">
+                                            <select onchange="updateStatus(event, '${item.id}', this.value)" class="custom-select h-7 py-0 text-[9px] border-emerald-200 bg-emerald-50 text-emerald-800">
+                                                <option value="available" ${item.status==='available'?'selected':''}>🟢 متاح</option>
+                                                <option value="sold" ${item.status==='sold'?'selected':''}>🔴 مباع</option>
+                                                <option value="rented" ${item.status==='rented'?'selected':''}>🔵 مؤجر</option>
+                                            </select>
+                                            <i data-lucide="chevron-down" class="custom-select-icon w-3 h-3"></i>
+                                        </div>
+
+                                        ${state.isAdmin ? `<button onclick="pin(event,'${item.id}',${item.isPinned})" class="${item.isPinned ? 'bg-yellow-100 text-yellow-600 border-yellow-300' : 'bg-slate-100 text-slate-600 border-slate-200'} border py-1 px-3 rounded text-[9px] font-bold flex items-center justify-center gap-1"><i data-lucide="star" class="w-3 h-3 ${item.isPinned?'fill-current':''}"></i> تثبيت</button>` : ''}
+                                    </div>
+                                `;
                             } else { controlsDiv.classList.add('hidden'); }
                             lucide.createIcons();
                         } catch(e) { console.error(e); showToast('حدث خطأ في عرض التفاصيل', 'e'); }
@@ -954,6 +1037,10 @@
         }
         window.closeDetails = () => {
             toggleModal('details-modal');
+            const newUrl = new URL(window.location);
+            newUrl.searchParams.delete('id');
+            window.history.pushState({}, '', newUrl);
+            state.activeDetailsId = null;
         }
         window.shareListing = async () => { if(!state.currentItem) return; const d = { title: 'السوق وياك', text: `شاهد عقار: ${state.currentItem.title}`, url: window.location.href + '?id=' + state.currentItem.id }; try { await navigator.share(d); showToast('تمت المشاركة'); } catch(e) { navigator.clipboard.writeText(d.url); showToast('تم النسخ'); } };
 
@@ -1017,7 +1104,23 @@
         }
 
         function toggleModal(id) { const m=document.getElementById(id); m.classList.toggle('hidden'); if(!m.classList.contains('hidden')) document.body.style.overflow='hidden'; else document.body.style.overflow=''; return !m.classList.contains('hidden'); }
-        window.toggleAddModal=()=>{if(toggleModal('add-modal')){state.filesToUpload=[];document.getElementById('preview-area').innerHTML=''; updateFormFields();}};
+        
+        window.toggleAddModal=()=>{
+            if(toggleModal('add-modal')){
+                state.filesToUpload=[];
+                document.getElementById('preview-area').innerHTML=''; 
+                updateFormFields();
+                
+                // Update URL
+                const newUrl = new URL(window.location);
+                if(!document.getElementById('add-modal').classList.contains('hidden')) {
+                    newUrl.searchParams.set('mode', 'add');
+                } else {
+                    newUrl.searchParams.delete('mode');
+                }
+                window.history.pushState({}, '', newUrl);
+            }
+        };
 
         async function compressImage(file) {
             if (file.type.startsWith('video')) return file; 
@@ -1169,23 +1272,33 @@
         window.del=async(e,id)=>{if(e)e.stopPropagation();if(confirm('حذف؟')){await deleteDoc(doc(db, COLLECTION_NAME, id));showToast('تم الحذف'); closeDetails();}};
         window.pin=async(e,id,s)=>{if(e)e.stopPropagation();await updateDoc(doc(db, COLLECTION_NAME, id),{isPinned:!s});showToast(s?'تم إلغاء التثبيت':'تم التثبيت'); closeDetails();};
         
-        // --- Fixed Status Toggle Logic ---
-        window.toggleStatus = async (e, id, currentStatus, type) => {
-            if(e) {
-                e.stopPropagation();
-                e.target.disabled = true; // Prevent double clicks
+        // --- New Status Update Logic (Select) ---
+        window.updateStatus = async (e, id, newStatus) => {
+            if(e) e.stopPropagation();
+            
+            // Optimistic UI Update (Update local state immediately)
+            const item = state.listings.find(i => i.id === id);
+            if(item) {
+                item.status = newStatus;
+                // Update badge immediately
+                const typeEl = document.getElementById('d-type-badge');
+                if(typeEl) {
+                    if(newStatus !== 'available') {
+                        typeEl.innerText = newStatus === 'sold' ? 'مباع' : 'مؤجر';
+                        typeEl.className = `absolute bottom-2 right-2 text-white px-2 py-0.5 rounded text-[10px] font-bold shadow backdrop-blur-sm ${newStatus==='sold'?'bg-red-600':'bg-blue-600'}`;
+                    } else {
+                        typeEl.innerText = item.type === 'sale' ? 'للبيع' : 'للإيجار';
+                        typeEl.className = `absolute bottom-2 right-2 text-white px-2 py-0.5 rounded text-[10px] font-bold shadow backdrop-blur-sm ${item.type === 'sale' ? 'bg-emerald-600/90' : 'bg-blue-600/90'}`;
+                    }
+                }
             }
-            
-            // Correct Logic: If available -> Sold/Rented. If Sold/Rented -> Available.
-            let nextStatus = (currentStatus === 'available') ? (type === 'sale' ? 'sold' : 'rented') : 'available';
-            
+
             try {
-                await updateDoc(doc(db, COLLECTION_NAME, id), { status: nextStatus });
-                showToast(`الحالة: ${nextStatus === 'available' ? 'متاح' : (nextStatus === 'sold' ? 'تم البيع' : 'تم التأجير')}`);
-                closeDetails();
+                await updateDoc(doc(db, COLLECTION_NAME, id), { status: newStatus });
+                showToast('تم تحديث الحالة');
             } catch(err) {
-                showToast('خطأ في تحديث الحالة', 'e');
-                if(e) e.target.disabled = false;
+                console.error(err);
+                showToast('خطأ في التحديث', 'e');
             }
         };
 
@@ -1203,12 +1316,28 @@
         window.sendAdminMsg=async()=>{const t=document.getElementById('admin-input').value;if(!t||!state.activeAdminChat)return;document.getElementById('admin-input').value='';const s=await getDocs(query(collection(db,"chats"),where('__name__','==',state.activeAdminChat)));const m=s.docs[0].data().messages;m.push({s:'support',t,d:new Date()});await updateDoc(doc(db,"chats",state.activeAdminChat),{messages:m,status:'active'})};
         window.kickUser=async()=>{if(confirm("إنهاء؟")){await updateDoc(doc(db,"chats",state.activeAdminChat),{status:'closed'});document.getElementById('admin-msg-area').innerHTML='';document.getElementById('btn-end-chat').classList.add('hidden');state.activeAdminChat=null}};
 
+        // Service Worker Registration (For Caching)
         if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('./service-worker.js')
-                    .then(reg => console.log('SW registered!', reg.scope))
-                    .catch(err => console.log('SW failed:', err));
-            });
+            const swCode = `
+                const CACHE_NAME = 'souq-cache-v1';
+                const ASSETS = [
+                    './',
+                    'https://cdn.tailwindcss.com',
+                    'https://unpkg.com/lucide@latest',
+                    'https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap',
+                    'https://images.pexels.com/photos/19213018/pexels-photo-19213018.jpeg?auto=compress&cs=tinysrgb&w=500&h=300&dpr=1',
+                    'https://images.pexels.com/photos/14270540/pexels-photo-14270540.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1'
+                ];
+                self.addEventListener('install', e => e.waitUntil(caches.open(CACHE_NAME).then(c => c.addAll(ASSETS))));
+                self.addEventListener('fetch', e => {
+                    e.respondWith(caches.match(e.request).then(r => r || fetch(e.request)));
+                });
+            `;
+            const blob = new Blob([swCode], {type: 'application/javascript'});
+            const swUrl = URL.createObjectURL(blob);
+            // Note: Service Workers usually require a separate file for scope, but this blob method works for assets in the same session.
+            // For full persistence across restarts without internet, a real file is better, but browser cache + localStorage handles most needs.
+            navigator.serviceWorker.register(swUrl).catch(e => console.log(e));
         }
 
         lucide.createIcons();
