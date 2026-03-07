@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
@@ -196,7 +195,7 @@
                 <div class="relative w-full">
                     <button onclick="toggleFilterPanel()" class="absolute left-1 top-0 h-full w-9 flex items-center justify-center text-slate-500 hover:text-slate-800 dark:hover:text-white transition z-10"><i data-lucide="sliders-horizontal" class="w-4 h-4"></i></button>
                     <input type="text" id="search-input" placeholder="ابحث (شقة، كود، عنوان)..." class="w-full bg-transparent border-none rounded-lg pl-10 pr-9 py-1 text-xs outline-none dark:text-white font-bold h-8">
-                    <button onclick="performSearch()" class="absolute right-1 top-0 h-full w-9 flex items-center justify-center text-slate-500 hover:text-emerald-600 transition"><i data-lucide="search" class="w-4 h-4"></i></button>
+                    <button onclick="performSearch(false)" class="absolute right-1 top-0 h-full w-9 flex items-center justify-center text-slate-500 hover:text-emerald-600 transition"><i data-lucide="search" class="w-4 h-4"></i></button>
                 </div>
                 <div id="filter-panel" class="mt-2 border-t border-slate-200 dark:border-slate-700 pt-2">
                     <div class="space-y-1.5">
@@ -208,7 +207,7 @@
                         <div class="custom-select-wrapper"><select id="filter-type" class="custom-select py-1 text-[10px]"><option value="">كل الأنواع (بيع/إيجار)</option><option value="sale">بيع</option><option value="rent">إيجار</option></select><i data-lucide="chevron-down" class="custom-select-icon w-3 h-3"></i></div>
                         <div class="grid grid-cols-2 gap-1.5"><div class="custom-select-wrapper"><select id="filter-gov" onchange="populateCities('filter-gov', 'filter-city')" class="custom-select py-1 text-[10px]"><option value="">كل المحافظات</option></select><i data-lucide="chevron-down" class="custom-select-icon w-3 h-3"></i></div><div class="custom-select-wrapper"><select id="filter-city" class="custom-select py-1 text-[10px]"><option value="">كل المراكز</option></select><i data-lucide="chevron-down" class="custom-select-icon w-3 h-3"></i></div></div>
                         <div class="grid grid-cols-2 gap-1.5"><input type="number" id="filter-min-price" placeholder="أقل سعر" class="input-box text-[10px] py-1"><input type="number" id="filter-max-price" placeholder="أعلى سعر" class="input-box text-[10px] py-1"></div>
-                        <div class="flex gap-2"><button onclick="performSearch(); toggleFilterPanel()" class="flex-1 bg-emerald-600 text-white py-1.5 rounded font-bold text-[10px] shadow hover:bg-emerald-700 transition">تطبيق</button><button onclick="toggleFilterPanel()" class="w-16 bg-red-500 text-white py-1.5 rounded font-bold text-[10px] shadow hover:bg-red-600 transition flex items-center justify-center"><i data-lucide="x" class="w-4 h-4"></i> إغلاق</button></div>
+                        <div class="flex gap-2"><button onclick="performSearch(false); toggleFilterPanel()" class="flex-1 bg-emerald-600 text-white py-1.5 rounded font-bold text-[10px] shadow hover:bg-emerald-700 transition">تطبيق</button><button onclick="toggleFilterPanel()" class="w-16 bg-red-500 text-white py-1.5 rounded font-bold text-[10px] shadow hover:bg-red-600 transition flex items-center justify-center"><i data-lucide="x" class="w-4 h-4"></i> إغلاق</button></div>
                     </div>
                 </div>
             </div>
@@ -221,7 +220,7 @@
         <!-- Floating Dock -->
         <nav id="bottom-nav" class="fixed bottom-4 left-1/2 -translate-x-1/2 bg-white/90 dark:bg-slate-800/90 backdrop-blur-none border border-slate-200 dark:border-slate-600 px-5 py-2 rounded-full flex items-center gap-6 shadow-xl transform transition-all hover:scale-105 transform-gpu">
             <button onclick="resetFilters(); window.scrollTo({top:0, behavior:'smooth'})" class="flex items-center justify-center text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition group"><i data-lucide="home" class="w-5 h-5 group-hover:scale-110 transition"></i></button>
-            <button onclick="openAddModal()" class="w-10 h-10 bg-emerald-100/70 dark:bg-emerald-800/60 backdrop-blur-md text-emerald-700 dark:text-emerald-300 border border-emerald-500 rounded-full flex items-center justify-center shadow-lg transform -translate-y-4 hover:scale-110 transition active:scale-90"><i data-lucide="plus" class="w-5 h-5"></i></button>
+            <button onclick="openAddModal()" class="w-10 h-10 bg-emerald-600 dark:bg-emerald-500 text-white border-2 border-white dark:border-slate-800 rounded-full flex items-center justify-center shadow-lg transform -translate-y-4 hover:scale-110 transition active:scale-90"><i data-lucide="plus" class="w-5 h-5"></i></button>
             <button onclick="toggleChat()" class="flex items-center justify-center text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition group relative"><div id="chat-badge" class="hidden absolute top-0 right-0 w-2 h-2 bg-red-500 rounded-full border border-white dark:border-slate-800"></div><i data-lucide="message-circle" class="w-5 h-5 group-hover:scale-110 transition"></i></button>
         </nav>
 
@@ -477,7 +476,7 @@
                 try {
                     state.listings = JSON.parse(cached);
                     state.listings.sort((a,b) => (a.isPinned ? -1 : 1));
-                    performSearch();
+                    performSearch(true);
                     document.body.classList.add('app-loaded');
                     document.getElementById('splash-screen').classList.add('hidden-splash');
                 } catch(e) { console.log('Cache error', e); }
@@ -531,7 +530,7 @@
                     if(userDoc.exists()) {
                         state.userProfile = userDoc.data();
                         
-                        // نظام الحظر (Block System) - شاشة إجبارية حمراء
+                        // نظام الحظر
                         if(state.userProfile.isBlocked) {
                             document.body.innerHTML = `
                                 <div style="display:flex; flex-direction:column; height:100vh; align-items:center; justify-content:center; background-color:#0f172a; color:#ef4444; font-family:'Cairo',sans-serif; text-align:center; padding:20px;">
@@ -539,10 +538,9 @@
                                     <h1 style="font-size:24px; font-weight:bold; margin-bottom:10px;">عذراً، تم حظر هذا الحساب!</h1>
                                     <p style="font-size:14px; color:#94a3b8; max-width:300px;">لا يمكنك استخدام المنصة بسبب مخالفة شروط الاستخدام. يرجى التواصل مع الدعم الفني.</p>
                                 </div>`;
-                            return; // توقف عن تنفيذ الكود تماماً
+                            return; 
                         }
 
-                        // إعطاء صلاحية الأدمن تلقائياً للحساب الرئيسي أو من تم ترقيته
                         if(state.userProfile.phoneNumber === '+201206244875' || state.userProfile.isAdmin) {
                             state.isAdmin = true;
                             document.getElementById('btn-admin-top').classList.remove('hidden');
@@ -759,13 +757,14 @@
                 snap.forEach(d => state.listings.push({id:d.id, ...d.data()})); 
                 localStorage.setItem('souq_listings', JSON.stringify(state.listings));
                 state.listings.sort((a,b) => (a.isPinned === b.isPinned) ? (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0) : (a.isPinned ? -1 : 1));
-                performSearch(); 
+                performSearch(true); // Force re-render of DOM
                 document.body.classList.add('app-loaded');
                 setTimeout(() => { document.getElementById('splash-screen').classList.add('hidden-splash'); }, 100);
             }); 
         }
 
-        window.performSearch = () => { 
+        // Search mechanism optimized to avoid DOM trashing while typing
+        window.performSearch = (forceRender = false) => { 
             const q = normalizeText(document.getElementById('search-input').value); 
             const filterGov = document.getElementById('filter-gov').value;
             const filterCity = document.getElementById('filter-city').value;
@@ -773,29 +772,75 @@
             const filterCat = document.getElementById('filter-cat').value; 
             const minPrice = Number(document.getElementById('filter-min-price').value) || 0;
             const maxPrice = Number(document.getElementById('filter-max-price').value) || Infinity;
-            let detectedCat = ''; for (const [key, val] of Object.entries(CAT_KEYWORDS)) { if (q.includes(key)) { detectedCat = val; break; } }
+            
+            let detectedCat = ''; 
+            for (const [key, val] of Object.entries(CAT_KEYWORDS)) { 
+                if (q.includes(key)) { detectedCat = val; break; } 
+            }
+            
             const cont = document.getElementById('grid-container'); 
-            const filtered = state.listings.filter(item => { 
-                let matchType = true; if (state.currentFilter !== 'all' && item.type !== state.currentFilter) matchType = false;
-                if (filterType && item.type !== filterType) matchType = false; if (filterCat && item.category !== filterCat) matchType = false; 
-                const catNameAr = CAT_MAP[item.category] || '';
+
+            // Only overwrite innerHTML completely if data updated or container is empty
+            if (forceRender || cont.children.length === 0) {
+                cont.innerHTML = state.listings.map(item => createCard(item)).join('');
+                lucide.createIcons({ root: cont });
+            }
+
+            let matchedCount = 0;
+
+            state.listings.forEach(item => { 
+                let matchType = true; 
+                if (state.currentFilter !== 'all' && item.type !== state.currentFilter) matchType = false;
+                if (filterType && item.type !== filterType) matchType = false; 
+                if (filterCat && item.category !== filterCat) matchType = false; 
                 
+                const catNameAr = CAT_MAP[item.category] || '';
                 const codeSearch = (item.shortCode || item.id.substring(0,3)).toLowerCase();
                 const itemText = normalizeText(item.title + item.desc + item.phone + item.gov + item.city + item.location + (item.address || '') + catNameAr + codeSearch);
                 
                 const matchText = itemText.includes(q);
-                const matchCat = !detectedCat || item.category === detectedCat; const matchGov = !filterGov || item.gov === filterGov; const matchCity = !filterCity || item.city === filterCity; const matchPrice = item.price >= minPrice && item.price <= maxPrice;
-                return matchType && matchText && matchCat && matchGov && matchCity && matchPrice; 
+                const matchCat = !detectedCat || item.category === detectedCat; 
+                const matchGov = !filterGov || item.gov === filterGov; 
+                const matchCity = !filterCity || item.city === filterCity; 
+                const matchPrice = item.price >= minPrice && item.price <= maxPrice;
+                
+                const isMatch = matchType && matchText && matchCat && matchGov && matchCity && matchPrice; 
+
+                // Smart toggle display instead of re-rendering DOM
+                const cardEl = document.getElementById(`card-${item.id}`);
+                if (cardEl) {
+                    if (isMatch) {
+                        if (matchedCount < state.visibleLimit) {
+                            cardEl.style.display = '';
+                        } else {
+                            cardEl.style.display = 'none';
+                        }
+                        matchedCount++;
+                    } else {
+                        cardEl.style.display = 'none';
+                    }
+                }
             }); 
-            const visibleItems = filtered.slice(0, state.visibleLimit);
+            
             const loadMoreBtn = document.getElementById('load-more-container');
-            if(!filtered.length) { document.getElementById('empty-state').classList.remove('hidden'); cont.innerHTML = ''; loadMoreBtn.classList.add('hidden'); } 
-            else { document.getElementById('empty-state').classList.add('hidden'); cont.innerHTML = visibleItems.map(item => createCard(item)).join(''); lucide.createIcons({ root: cont }); if(filtered.length > state.visibleLimit) { loadMoreBtn.classList.remove('hidden'); } else { loadMoreBtn.classList.add('hidden'); } } 
+            const emptyState = document.getElementById('empty-state');
+
+            if(matchedCount === 0) { 
+                emptyState.classList.remove('hidden'); 
+                loadMoreBtn.classList.add('hidden'); 
+            } else { 
+                emptyState.classList.add('hidden'); 
+                if(matchedCount > state.visibleLimit) { 
+                    loadMoreBtn.classList.remove('hidden'); 
+                } else { 
+                    loadMoreBtn.classList.add('hidden'); 
+                } 
+            } 
         };
 
-        window.loadMore = () => { state.visibleLimit += 6; performSearch(); };
-        let searchTimeout; document.getElementById('search-input').addEventListener('input', () => { clearTimeout(searchTimeout); searchTimeout = setTimeout(performSearch, 200); }); document.getElementById('search-input').addEventListener('keydown', (e) => { if(e.key === 'Enter') { e.preventDefault(); performSearch(); document.getElementById('search-input').blur(); } });
-        window.resetFilters = () => {['filter-cat', 'filter-type', 'filter-gov'].forEach(id => document.getElementById(id).selectedIndex = 0); document.getElementById('filter-city').innerHTML = '<option value="">كل المراكز</option>'; document.getElementById('filter-min-price').value = ''; document.getElementById('filter-max-price').value = ''; state.currentFilter = 'all'; state.visibleLimit = 6; performSearch(); };
+        window.loadMore = () => { state.visibleLimit += 6; performSearch(false); };
+        let searchTimeout; document.getElementById('search-input').addEventListener('input', () => { clearTimeout(searchTimeout); searchTimeout = setTimeout(() => performSearch(false), 200); }); document.getElementById('search-input').addEventListener('keydown', (e) => { if(e.key === 'Enter') { e.preventDefault(); performSearch(false); document.getElementById('search-input').blur(); } });
+        window.resetFilters = () => {['filter-cat', 'filter-type', 'filter-gov'].forEach(id => document.getElementById(id).selectedIndex = 0); document.getElementById('filter-city').innerHTML = '<option value="">كل المراكز</option>'; document.getElementById('filter-min-price').value = ''; document.getElementById('filter-max-price').value = ''; state.currentFilter = 'all'; state.visibleLimit = 6; performSearch(false); };
 
         const getOptimizedUrl = (url, isVideo = false) => {
             if (!url || !url.includes('cloudinary.com')) return url;
@@ -829,14 +874,14 @@
             }
             if(item.area) iconsHtml += `<span class="${pillClass}"><i data-lucide="ruler" class="w-3 h-3 text-orange-500"></i> ${item.area}م</span>`;
             
-            const locDisplay = item.gov ? `${item.gov}، ${item.city}` : item.location;
+            const locDisplay = item.gov ? `${item.city}، ${item.gov}` : item.location;
             const code = item.shortCode || item.id.substring(0,3).toUpperCase();
             const shareUrl = window.location.origin + window.location.pathname + '?id=' + item.id;
             
             const waMsg = `مهتم بهذا العقار: ${item.title} (${Number(item.price).toLocaleString()} ج)\nكود الإعلان: ${code}\nالرابط: ${shareUrl}`;
             const waLink = `https://wa.me/20${item.phone}?text=${encodeURIComponent(waMsg)}`;
 
-            return `<div class="listing-card bg-white dark:bg-slate-800 rounded-lg overflow-hidden shadow-sm border border-black dark:border-slate-500 flex flex-col h-full cursor-pointer active:scale-95 transition-transform group relative transform-gpu" onclick="openDetails('${item.id}')">
+            return `<div id="card-${item.id}" class="listing-card bg-white dark:bg-slate-800 rounded-lg overflow-hidden shadow-sm border border-black dark:border-slate-500 flex flex-col h-full cursor-pointer active:scale-95 transition-transform group relative transform-gpu" onclick="openDetails('${item.id}')">
                 <div class="relative w-full h-36 shrink-0">
                     ${statusOverlay}
                     <span class="absolute top-2 right-2 ${item.type === 'sale' ? 'bg-emerald-600' : 'bg-blue-600'} text-white px-2 py-0.5 rounded text-[10px] font-bold shadow z-20">${item.type === 'sale' ? 'بيع' : 'إيجار'}</span>
@@ -859,7 +904,7 @@
                             <span>${timeAgo(item.createdAt)}</span>
                         </div>
                         
-                        ${item.address ? `<div class="flex items-center gap-1 text-[9px] text-slate-500 dark:text-slate-400 mb-1"><i data-lucide="map" class="w-3 h-3 text-emerald-500 shrink-0"></i><span class="text-[8px] text-slate-400 dark:text-slate-500 shrink-0 font-normal ml-0.5">العنوان:</span><span class="truncate leading-tight font-bold text-slate-700 dark:text-slate-300">${item.address}</span></div>` : ''}
+                        ${item.address ? `<div class="flex items-center gap-1 text-[9px] mb-1"><i data-lucide="map" class="w-3 h-3 text-slate-400 shrink-0"></i><span class="text-[9px] text-slate-500 dark:text-slate-400 shrink-0">العنوان:</span><span class="truncate leading-tight text-slate-500 dark:text-slate-400">${item.address}</span></div>` : ''}
                         <div class="flex items-center gap-1 text-[9px] text-slate-500 dark:text-slate-400 mb-1"><i data-lucide="map-pin" class="w-3 h-3 text-slate-400 shrink-0"></i><span class="truncate leading-tight">${locDisplay}</span></div>
                     </div>
                     
@@ -938,7 +983,7 @@
                     if(item.status !== 'available') { typeEl.innerText = item.status === 'sold' ? 'مباع' : 'مؤجر'; typeEl.className = `absolute bottom-2 right-2 text-white px-2 py-0.5 rounded text-[10px] font-bold shadow backdrop-blur-sm ${item.status==='sold'?'bg-red-600':'bg-blue-600'}`; } 
                     else { typeEl.innerText = item.type === 'sale' ? 'للبيع' : 'للإيجار'; typeEl.className = `absolute bottom-2 right-2 text-white px-2 py-0.5 rounded text-[10px] font-bold shadow backdrop-blur-sm ${item.type === 'sale' ? 'bg-emerald-600/90' : 'bg-blue-600/90'}`; }
 
-                    const imgs = Array.isArray(item.images) ? item.images : [item.image]; 
+                    const imgs = Array.isArray(item.images) ? item.images :[item.image]; 
                     const updateWaLink = () => { 
                         const shareUrl = window.location.origin + window.location.pathname + '?id=' + item.id; 
                         const waMsg = `مهتم بهذا العقار: ${item.title} (${Number(item.price).toLocaleString()} ج)\nكود الإعلان: ${code}\nالرابط: ${shareUrl}`; 
@@ -963,7 +1008,7 @@
 
                     document.getElementById('details-arrows').style.display = imgs.length > 1 ? 'block' : 'none';
 
-                    const locDisplay = item.gov ? `${item.gov}، ${item.city}` : item.location;
+                    const locDisplay = item.gov ? `${item.city}، ${item.gov}` : item.location;
                     let tableHtml = `<tr><th class="w-1/3 text-slate-500 dark:text-slate-400 font-normal bg-slate-50 dark:bg-slate-800/50 text-[10px] flex items-center gap-1"><i data-lucide="home" class="w-3 h-3"></i> نوع العقار</th><td class="font-bold text-slate-800 dark:text-slate-200">${CAT_MAP[item.category] || 'عقار'}</td></tr>`;
                     if(item.address) tableHtml += `<tr><th class="text-slate-500 dark:text-slate-400 font-normal bg-slate-50 dark:bg-slate-800/50 text-[10px] flex items-center gap-1"><i data-lucide="map" class="w-3 h-3"></i> العنوان التفصيلي</th><td class="font-bold text-slate-800 dark:text-slate-200">${item.address}</td></tr>`;
                     tableHtml += `<tr><th class="text-slate-500 dark:text-slate-400 font-normal bg-slate-50 dark:bg-slate-800/50 text-[10px] flex items-center gap-1"><i data-lucide="map-pin" class="w-3 h-3"></i> المحافظة/المركز</th><td class="font-bold text-slate-800 dark:text-slate-200">${locDisplay}</td></tr>`;
