@@ -63,7 +63,7 @@
         @keyframes popIn { from { transform: scale(0.95); opacity: 0; } to { transform: scale(1); opacity: 1; } }
         .animate-pop { animation: popIn 0.15s ease-out forwards; will-change: transform, opacity; }
 
-        /* Modals - High Z-Index - تم إزالة backdrop-filter لأنه يسبب لاج فظيع في الهواتف */
+        /* Modals */
         .modal-overlay { 
             position: fixed; inset: 0; z-index: 100; 
             background-color: rgba(0,0,0,0.85); 
@@ -85,7 +85,7 @@
         }
         .dark .mobile-full-modal { background-color: #1e293b; }
 
-        /* Header & Nav - Lower Z-Index than Modal */
+        /* Header & Nav */
         .sticky-header { 
             z-index: 40; transform: translateZ(0); 
             background-color: rgba(255, 255, 255, 0.95);
@@ -188,7 +188,7 @@
             <div class="sticky-search-bar">
                 <div class="relative w-full">
                     <button onclick="toggleFilterPanel()" class="absolute left-1 top-0 h-full w-9 flex items-center justify-center text-slate-500 hover:text-slate-800 dark:hover:text-white transition z-10"><i data-lucide="sliders-horizontal" class="w-4 h-4"></i></button>
-                    <input type="text" id="search-input" placeholder="ابحث (شقة، أرض، عنوان)..." class="w-full bg-transparent border-none rounded-lg pl-10 pr-9 py-1 text-xs outline-none dark:text-white font-bold h-8">
+                    <input type="text" id="search-input" placeholder="ابحث (شقة، كود، عنوان)..." class="w-full bg-transparent border-none rounded-lg pl-10 pr-9 py-1 text-xs outline-none dark:text-white font-bold h-8">
                     <button onclick="performSearch()" class="absolute right-1 top-0 h-full w-9 flex items-center justify-center text-slate-500 hover:text-emerald-600 transition"><i data-lucide="search" class="w-4 h-4"></i></button>
                 </div>
                 <div id="filter-panel" class="mt-2 border-t border-slate-200 dark:border-slate-700 pt-2">
@@ -206,7 +206,7 @@
                 </div>
             </div>
 
-            <!-- تم التعديل ليكون 1 عمود في الهاتف (grid-cols-1) -->
+            <!-- شبكة من بطاقة واحدة في الهواتف -->
             <div id="grid-container" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 mt-4"></div>
             <div id="load-more-container" class="hidden mt-4 text-center"><button onclick="loadMore()" class="bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 text-slate-700 dark:text-slate-200 px-6 py-2 rounded-full text-xs font-bold shadow-sm hover:bg-slate-50 dark:hover:bg-slate-700 transition">عرض المزيد</button></div>
             <div id="empty-state" class="hidden text-center py-16 opacity-60 flex flex-col items-center"><div class="bg-slate-200 dark:bg-slate-700 p-3 rounded-full inline-block mb-2"><i data-lucide="search-x" class="w-6 h-6 text-slate-400"></i></div><p class="text-slate-500 dark:text-slate-400 font-bold text-xs">لا توجد نتائج</p><button onclick="resetFilters()" class="mt-1 text-emerald-600 dark:text-emerald-400 text-[10px] font-bold underline">عرض الكل</button></div>
@@ -218,6 +218,21 @@
             <button onclick="toggleAddModal()" class="w-10 h-10 bg-slate-900 text-white rounded-full flex items-center justify-center shadow-lg shadow-slate-900/20 transform -translate-y-4 border-2 border-emerald-600 dark:border-emerald-500 hover:scale-110 transition active:scale-90"><i data-lucide="plus" class="w-5 h-5"></i></button>
             <button onclick="toggleChat()" class="flex items-center justify-center text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition group relative"><div id="chat-badge" class="hidden absolute top-0 right-0 w-2 h-2 bg-red-500 rounded-full border border-white dark:border-slate-800"></div><i data-lucide="message-circle" class="w-5 h-5 group-hover:scale-110 transition"></i></button>
         </nav>
+
+    <!-- Logout Modal -->
+    <div id="logout-modal" class="hidden modal-overlay" style="z-index: 150;">
+        <div class="relative w-full max-w-xs bg-white dark:bg-slate-800 rounded-2xl shadow-2xl p-6 text-center animate-pop border border-slate-200 dark:border-slate-700">
+            <div class="w-16 h-16 bg-red-50 dark:bg-red-900/20 text-red-500 rounded-full flex items-center justify-center mx-auto mb-4 border-2 border-red-100 dark:border-red-800/50">
+                <i data-lucide="log-out" class="w-8 h-8"></i>
+            </div>
+            <h3 class="text-lg font-black text-slate-800 dark:text-white mb-2">تسجيل الخروج</h3>
+            <p class="text-xs text-slate-500 dark:text-slate-400 mb-6">هل أنت متأكد أنك تريد تسجيل الخروج من حسابك الحالي؟</p>
+            <div class="flex gap-2">
+                <button onclick="confirmLogout()" class="flex-1 bg-red-500 text-white py-2.5 rounded-xl font-bold text-sm shadow hover:bg-red-600 transition active:scale-95">نعم، خروج</button>
+                <button onclick="toggleModal('logout-modal')" class="flex-1 bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-white py-2.5 rounded-xl font-bold text-sm shadow-sm hover:bg-slate-200 dark:hover:bg-slate-600 transition active:scale-95">إلغاء</button>
+            </div>
+        </div>
+    </div>
 
     <!-- Auth Modal -->
     <div id="auth-modal" class="hidden modal-overlay">
@@ -413,7 +428,7 @@
         const CAT_MAP = { 'apartment': 'شقة', 'villa': 'فيلا', 'chalet': 'شالية', 'office': 'مكتب', 'shop': 'محل', 'land': 'أرض', 'building': 'عماير', 'warehouse': 'مخزن' };
         const FINISH_MAP = { 'red': 'طوب أحمر', 'semi': 'نصف تشطيب', 'full': 'تشطيب كامل', 'super': 'سوبر لوكس', 'ultra': 'الترا سوبر لوكس' };
         const CAT_KEYWORDS = { 'شقة': 'apartment', 'شقق': 'apartment', 'فيلا': 'villa', 'فلل': 'villa', 'شالية': 'chalet', 'شاليهات': 'chalet', 'مكتب': 'office', 'مكاتب': 'office', 'محل': 'shop', 'محلات': 'shop', 'ارض': 'land', 'اراضي': 'land', 'عمارة': 'building', 'عماير': 'building', 'مخزن': 'warehouse', 'مخازن': 'warehouse' };
-        const EGYPT_LOCATIONS = { "الشرقية":["الزقازيق", "العاشر من رمضان", "منيا القمح", "بلبيس", "مشتول السوق", "القنايات", "أبو حماد", "القرين", "ههيا", "أبو كبير", "فاقوس", "الصالحية الجديدة", "الإبراهيمية", "ديرب نجم", "كفر صقر", "أولاد صقر", "الحسينية", "صان الحجر", "منشأة أبو عمر"], "القاهرة":["مدينة نصر", "مصر الجديدة", "المعادي", "التجمع الخامس", "الرحاب", "مدينتي", "الشروق", "العبور", "المقطم", "الزيتون", "حدائق القبة", "شبرا", "وسط البلد", "المنيل", "الزمالك", "المهندسين", "الدقي", "العجوزة"], "الجيزة":["6 أكتوبر", "الشيخ زايد", "الهرم", "فيصل", "المهندسين", "الدقي", "العجوزة", "إمبابة", "الوراق", "بولاق الدكرور", "العمرانية", "المنيب"], "الإسكندرية":["سموحة", "ميامي", "المنتزه", "سيدي بشر", "جليم", "ستانلي", "رشدي", "كفر عبده", "محرم بك", "العجمي", "الساحل الشمالي", "برج العرب"], "الدقهلية":["المنصورة", "طلخا", "ميت غمر", "دكرنس", "أجا", "منية النصر", "السنبلاوين", "شربين", "بلقاس", "المطرية", "المنزلة", "جمصة"], "القليوبية":["بنها", "قليوب", "شبرا الخيمة", "القناطر الخيرية", "الخانكة", "كفر شكر", "طوخ", "قها", "العبور"], "المنوفية":["شبين الكوم", "مدينة السادات", "منوف", "سرس الليان", "أشمون", "الباجور", "قويسنا", "بركة السبع", "تلا", "الشهداء"], "الغربية":["طنطا", "المحلة الكبرى", "كفر الزيات", "زفتى", "السنطة", "قطور", "بسيون", "سمنود"], "البحيرة":["دمنهور", "كفر الدوار", "رشيد", "إدكو", "أبو المطامير", "أبو حمص", "الدلنجات", "المحمودية", "الرحمانية", "إيتاي البارود", "حوش عيسى", "شبراخيت", "كوم حمادة", "بدر", "وادي النطرون", "النوبارية الجديدة"], "دمياط":["دمياط", "دمياط الجديدة", "رأس البر", "فارسكور", "الزرقا", "السرو", "الروضة", "كفر البطيخ", "عزبة البرج", "ميت أبو غالب", "كفر سعد"], "بورسعيد": ["بورسعيد", "بورفؤاد"], "الإسماعيلية":["الإسماعيلية", "التل الكبير", "فايد", "القنطرة شرق", "القنطرة غرب", "أبو صوير", "القصاصين"], "السويس":["السويس", "الأربعين", "عتاقة", "الجناين", "فيصل"], "كفر الشيخ":["كفر الشيخ", "دسوق", "فوه", "مطوبس", "بلطيم", "مصيف بلطيم", "الحامول", "بيلا", "الرياض", "سيدي سالم", "قلين", "برج البرلس"], "الفيوم":["الفيوم", "الفيوم الجديدة", "طامية", "سنورس", "إطسا", "إبشواي", "يوسف الصديق"], "بني سويف":["بني سويف", "بني سويف الجديدة", "الواسطى", "ناصر", "إهناسيا", "ببا", "الفشن", "سمسطا"], "المنيا":["المنيا", "المنيا الجديدة", "العدوة", "مغاغة", "بني مزار", "مطاي", "سمالوط", "أبو قرقاص", "ملوي", "دير مواس"], "أسيوط":["أسيوط", "أسيوط الجديدة", "ديروط", "القوصية", "أبنوب", "منفلوط", "أبو تيج", "الغنايم", "ساحل سليم", "البداري", "صدفا", "الفتح"], "سوهاج":["سوهاج", "سوهاج الجديدة", "أخميم", "أخميم الجديدة", "البلينا", "المراغة", "المنشأة", "دار السلام", "جرجا", "جهينة", "ساقلتة", "طما", "طهطا"], "قنا":["قنا", "قنا الجديدة", "أبو تشت", "نجع حمادي", "دشنا", "الوقف", "قفط", "قوص", "نقادة", "فرشوط"], "الأقصر":["الأقصر", "الأقصر الجديدة", "إسنا", "طيبة الجديدة", "الزينية", "البياضية", "القرنة", "أرمنت", "الطود"], "أسوان":["أسوان", "أسوان الجديدة", "دراو", "كوم أمبو", "نصر النوبة", "إدفو"], "البحر الأحمر":["الغردقة", "رأس غارب", "سفاجا", "القصير", "مرسى علم", "الشلاتين", "حلايب"], "الوادي الجديد":["الخارجة", "باريس", "موط", "الفرافرة", "بلاط"], "مطروح":["مرسى مطروح", "الحمام", "العلمين", "الضبعة", "النجيلة", "سيدي براني", "السلوم", "سيوة"], "شمال سيناء":["العريش", "بئر العبد", "نخل", "الحسنة", "الشيخ زويد", "رفح"], "جنوب سيناء":["الطور", "شرم الشيخ", "دهب", "نويبع", "طابا", "سانت كاترين", "أبو رديس", "أبو زنيمة", "رأس سدر"] };
+        const EGYPT_LOCATIONS = { "الشرقية":["الزقازيق", "العاشر من رمضان", "منيا القمح", "بلبيس", "مشتول السوق", "القنايات", "أبو حماد", "القرين", "ههيا", "أبو كبير", "فاقوس", "الصالحية الجديدة", "الإبراهيمية", "ديرب نجم", "كفر صقر", "أولاد صقر", "الحسينية", "صان الحجر", "منشأة أبو عمر"], "القاهرة":["مدينة نصر", "مصر الجديدة", "المعادي", "التجمع الخامس", "الرحاب", "مدينتي", "الشروق", "العبور", "المقطم", "الزيتون", "حدائق القبة", "شبرا", "وسط البلد", "المنيل", "الزمالك", "المهندسين", "الدقي", "العجوزة"], "الجيزة":["6 أكتوبر", "الشيخ زايد", "الهرم", "فيصل", "المهندسين", "الدقي", "العجوزة", "إمبابة", "الوراق", "بولاق الدكرور", "العمرانية", "المنيب"], "الإسكندرية":["سموحة", "ميامي", "المنتزه", "سيدي بشر", "جليم", "ستانلي", "رشدي", "كفر عبده", "محرم بك", "العجمي", "الساحل الشمالي", "برج العرب"], "الدقهلية":["المنصورة", "طلخا", "ميت غمر", "دكرنس", "أجا", "منية النصر", "السنبلاوين", "شربين", "بلقاس", "المطرية", "المنزلة", "جمصة"], "القليوبية":["بنها", "قليوب", "شبرا الخيمة", "القناطر الخيرية", "الخانكة", "كفر شكر", "طوخ", "قها", "العبور"], "المنوفية":["شبين الكوم", "مدينة السادات", "منوف", "سرس الليان", "أشمون", "الباجور", "قويسنا", "بركة السبع", "تلا", "الشهداء"], "الغربية":["طنطا", "المحلة الكبرى", "كفر الزيات", "زفتى", "السنطة", "قطور", "بسيون", "سمنود"], "البحيرة":["دمنهور", "كفر الدوار", "رشيد", "إدكو", "أبو المطامير", "أبو حمص", "الدلنجات", "المحمودية", "الرحمانية", "إيتاي البارود", "حوش عيسى", "شبراخيت", "كوم حمادة", "بدر", "وادي النطرون", "النوبارية الجديدة"], "دمياط":["دمياط", "دمياط الجديدة", "رأس البر", "فارسكور", "الزرقا", "السرو", "الروضة", "كفر البطيخ", "عزبة البرج", "ميت أبو غالب", "كفر سعد"], "بورسعيد":["بورسعيد", "بورفؤاد"], "الإسماعيلية":["الإسماعيلية", "التل الكبير", "فايد", "القنطرة شرق", "القنطرة غرب", "أبو صوير", "القصاصين"], "السويس":["السويس", "الأربعين", "عتاقة", "الجناين", "فيصل"], "كفر الشيخ":["كفر الشيخ", "دسوق", "فوه", "مطوبس", "بلطيم", "مصيف بلطيم", "الحامول", "بيلا", "الرياض", "سيدي سالم", "قلين", "برج البرلس"], "الفيوم":["الفيوم", "الفيوم الجديدة", "طامية", "سنورس", "إطسا", "إبشواي", "يوسف الصديق"], "بني سويف":["بني سويف", "بني سويف الجديدة", "الواسطى", "ناصر", "إهناسيا", "ببا", "الفشن", "سمسطا"], "المنيا":["المنيا", "المنيا الجديدة", "العدوة", "مغاغة", "بني مزار", "مطاي", "سمالوط", "أبو قرقاص", "ملوي", "دير مواس"], "أسيوط":["أسيوط", "أسيوط الجديدة", "ديروط", "القوصية", "أبنوب", "منفلوط", "أبو تيج", "الغنايم", "ساحل سليم", "البداري", "صدفا", "الفتح"], "سوهاج":["سوهاج", "سوهاج الجديدة", "أخميم", "أخميم الجديدة", "البلينا", "المراغة", "المنشأة", "دار السلام", "جرجا", "جهينة", "ساقلتة", "طما", "طهطا"], "قنا":["قنا", "قنا الجديدة", "أبو تشت", "نجع حمادي", "دشنا", "الوقف", "قفط", "قوص", "نقادة", "فرشوط"], "الأقصر":["الأقصر", "الأقصر الجديدة", "إسنا", "طيبة الجديدة", "الزينية", "البياضية", "القرنة", "أرمنت", "الطود"], "أسوان":["أسوان", "أسوان الجديدة", "دراو", "كوم أمبو", "نصر النوبة", "إدفو"], "البحر الأحمر":["الغردقة", "رأس غارب", "سفاجا", "القصير", "مرسى علم", "الشلاتين", "حلايب"], "الوادي الجديد":["الخارجة", "باريس", "موط", "الفرافرة", "بلاط"], "مطروح":["مرسى مطروح", "الحمام", "العلمين", "الضبعة", "النجيلة", "سيدي براني", "السلوم", "سيوة"], "شمال سيناء":["العريش", "بئر العبد", "نخل", "الحسنة", "الشيخ زويد", "رفح"], "جنوب سيناء":["الطور", "شرم الشيخ", "دهب", "نويبع", "طابا", "سانت كاترين", "أبو رديس", "أبو زنيمة", "رأس سدر"] };
 
         function loadCachedData() {
             const cached = localStorage.getItem('souq_listings');
@@ -527,7 +542,6 @@
             }
         };
 
-        /* إصلاح الخطأ عند التسجيل بحساب جديد وتوضيح رسالة الخطأ */
         window.registerUser = async () => {
             const name = document.getElementById('reg-name').value;
             const phone = document.getElementById('reg-phone').value;
@@ -590,11 +604,14 @@
             }
         };
 
-        window.logoutUser = async () => {
-            if(confirm('تسجيل خروج؟')) {
-                await signOut(auth);
-                window.location.reload(); 
-            }
+        /* تم استبدال رسالة التأكيد المزعجة بنافذة منبثقة احترافية */
+        window.logoutUser = () => {
+            toggleModal('logout-modal');
+        };
+
+        window.confirmLogout = async () => {
+            await signOut(auth);
+            window.location.reload(); 
         };
 
         function updateHeader() {
@@ -623,7 +640,6 @@
                 logoutBtn.classList.add('hidden');
                 loginBtn.classList.remove('hidden');
             }
-            // تم تقليل استدعاء lucide لتخفيف اللاج
             if(document.querySelector('.sticky-header')) lucide.createIcons({root: document.querySelector('.sticky-header')});
         }
 
@@ -713,7 +729,11 @@
                 let matchType = true; if (state.currentFilter !== 'all' && item.type !== state.currentFilter) matchType = false;
                 if (filterType && item.type !== filterType) matchType = false; if (filterCat && item.category !== filterCat) matchType = false; 
                 const catNameAr = CAT_MAP[item.category] || '';
-                const itemText = normalizeText(item.title + item.desc + item.phone + item.gov + item.city + item.location + (item.address || '') + catNameAr);
+                
+                // إضافة الكود القصير إلى نص البحث ليتم الفلترة بسببه
+                const codeSearch = (item.shortCode || item.id.substring(0,3)).toLowerCase();
+                const itemText = normalizeText(item.title + item.desc + item.phone + item.gov + item.city + item.location + (item.address || '') + catNameAr + codeSearch);
+                
                 const matchText = itemText.includes(q);
                 const matchCat = !detectedCat || item.category === detectedCat; const matchGov = !filterGov || item.gov === filterGov; const matchCity = !filterCity || item.city === filterCity; const matchPrice = item.price >= minPrice && item.price <= maxPrice;
                 return matchType && matchText && matchCat && matchGov && matchCity && matchPrice; 
@@ -749,13 +769,26 @@
             const thumbUrl = getOptimizedUrl(firstMedia, isVideo);
             let badge = item.badge==='hot' ? `<span class="inline-block bg-orange-500 text-white text-[9px] font-bold px-1.5 py-0.5 rounded shadow animate-pulse">🔥 لقطة</span>` : (item.badge==='verified' ? `<span class="inline-block bg-blue-500 text-white text-[9px] font-bold px-1.5 py-0.5 rounded shadow flex items-center gap-0.5"><i data-lucide="check-circle" class="w-3 h-3"></i> موثوق</span>` : '');
             let statusOverlay = ''; if(item.status && item.status !== 'available') { const txt = item.status==='sold'?'تم البيع':'تم التأجير'; const clr = item.status==='sold'?'bg-red-600':'bg-blue-600'; statusOverlay=`<div class="absolute inset-0 sold-overlay flex items-center justify-center z-30 pointer-events-none bg-black/40"><span class="${clr} text-white font-bold px-4 py-1.5 rounded-lg shadow-xl transform -rotate-12 text-sm">${txt}</span></div>`; }
+            
+            // توزيع احترافي لأيقونات البطاقة (كبسولات متساوية)
             let iconsHtml = '';
-            if(item.category === 'land') { if(item.feddan || item.qirat) iconsHtml += `<span class="flex items-center gap-0.5"><i data-lucide="maximize" class="w-3 h-3 text-slate-400"></i> ${item.feddan?item.feddan+' ف':''} ${item.qirat?item.qirat+' ق':''}</span>`; } 
-            else if (item.category === 'building') { if(item.floors) iconsHtml += `<span class="flex items-center gap-0.5"><i data-lucide="layers" class="w-3 h-3 text-slate-400"></i> ${item.floors}</span>`; } 
-            else { if(item.rooms) iconsHtml += `<span class="flex items-center gap-0.5"><i data-lucide="bed-double" class="w-3 h-3 text-slate-400"></i> ${item.rooms}</span>`; if(item.baths) iconsHtml += `<span class="flex items-center gap-0.5"><i data-lucide="bath" class="w-3 h-3 text-slate-400"></i> ${item.baths}</span>`; }
-            if(item.area) iconsHtml += `<span class="flex items-center gap-0.5"><i data-lucide="ruler" class="w-3 h-3 text-slate-400"></i> ${item.area}م</span>`;
+            const pillClass = "flex-1 bg-slate-50 dark:bg-slate-700/50 border border-slate-100 dark:border-slate-600 rounded py-1 flex justify-center items-center gap-1 shadow-sm";
+            if(item.category === 'land') { 
+                if(item.feddan || item.qirat) iconsHtml += `<span class="${pillClass}"><i data-lucide="maximize" class="w-3 h-3 text-emerald-500"></i> ${item.feddan?item.feddan+' ف':''} ${item.qirat?item.qirat+' ق':''}</span>`; 
+            } else if (item.category === 'building') { 
+                if(item.floors) iconsHtml += `<span class="${pillClass}"><i data-lucide="layers" class="w-3 h-3 text-blue-500"></i> ${item.floors} أدوار</span>`; 
+            } else { 
+                if(item.rooms) iconsHtml += `<span class="${pillClass}"><i data-lucide="bed-double" class="w-3 h-3 text-indigo-500"></i> ${item.rooms} غرف</span>`; 
+                if(item.baths) iconsHtml += `<span class="${pillClass}"><i data-lucide="bath" class="w-3 h-3 text-cyan-500"></i> ${item.baths} حمام</span>`; 
+            }
+            if(item.area) iconsHtml += `<span class="${pillClass}"><i data-lucide="ruler" class="w-3 h-3 text-orange-500"></i> ${item.area}م</span>`;
+            
             const locDisplay = item.gov ? `${item.gov}، ${item.city}` : item.location;
-            const waMsg = `مهتم بهذا العقار: ${item.title} (${Number(item.price).toLocaleString()} ج)`;
+            const code = item.shortCode || item.id.substring(0,3).toUpperCase();
+            const shareUrl = window.location.origin + window.location.pathname + '?id=' + item.id;
+            
+            // رسالة واتساب معدلة تشمل الكود والرابط
+            const waMsg = `مهتم بهذا العقار: ${item.title} (${Number(item.price).toLocaleString()} ج)\nكود الإعلان: ${code}\nالرابط: ${shareUrl}`;
             const waLink = `https://wa.me/20${item.phone}?text=${encodeURIComponent(waMsg)}`;
 
             return `<div class="listing-card bg-white dark:bg-slate-800 rounded-lg overflow-hidden shadow-sm border border-black dark:border-slate-500 flex flex-col h-full cursor-pointer active:scale-95 transition-transform group relative transform-gpu" onclick="openDetails('${item.id}')">
@@ -772,11 +805,22 @@
                         <div class="h-4 flex justify-end items-center mb-1">${!statusOverlay ? badge : ''}</div>
                         <div class="flex items-center gap-1 text-[10px] text-slate-500 dark:text-slate-400 mb-1"><i data-lucide="map-pin" class="w-3 h-3 text-emerald-500 shrink-0"></i><span class="truncate leading-tight">${locDisplay}</span></div>
                         ${item.address ? `<div class="flex items-center gap-1 text-[10px] text-slate-500 dark:text-slate-400 mb-1"><i data-lucide="map" class="w-3 h-3 text-slate-400 shrink-0"></i><span class="truncate leading-tight">${item.address}</span></div>` : ''}
-                        <div class="flex items-center gap-3 text-[10px] text-slate-600 dark:text-slate-300 font-bold mb-2 h-4">${iconsHtml}</div>
+                        
+                        <!-- توزيع الأيقونات هنا -->
+                        <div class="flex items-center gap-1.5 text-[10px] text-slate-700 dark:text-slate-200 font-bold mb-3 mt-2">${iconsHtml}</div>
                     </div>
-                    <div class="mt-auto flex gap-1.5 pt-2 border-t border-slate-100 dark:border-slate-700">
-                        <a href="${waLink}" target="_blank" onclick="event.stopPropagation()" class="flex-1 bg-emerald-600 text-white py-1.5 rounded flex justify-center items-center gap-1 text-[10px] font-bold hover:bg-emerald-700 transition"><i data-lucide="message-circle" class="w-3 h-3"></i> واتساب</a>
-                        <a href="tel:${item.phone}" onclick="event.stopPropagation()" class="bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 px-3 py-1.5 rounded flex items-center justify-center hover:bg-slate-200 transition"><i data-lucide="phone" class="w-3 h-3"></i></a>
+                    
+                    <div class="mt-auto">
+                        <!-- عرض الكود -->
+                        <div class="flex justify-between items-center text-[9px] font-bold text-slate-500 dark:text-slate-400 mb-1.5 px-1">
+                            <span>كود العقار: <span class="text-slate-800 dark:text-white bg-slate-100 dark:bg-slate-700 px-1.5 py-0.5 rounded shadow-sm">${code}</span></span>
+                            <span>${timeAgo(item.createdAt)}</span>
+                        </div>
+                        
+                        <div class="flex gap-1.5 pt-2 border-t border-slate-100 dark:border-slate-700">
+                            <a href="${waLink}" target="_blank" onclick="event.stopPropagation()" class="flex-1 bg-emerald-600 text-white py-1.5 rounded flex justify-center items-center gap-1 text-[10px] font-bold hover:bg-emerald-700 transition shadow-sm"><i data-lucide="message-circle" class="w-3 h-3"></i> واتساب</a>
+                            <a href="tel:${item.phone}" onclick="event.stopPropagation()" class="bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-200 px-4 py-1.5 rounded flex items-center justify-center hover:bg-slate-200 transition shadow-sm"><i data-lucide="phone" class="w-3 h-3"></i></a>
+                        </div>
                     </div>
                 </div>
             </div>`;
@@ -790,7 +834,6 @@
             const slider = document.getElementById('details-slider'); if(slider) slider.scrollLeft = 0;
         }
 
-        /* إصلاح اللاج وتعديل تحميل الصور */
         window.openDetails = async (id) => {
             if (state.activeDetailsId === id) { toggleModal('details-modal'); return; }
             clearDetailsData();
@@ -829,7 +872,15 @@
                         state.currentPublisher = DUMMY_PUBLISHER; renderPublisher(DUMMY_PUBLISHER);
                     }
 
-                    document.getElementById('d-title').innerText = item.title; document.getElementById('d-price').innerText = Number(item.price).toLocaleString() + ' جنيه'; document.getElementById('d-desc').innerText = item.desc; document.getElementById('d-time-badge').innerText = timeAgo(item.createdAt);
+                    const code = item.shortCode || item.id.substring(0,3).toUpperCase();
+
+                    document.getElementById('d-title').innerText = item.title; 
+                    document.getElementById('d-price').innerText = Number(item.price).toLocaleString() + ' جنيه'; 
+                    document.getElementById('d-desc').innerText = item.desc; 
+                    
+                    // إضافة الكود بجوار الوقت
+                    document.getElementById('d-time-badge').innerHTML = `${timeAgo(item.createdAt)} &nbsp;|&nbsp; كود: <span class="text-slate-700 dark:text-slate-200">${code}</span>`;
+                    
                     const amCont = document.getElementById('d-amenities'); amCont.innerHTML=''; 
                     if(item.amenities && Array.isArray(item.amenities) && item.amenities.length > 0) { item.amenities.forEach(a => { amCont.innerHTML += `<div class="p-1.5 text-center text-[9px] font-bold text-slate-700 dark:text-slate-300 border-r border-b border-slate-200 dark:border-slate-700 last:border-r-0">${a}</div>`; }); } else { amCont.innerHTML = `<div class="col-span-3 p-2 text-center text-[9px] text-slate-400">لا توجد مميزات إضافية</div>`; }
                     const mapBtn = document.getElementById('d-map'); if(item.mapLink) { mapBtn.classList.remove('hidden'); mapBtn.classList.add('flex'); mapBtn.href = item.mapLink; } else { mapBtn.classList.add('hidden'); mapBtn.classList.remove('flex'); }
@@ -839,14 +890,17 @@
                     else { typeEl.innerText = item.type === 'sale' ? 'للبيع' : 'للإيجار'; typeEl.className = `absolute bottom-2 right-2 text-white px-2 py-0.5 rounded text-[10px] font-bold shadow backdrop-blur-sm ${item.type === 'sale' ? 'bg-emerald-600/90' : 'bg-blue-600/90'}`; }
 
                     const imgs = Array.isArray(item.images) ? item.images : [item.image]; 
-                    const updateWaLink = () => { const shareUrl = window.location.origin + window.location.pathname + '?id=' + item.id; const waMsg = `مهتم بهذا العقار: ${item.title} (${Number(item.price).toLocaleString()} ج)\nالرابط: ${shareUrl}`; document.getElementById('d-wa').href = `https://wa.me/20${item.phone}?text=${encodeURIComponent(waMsg)}`; };
+                    const updateWaLink = () => { 
+                        const shareUrl = window.location.origin + window.location.pathname + '?id=' + item.id; 
+                        const waMsg = `مهتم بهذا العقار: ${item.title} (${Number(item.price).toLocaleString()} ج)\nكود الإعلان: ${code}\nالرابط: ${shareUrl}`; 
+                        document.getElementById('d-wa').href = `https://wa.me/20${item.phone}?text=${encodeURIComponent(waMsg)}`; 
+                    };
                     updateWaLink(); document.getElementById('d-call').href = `tel:${item.phone}`;
 
                     const slider = document.getElementById('details-slider'); 
                     slider.innerHTML = imgs.map((src, idx) => { 
                         const isVid = src.includes('.mp4') || src.includes('.mov'); 
                         let thumb = "";
-                        // الصورة الأولى مطابقة للتي بالخارج تماماً فتفتح من الكاش لحظياً، الباقي بجودة أعلى lazy load
                         if(idx === 0) {
                              thumb = getOptimizedUrl(src, isVid);
                         } else {
@@ -855,6 +909,12 @@
                         
                         return isVid ? `<video src="${src}" controls class="w-full h-full object-contain snap-center shrink-0 bg-black"></video>` : `<img src="${thumb}" ${idx > 0 ? 'loading="lazy"' : ''} decoding="async" class="w-full h-full object-cover snap-center shrink-0 cursor-pointer" onclick="openLightbox('${src}', ${idx})">` 
                     }).join('');
+                    
+                    // إجبار المتصفح على العودة لأول صورة برمجياً لمنع اللاج المذكور
+                    setTimeout(() => {
+                        slider.scrollLeft = 0;
+                    }, 10);
+                    
                     document.getElementById('details-arrows').style.display = imgs.length > 1 ? 'block' : 'none';
 
                     const locDisplay = item.gov ? `${item.gov}، ${item.city}` : item.location;
@@ -875,7 +935,6 @@
                         controlsDiv.innerHTML = `<div class="flex items-center gap-2"><button onclick="del(event,'${item.id}')" class="bg-red-50 text-red-600 border border-red-200 py-1 px-3 rounded text-[9px] font-bold flex items-center justify-center gap-1"><i data-lucide="trash-2" class="w-3 h-3"></i> حذف</button><div class="custom-select-wrapper w-24"><select onchange="updateStatus(event, '${item.id}', this.value)" class="custom-select h-7 py-0 text-[9px] border-emerald-200 bg-emerald-50 text-emerald-800"><option value="available" ${item.status==='available'?'selected':''}>🟢 متاح</option><option value="sold" ${item.status==='sold'?'selected':''}>🔴 مباع</option><option value="rented" ${item.status==='rented'?'selected':''}>🔵 مؤجر</option></select><i data-lucide="chevron-down" class="custom-select-icon w-3 h-3"></i></div>${state.isAdmin ? `<button onclick="pin(event,'${item.id}',${item.isPinned})" class="${item.isPinned ? 'bg-yellow-100 text-yellow-600 border-yellow-300' : 'bg-slate-100 text-slate-600 border-slate-200'} border py-1 px-3 rounded text-[9px] font-bold flex items-center justify-center gap-1"><i data-lucide="star" class="w-3 h-3 ${item.isPinned?'fill-current':''}"></i> تثبيت</button>` : ''}</div>`;
                     } else { controlsDiv.classList.add('hidden'); }
                     
-                    // استدعاء الأيقونات للنافذة الحالية فقط للحفاظ على الأداء
                     lucide.createIcons({root: document.getElementById('details-modal')});
                 } catch(e) { console.error(e); showToast('حدث خطأ في عرض التفاصيل', 'e'); }
             }
@@ -888,7 +947,6 @@
         window.closeLightbox = () => { document.getElementById('lightbox').classList.add('hidden'); document.getElementById('lightbox-img').src=''; }
         window.changeLightboxImage = (dir) => { if (!state.currentItem || !state.currentItem.images) return; const len = state.currentItem.images.length; state.lightboxIndex = (state.lightboxIndex + dir + len) % len; updateLightboxImage(); };
         
-        /* إصلاح الانتقال بين الصور في شاشة التكبير Lightbox ليكون سلس بدون سواد */
         function updateLightboxImage() { 
             const imgEl = document.getElementById('lightbox-img'); 
             const src = state.currentItem.images[state.lightboxIndex]; 
@@ -947,7 +1005,11 @@
                 const btn = document.getElementById('btn-publish'); const originalText = btn.innerText; btn.innerText='جاري الرفع والنشر...'; btn.disabled = true;
                 const uploadedUrls =[]; for(let f of state.filesToUpload) { const url = await uploadToCloudinary(f); uploadedUrls.push(url); }
                 const bdg = document.querySelector('input[name="badge"]:checked').value; const am =[]; document.querySelectorAll('.amenity-check:checked').forEach(c => am.push(c.value)); const cat = document.getElementById('in-category').value; const furnished = document.querySelector('input[name="furnished"]:checked')?.value; const landType = document.getElementById('in-land-type').value;
-                await addDoc(collection(db, COLLECTION_NAME),{ title: document.getElementById('in-title').value, price: Number(document.getElementById('in-price').value), type: document.getElementById('in-type').value, category: cat, area: Number(document.getElementById('in-area').value) || 0, feddan: Number(document.getElementById('in-feddan').value) || 0, qirat: Number(document.getElementById('in-qirat').value) || 0, landType: landType, floors: Number(cat === 'building' ? document.getElementById('in-floors-alt').value : document.getElementById('in-floors-alt').value) || 0, apartments: Number(document.getElementById('in-apartments').value) || 0, rooms: Number(document.getElementById('in-rooms').value) || 0, baths: Number(document.getElementById('in-baths').value) || 0, balconies: Number(document.getElementById('in-balconies').value) || 0, finishing: document.getElementById('in-finishing').value, level: document.getElementById('in-level').value, furnished: furnished, gov: gov, city: city, address: document.getElementById('in-address').value, location: document.getElementById('in-loc')?.value || '', phone: document.getElementById('in-phone').value, desc: document.getElementById('in-desc').value, mapLink: document.getElementById('in-map').value, amenities: am, images: uploadedUrls, image: uploadedUrls[0], badge: bdg, status: 'available', isPinned: false, createdAt: serverTimestamp(), authorId: state.user.uid });
+                
+                // توليد كود العقار (3 أرقام عشوائية)
+                const generatedCode = Math.floor(100 + Math.random() * 900).toString();
+
+                await addDoc(collection(db, COLLECTION_NAME),{ shortCode: generatedCode, title: document.getElementById('in-title').value, price: Number(document.getElementById('in-price').value), type: document.getElementById('in-type').value, category: cat, area: Number(document.getElementById('in-area').value) || 0, feddan: Number(document.getElementById('in-feddan').value) || 0, qirat: Number(document.getElementById('in-qirat').value) || 0, landType: landType, floors: Number(cat === 'building' ? document.getElementById('in-floors-alt').value : document.getElementById('in-floors-alt').value) || 0, apartments: Number(document.getElementById('in-apartments').value) || 0, rooms: Number(document.getElementById('in-rooms').value) || 0, baths: Number(document.getElementById('in-baths').value) || 0, balconies: Number(document.getElementById('in-balconies').value) || 0, finishing: document.getElementById('in-finishing').value, level: document.getElementById('in-level').value, furnished: furnished, gov: gov, city: city, address: document.getElementById('in-address').value, location: document.getElementById('in-loc')?.value || '', phone: document.getElementById('in-phone').value, desc: document.getElementById('in-desc').value, mapLink: document.getElementById('in-map').value, amenities: am, images: uploadedUrls, image: uploadedUrls[0], badge: bdg, status: 'available', isPinned: false, createdAt: serverTimestamp(), authorId: state.user.uid });
                 showToast('تم النشر بنجاح'); toggleModal('add-modal'); state.filesToUpload =[]; document.getElementById('preview-area').innerHTML = ''; document.getElementById('in-title').value = ''; document.getElementById('in-price').value = ''; document.getElementById('in-area').value = ''; document.getElementById('in-desc').value = ''; btn.innerText = originalText; btn.disabled = false;
             } catch(e) { console.error(e); showToast('حدث خطأ أثناء النشر', 'e'); document.getElementById('btn-publish').innerText = 'نشر الإعلان'; document.getElementById('btn-publish').disabled = false; }
         };
