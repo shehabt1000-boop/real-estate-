@@ -1,6 +1,3 @@
-
-
-
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
@@ -27,7 +24,7 @@
             theme: { 
                 extend: { 
                     colors: { navy: '#0f172a', darkbg: '#1e293b', brand: '#10b981' },
-                    fontFamily: { sans: ['Cairo', 'sans-serif'] },
+                    fontFamily: { sans:['Cairo', 'sans-serif'] },
                     screens: { 'xs': '400px' },
                     zIndex: { '60': '60', '70': '70', '100': '100' }
                 } 
@@ -97,7 +94,7 @@
         .dark .sticky-header { background-color: rgba(15, 23, 42, 0.95); }
 
         .sticky-search-bar {
-            position: sticky; top: 3.5rem; z-index: 30; margin: 0 0 0.5rem 0; /* تم إزالة الهوامش الجانبية لتطابق البطاقات */
+            position: sticky; top: 3.5rem; z-index: 30; margin: 0 0 0.5rem 0;
             padding: 0.25rem; border-radius: 0.75rem; background: rgba(255, 255, 255, 0.9); 
             border: 1px solid rgba(0,0,0,0.1); box-shadow: 0 2px 5px rgba(0,0,0,0.05); transition: transform 0.2s;
         }
@@ -171,12 +168,6 @@
                 <span class="text-[10px] font-black text-slate-800 dark:text-white leading-tight">سوق <span class="text-emerald-600 dark:text-emerald-400">العقارات</span></span>
             </div>
 
-            <div class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center cursor-pointer group" id="logo-trigger">
-                <div class="w-10 h-10 flex items-center justify-center bg-slate-900 text-white rounded-full border-2 border-emerald-600 dark:border-emerald-500 shadow-lg group-hover:scale-110 transition-all duration-300">
-                    <i data-lucide="building-2" class="w-5 h-5 text-white"></i>
-                </div>
-            </div>
-
             <div class="flex gap-2 items-center">
                 <button id="btn-header-login" onclick="toggleModal('auth-modal')" class="p-1.5 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-white hover:bg-slate-200 transition"><i data-lucide="user" class="w-4 h-4"></i></button>
                 <button id="btn-logout" onclick="logoutUser()" class="hidden p-1.5 rounded-full bg-red-50 dark:bg-red-900/20 text-red-600 hover:bg-red-100 transition"><i data-lucide="log-out" class="w-4 h-4"></i></button>
@@ -208,7 +199,6 @@
                 </div>
             </div>
 
-            <!-- شبكة من بطاقة واحدة في الهواتف -->
             <div id="grid-container" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-4"></div>
             <div id="load-more-container" class="hidden mt-4 text-center"><button onclick="loadMore()" class="bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 text-slate-700 dark:text-slate-200 px-6 py-2 rounded-full text-xs font-bold shadow-sm hover:bg-slate-50 dark:hover:bg-slate-700 transition">عرض المزيد</button></div>
             <div id="empty-state" class="hidden text-center py-16 opacity-60 flex flex-col items-center"><div class="bg-slate-200 dark:bg-slate-700 p-3 rounded-full inline-block mb-2"><i data-lucide="search-x" class="w-6 h-6 text-slate-400"></i></div><p class="text-slate-500 dark:text-slate-400 font-bold text-xs">لا توجد نتائج</p><button onclick="resetFilters()" class="mt-1 text-emerald-600 dark:text-emerald-400 text-[10px] font-bold underline">عرض الكل</button></div>
@@ -295,10 +285,9 @@
                 <img id="pub-img" src="" class="w-full h-full rounded-full object-cover bg-slate-200">
             </div>
             <h2 id="pub-name" class="text-xl font-black text-slate-800 dark:text-white mb-1"></h2>
-            <p id="pub-phone" class="text-sm font-bold text-slate-500 dark:text-slate-400 mb-6" dir="ltr"></p>
-            <div class="bg-emerald-50 dark:bg-emerald-900/20 p-4 rounded-xl border border-emerald-100 dark:border-emerald-800">
-                <p class="text-emerald-800 dark:text-emerald-200 font-bold text-xs">ناشر موثوق في السوق وياك ✅</p>
-            </div>
+            <p id="pub-phone" class="text-sm font-bold text-slate-500 dark:text-slate-400 mb-2" dir="ltr"></p>
+            
+            <div id="pub-badge-status" class="hidden"></div>
         </div>
     </div>
 
@@ -321,11 +310,11 @@
 
             <div class="flex-1 overflow-y-auto bg-white dark:bg-darkbg">
                 <div id="publisher-bar" class="flex items-center gap-2 p-2 bg-slate-50 dark:bg-slate-800/50 border-b border-slate-100 dark:border-slate-700 cursor-pointer hover:bg-slate-100 dark:hover:bg-slate-800 transition" onclick="openPublisherProfile()">
-                    <div id="d-pub-img-container" class="w-8 h-8 rounded-full border border-slate-300 overflow-hidden bg-slate-200">
+                    <div id="d-pub-img-container" class="w-8 h-8 rounded-full border border-slate-300 overflow-hidden bg-slate-200 shrink-0">
                         <img id="d-pub-img" src="" class="w-full h-full object-cover hidden">
                     </div>
-                    <div class="flex-1">
-                        <h4 id="d-pub-name" class="text-[10px] font-bold text-slate-800 dark:text-white leading-tight"></h4>
+                    <div class="flex-1 truncate">
+                        <h4 id="d-pub-name" class="text-[10px] font-bold text-slate-800 dark:text-white leading-tight flex items-center gap-1"></h4>
                         <span class="text-[8px] text-emerald-600 dark:text-emerald-400 font-bold">عرض البروفايل</span>
                     </div>
                     <i data-lucide="chevron-left" class="w-4 h-4 text-slate-400"></i>
@@ -377,7 +366,7 @@
                     </div>
                     <div class="bg-white dark:bg-slate-800 p-2.5 rounded-lg border border-black dark:border-slate-500 shadow-sm space-y-1.5">
                         <h4 class="text-[9px] font-bold text-slate-400 uppercase tracking-wider border-b border-slate-100 dark:border-slate-700 pb-0.5 mb-0.5">بيانات أساسية</h4>
-                        <div class="flex gap-1.5"><div class="custom-select-wrapper flex-1"><select id="in-category" onchange="updateFormFields()" class="custom-select"><option value="apartment">شقة</option><option value="villa">فيلا</option><option value="chalet">شاليهات</option><option value="office">مكتب</option><option value="shop">محل</option><option value="land">أرض</option><option value="building">عمارة</option><option value="warehouse">مخزن</option></select><i data-lucide="chevron-down" class="custom-select-icon w-3 h-3"></i></div><div class="custom-select-wrapper w-20 shrink-0"><select id="in-type" class="custom-select"><option value="sale">بيع</option><option value="rent">إيجار</option></select><i data-lucide="chevron-down" class="custom-select-icon w-3 h-3"></i></div></div>
+                        <div class="flex gap-1.5"><div class="custom-select-wrapper flex-1"><select id="in-category" onchange="updateFormFields()" class="custom-select"><option value="apartment">شقة</option><option value="villa">فيلا</option><option value="chalet">شاليهات</option><option value="office">مكتب</option><option value="shop">محلات</option><option value="land">أراضي</option><option value="building">عماير</option><option value="warehouse">مخازن</option></select><i data-lucide="chevron-down" class="custom-select-icon w-3 h-3"></i></div><div class="custom-select-wrapper w-20 shrink-0"><select id="in-type" class="custom-select"><option value="sale">بيع</option><option value="rent">إيجار</option></select><i data-lucide="chevron-down" class="custom-select-icon w-3 h-3"></i></div></div>
                         <input id="in-title" class="input-box" placeholder="عنوان الإعلان"><input id="in-price" type="number" class="input-box" placeholder="السعر (جنيه)">
                         <div class="grid grid-cols-2 gap-1.5"><input id="in-area" type="number" class="input-box" placeholder="المساحة (م²)"><input id="in-level" type="text" class="input-box" placeholder="الدور"><input id="in-floors-alt" type="number" class="input-box hidden" placeholder="عدد الأدوار"><div id="land-type-wrapper" class="hidden custom-select-wrapper"><select id="in-land-type" class="custom-select"><option value="building">مباني</option><option value="agriculture">زراعية</option></select><i data-lucide="chevron-down" class="custom-select-icon w-3 h-3"></i></div></div>
                         <div id="land-fields" class="hidden grid grid-cols-2 gap-1.5"><input id="in-feddan" type="number" class="input-box" placeholder="فدان (اختياري)"><input id="in-qirat" type="number" class="input-box" placeholder="قيراط (اختياري)"></div>
@@ -410,7 +399,44 @@
         </div>
     </div>
 
-    <div id="admin-panel" class="hidden fixed inset-0 bg-navy z-[90] flex flex-col text-white"><div class="p-3 border-b border-white/10 flex justify-between items-center bg-[#001a38]"><h2 class="font-bold flex items-center gap-2 text-sm"><i data-lucide="shield" class="w-4 h-4 text-emerald-400"></i> التحكم</h2><div class="flex gap-3"><button onclick="refreshAdmin()"><i data-lucide="refresh-cw" class="w-4 h-4"></i></button><button onclick="toggleAdminPanel()"><i data-lucide="x" class="w-5 h-5"></i></button></div></div><div class="flex-1 flex overflow-hidden"><div class="w-1/3 border-l border-white/10 bg-[#001f3f] overflow-y-auto p-2" id="admin-users-list"></div><div class="w-2/3 flex flex-col bg-navy relative"><div id="admin-chat-header" class="h-12 border-b border-white/10 flex items-center justify-between px-3 bg-[#001a38]"><span class="text-xs font-bold">اختر محادثة</span><button onclick="kickUser()" id="btn-end-chat" class="hidden bg-red-600 text-white text-[10px] font-bold px-2 py-1 rounded flex items-center gap-1"><i data-lucide="slash" class="w-3 h-3"></i> إنهاء</button></div><div id="admin-msg-area" class="flex-1 p-3 overflow-y-auto space-y-2 text-xs"></div><div class="p-2 border-t border-white/10 flex gap-2 bg-[#001a38]"><input id="admin-input" class="flex-1 bg-white/5 border border-white/20 rounded px-3 py-1.5 text-xs text-white outline-none" placeholder="الرد..."><button onclick="sendAdminMsg()" class="bg-blue-600 px-4 py-1.5 rounded text-xs font-bold">إرسال</button></div></div></div></div>
+    <!-- Admin Panel -->
+    <div id="admin-panel" class="hidden fixed inset-0 bg-navy z-[90] flex flex-col text-white">
+        <div class="p-3 border-b border-white/10 flex justify-between items-center bg-[#001a38]">
+            <h2 class="font-bold flex items-center gap-2 text-sm"><i data-lucide="shield" class="w-4 h-4 text-emerald-400"></i> التحكم</h2>
+            <div class="flex gap-3"><button onclick="refreshAdmin()"><i data-lucide="refresh-cw" class="w-4 h-4"></i></button><button onclick="toggleAdminPanel()"><i data-lucide="x" class="w-5 h-5"></i></button></div>
+        </div>
+        <div class="flex-1 flex overflow-hidden">
+            <div class="w-1/3 border-l border-white/10 bg-[#001f3f] overflow-y-auto p-2" id="admin-users-list"></div>
+            <div class="w-2/3 flex flex-col bg-navy relative">
+                <!-- User Verification & Admin Mgmt Bar -->
+                <div class="bg-[#001a38] border-b border-white/10 p-2 text-[10px]">
+                    <div class="flex gap-2 mb-1.5">
+                        <input id="admin-target-phone" placeholder="رقم هاتف المستخدم (مثال: 1206244875)" class="flex-1 bg-white/5 border border-white/20 rounded px-2 py-1.5 text-white outline-none">
+                    </div>
+                    <div class="flex gap-3 mb-2 text-white/90">
+                        <label class="cursor-pointer flex items-center gap-1 font-bold"><input type="radio" name="admin_role" value="verified" checked> توثيق</label>
+                        <label class="cursor-pointer flex items-center gap-1 font-bold"><input type="radio" name="admin_role" value="isAdmin"> أدمن</label>
+                        <label class="cursor-pointer flex items-center gap-1 font-bold text-red-400"><input type="radio" name="admin_role" value="isBlocked"> حظر</label>
+                    </div>
+                    <div class="flex gap-2">
+                        <button onclick="applyAdminAction(true)" class="flex-1 bg-emerald-600 hover:bg-emerald-500 text-white rounded py-1.5 font-bold transition">حفظ</button>
+                        <button onclick="applyAdminAction(false)" class="flex-1 bg-red-600 hover:bg-red-500 text-white rounded py-1.5 font-bold transition">إلغاء</button>
+                    </div>
+                </div>
+
+                <!-- Chat Header -->
+                <div id="admin-chat-header" class="h-10 border-b border-white/10 flex items-center justify-between px-3 bg-[#001a38]">
+                    <span class="text-xs font-bold">اختر محادثة الدعم</span>
+                    <button onclick="kickUser()" id="btn-end-chat" class="hidden bg-red-600 text-white text-[10px] font-bold px-2 py-1 rounded flex items-center gap-1"><i data-lucide="slash" class="w-3 h-3"></i> إنهاء</button>
+                </div>
+                <div id="admin-msg-area" class="flex-1 p-3 overflow-y-auto space-y-2 text-xs"></div>
+                <div class="p-2 border-t border-white/10 flex gap-2 bg-[#001a38]">
+                    <input id="admin-input" class="flex-1 bg-white/5 border border-white/20 rounded px-3 py-1.5 text-xs text-white outline-none" placeholder="الرد...">
+                    <button onclick="sendAdminMsg()" class="bg-blue-600 px-4 py-1.5 rounded text-xs font-bold">إرسال</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
@@ -491,10 +517,33 @@
                     const userDoc = await getDoc(doc(db, "users", u.uid));
                     if(userDoc.exists()) {
                         state.userProfile = userDoc.data();
+                        
+                        // نظام الحظر (Block System) - شاشة إجبارية حمراء
+                        if(state.userProfile.isBlocked) {
+                            document.body.innerHTML = `
+                                <div style="display:flex; flex-direction:column; height:100vh; align-items:center; justify-content:center; background-color:#0f172a; color:#ef4444; font-family:'Cairo',sans-serif; text-align:center; padding:20px;">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mb-4"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+                                    <h1 style="font-size:24px; font-weight:bold; margin-bottom:10px;">عذراً، تم حظر هذا الحساب!</h1>
+                                    <p style="font-size:14px; color:#94a3b8; max-width:300px;">لا يمكنك استخدام المنصة بسبب مخالفة شروط الاستخدام. يرجى التواصل مع الدعم الفني.</p>
+                                </div>`;
+                            return; // توقف عن تنفيذ الكود تماماً
+                        }
+
+                        // إعطاء صلاحية الأدمن تلقائياً للحساب الرئيسي أو من تم ترقيته
+                        if(state.userProfile.phoneNumber === '+201206244875' || state.userProfile.isAdmin) {
+                            state.isAdmin = true;
+                            document.getElementById('btn-admin-top').classList.remove('hidden');
+                        } else {
+                            state.isAdmin = false;
+                            document.getElementById('btn-admin-top').classList.add('hidden');
+                        }
+
                         updateHeader();
                     }
                 } else {
                     state.userProfile = null;
+                    state.isAdmin = false;
+                    document.getElementById('btn-admin-top').classList.add('hidden');
                     updateHeader();
                 }
                 loadListings(); 
@@ -623,7 +672,18 @@
             document.getElementById('pub-img').src = getOptimizedUrl(state.currentPublisher.photoURL).replace('w_512,h_512', 'w_200,h_200,r_max');
             document.getElementById('pub-name').innerText = state.currentPublisher.displayName;
             document.getElementById('pub-phone').innerText = state.currentPublisher.phoneNumber;
+            
+            const pubBdg = document.getElementById('pub-badge-status');
+            if(state.currentPublisher.verified) {
+                pubBdg.innerHTML = '<p class="text-blue-800 dark:text-blue-200 font-bold text-xs flex items-center justify-center gap-1"><i data-lucide="check-circle" class="w-4 h-4"></i> حساب موثق</p>';
+                pubBdg.className = 'bg-blue-50 dark:bg-blue-900/20 p-3 rounded-xl border border-blue-100 dark:border-blue-800 mt-2';
+                pubBdg.classList.remove('hidden');
+            } else {
+                pubBdg.classList.add('hidden');
+            }
+
             toggleModal('publisher-modal');
+            lucide.createIcons({root: document.getElementById('publisher-modal')});
         };
 
         function renderAmenities(list) { document.getElementById('amenities-grid').innerHTML = list.map(a => `<label class="amenity-tile cursor-pointer"><input type="checkbox" class="amenity-check hidden" value="${a}"><div class="text-center py-1 border border-slate-200 dark:border-slate-600 rounded-lg text-[8px] font-bold text-slate-600 dark:text-slate-300 transition hover:bg-slate-50 dark:hover:bg-slate-700 truncate">${a}</div></label>`).join(''); }
@@ -654,7 +714,13 @@
             else { renderAmenities(ALL_AMENITIES); if (cat === 'building') { roomFields.classList.add('hidden'); furnishedField.classList.add('hidden'); levelInput.classList.add('hidden'); floorsAltInput.classList.remove('hidden'); buildingFields.classList.remove('hidden'); extraFields.classList.add('hidden'); } else if (['shop','office','warehouse'].includes(cat)) { roomFields.classList.add('hidden'); extraFields.classList.add('hidden'); } }
         }
 
-        function checkAdminStatus() { if(localStorage.getItem('souq_admin') === 'true') { state.isAdmin = true; document.getElementById('btn-admin-top').classList.remove('hidden'); } }
+        function checkAdminStatus() { 
+            // الإدارة تعتمد الآن على البروفايل، هذا الكود احتياطي للمزامنة
+            if(localStorage.getItem('souq_admin') === 'true' && state.userProfile) { 
+                state.isAdmin = true; document.getElementById('btn-admin-top').classList.remove('hidden'); 
+            } 
+        }
+        
         window.toggleDarkMode = () => { document.documentElement.classList.toggle('dark'); localStorage.setItem('souq_theme', document.documentElement.classList.contains('dark') ? 'dark' : 'light'); }
         if(localStorage.getItem('souq_theme') === 'dark') document.documentElement.classList.add('dark');
 
@@ -757,25 +823,27 @@
                     ${imgs.length > 1 ? `<div class="absolute bottom-1 left-1 bg-black/50 text-white text-[10px] px-2 rounded flex items-center gap-1"><i data-lucide="images" class="w-3 h-3"></i> +${imgs.length-1}</div>` : ''}
                     ${isVideo ? `<div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-black/30 rounded-full p-2"><i data-lucide="play-circle" class="w-8 h-8 text-white/90"></i></div>` : ''}
                 </div>
-                <div class="p-2 flex-1 flex flex-col">
+                <div class="p-1.5 flex-1 flex flex-col">
                     <div class="flex-1">
-                        <div class="flex justify-between items-start mb-1"><h3 class="font-bold text-slate-900 dark:text-white text-xs line-clamp-1 leading-tight">${item.title}</h3><span class="font-black text-emerald-600 dark:text-emerald-400 text-xs whitespace-nowrap mr-2">${Number(item.price).toLocaleString()} ج</span></div>
-                        <div class="h-4 flex justify-end items-center mb-1">${!statusOverlay ? badge : ''}</div>
-                        <div class="flex items-center gap-1 text-[10px] text-slate-500 dark:text-slate-400 mb-1"><i data-lucide="map-pin" class="w-3 h-3 text-emerald-500 shrink-0"></i><span class="truncate leading-tight">${locDisplay}</span></div>
-                        ${item.address ? `<div class="flex items-center gap-1 text-[10px] text-slate-500 dark:text-slate-400 mb-1"><i data-lucide="map" class="w-3 h-3 text-slate-400 shrink-0"></i><span class="truncate leading-tight">${item.address}</span></div>` : ''}
+                        <div class="flex justify-between items-start mb-0.5">
+                            <h3 class="font-bold text-slate-900 dark:text-white text-[11px] line-clamp-1 leading-tight">${item.title}</h3>
+                            <span class="font-black text-emerald-600 dark:text-emerald-400 text-[11px] whitespace-nowrap mr-2">${Number(item.price).toLocaleString()} ج</span>
+                        </div>
+                        
+                        <div class="flex justify-between items-center text-[9px] text-slate-500 dark:text-slate-400 mb-1 px-0.5">
+                            <span>كود: <span class="font-bold text-slate-700 dark:text-slate-300">${code}</span></span>
+                            <span>${timeAgo(item.createdAt)}</span>
+                        </div>
+
+                        <div class="h-3 flex justify-end items-center mb-0.5">${!statusOverlay ? badge : ''}</div>
+                        
+                        <div class="flex items-center gap-1 text-[9px] text-slate-500 dark:text-slate-400 mb-1"><i data-lucide="map-pin" class="w-3 h-3 text-emerald-500 shrink-0"></i><span class="truncate leading-tight">${locDisplay}</span></div>
+                        ${item.address ? `<div class="flex items-center gap-1 text-[9px] text-slate-500 dark:text-slate-400 mb-1"><i data-lucide="map" class="w-3 h-3 text-slate-400 shrink-0"></i><span class="truncate leading-tight">${item.address}</span></div>` : ''}
                     </div>
                     
                     <div class="mt-auto">
-                        <!-- عرض الكود -->
-                        <div class="flex justify-between items-center text-[9px] font-bold text-slate-500 dark:text-slate-400 mb-1.5 px-1 mt-1">
-                            <span>كود العقار: <span class="text-slate-800 dark:text-white bg-slate-100 dark:bg-slate-700 px-1.5 py-0.5 rounded shadow-sm">${code}</span></span>
-                            <span>${timeAgo(item.createdAt)}</span>
-                        </div>
-                        
-                        <!-- توزيع الأيقونات -->
-                        <div class="flex items-center gap-1.5 text-[10px] text-slate-700 dark:text-slate-200 font-bold mb-2">${iconsHtml}</div>
-                        
-                        <div class="flex gap-1.5 pt-2 border-t border-slate-100 dark:border-slate-700">
+                        <div class="flex items-center gap-1.5 text-[10px] text-slate-700 dark:text-slate-200 font-bold mb-2 mt-1">${iconsHtml}</div>
+                        <div class="flex gap-1.5 pt-1 border-t border-slate-100 dark:border-slate-700">
                             <a href="${waLink}" target="_blank" onclick="event.stopPropagation()" class="flex-1 bg-emerald-600 text-white py-1.5 rounded flex justify-center items-center gap-1 text-[10px] font-bold hover:bg-emerald-700 transition shadow-sm"><i data-lucide="message-circle" class="w-3 h-3"></i> واتساب</a>
                             <a href="tel:${item.phone}" onclick="event.stopPropagation()" class="bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-200 px-4 py-1.5 rounded flex items-center justify-center hover:bg-slate-200 transition shadow-sm"><i data-lucide="phone" class="w-3 h-3"></i></a>
                         </div>
@@ -802,10 +870,14 @@
                     state.activeDetailsId = id; state.currentItem = item; state.currentDetailIndex = 0; 
 
                     const renderPublisher = (pubData) => {
-                        document.getElementById('d-pub-name').innerText = pubData.displayName;
+                        let nameHtml = pubData.displayName;
+                        if(pubData.verified) { nameHtml += ' <i data-lucide="check-circle" class="inline w-3 h-3 text-blue-500 mb-0.5"></i>'; }
+                        document.getElementById('d-pub-name').innerHTML = nameHtml;
+                        
                         const img = document.getElementById('d-pub-img');
                         img.src = getOptimizedUrl(pubData.photoURL).replace('w_512,h_512', 'w_100,h_100,r_max');
                         img.classList.remove('hidden');
+                        lucide.createIcons({root: document.getElementById('publisher-bar')});
                     };
 
                     state.currentPublisher = null;
@@ -881,7 +953,6 @@
                         let controlsHtml = `<div class="flex items-center gap-2">`;
                         controlsHtml += `<button onclick="del(event,'${item.id}')" class="bg-red-50 text-red-600 border border-red-200 py-1 px-3 rounded text-[9px] font-bold flex items-center justify-center gap-1"><i data-lucide="trash-2" class="w-3 h-3"></i> حذف</button>`;
                         
-                        // إضافة زر التعديل فقط لصاحب الإعلان
                         if(isOwner) {
                             controlsHtml += `<button onclick="editListing('${item.id}')" class="bg-blue-50 text-blue-600 border border-blue-200 py-1 px-3 rounded text-[9px] font-bold flex items-center justify-center gap-1"><i data-lucide="edit" class="w-3 h-3"></i> تعديل</button>`;
                         }
@@ -900,11 +971,9 @@
             }
         }
 
-        // إرجاع شريط الصور للصورة الأولى عند الإغلاق لمنع تداخل البطاقات
         window.closeDetails = () => { 
             const slider = document.getElementById('details-slider'); 
             if(slider) slider.scrollLeft = 0; 
-
             toggleModal('details-modal'); 
             const newUrl = new URL(window.location); 
             newUrl.searchParams.delete('id'); 
@@ -923,123 +992,48 @@
             const imgEl = document.getElementById('lightbox-img'); 
             const src = state.currentItem.images[state.lightboxIndex]; 
             if (src.includes('.mp4') || src.includes('.mov')) { showToast("فيديو: يرجى المشاهدة في التفاصيل"); return; } 
-            
             const optimizedSrc = getOptimizedUrl(src, false).replace('w_512', 'w_700');
-            
-            if(!imgEl.src) {
-                imgEl.src = optimizedSrc;
-            } else {
-                imgEl.style.opacity = '0.5'; 
-                const tempImg = new Image();
-                tempImg.onload = () => {
-                    imgEl.src = optimizedSrc;
-                    imgEl.style.opacity = '1';
-                };
-                tempImg.src = optimizedSrc;
-            }
+            if(!imgEl.src) { imgEl.src = optimizedSrc; } else { imgEl.style.opacity = '0.5'; const tempImg = new Image(); tempImg.onload = () => { imgEl.src = optimizedSrc; imgEl.style.opacity = '1'; }; tempImg.src = optimizedSrc; }
         }
         
         window.toggleModal = function(id) { 
             const m = document.getElementById(id); 
             m.classList.toggle('hidden'); 
-            
-            if(document.querySelectorAll('.modal-overlay:not(.hidden)').length > 0) {
-                document.body.style.overflow = 'hidden'; 
-            } else {
-                document.body.style.overflow = ''; 
-            }
+            if(document.querySelectorAll('.modal-overlay:not(.hidden)').length > 0) { document.body.style.overflow = 'hidden'; } else { document.body.style.overflow = ''; }
             return !m.classList.contains('hidden'); 
         }
 
-        // تفريغ فورم الإضافة لضمان عدم تداخل الإعلانات المضافة تباعاً
         function resetAddForm() {
-            state.filesToUpload = [];
-            state.editingId = null;
-            state.existingImages =[];
-            document.getElementById('preview-area').innerHTML = '';
-            document.getElementById('file-upload-input').value = '';
-            
-            document.getElementById('in-title').value = '';
-            document.getElementById('in-price').value = '';
-            document.getElementById('in-area').value = '';
-            document.getElementById('in-desc').value = '';
-            document.getElementById('in-map').value = '';
-            document.getElementById('in-address').value = '';
+            state.filesToUpload =[]; state.editingId = null; state.existingImages =[];
+            document.getElementById('preview-area').innerHTML = ''; document.getElementById('file-upload-input').value = '';
+            document.getElementById('in-title').value = ''; document.getElementById('in-price').value = ''; document.getElementById('in-area').value = ''; document.getElementById('in-desc').value = ''; document.getElementById('in-map').value = ''; document.getElementById('in-address').value = '';
             document.getElementById('in-phone').value = state.userProfile ? state.userProfile.phoneNumber.replace('+20', '') : '';
-            
             document.querySelectorAll('.amenity-check').forEach(c => c.checked = false);
-            document.getElementById('badge-none').checked = true;
-            document.getElementById('furn-no').checked = true;
-
-            document.getElementById('add-modal-title').innerText = 'إضافة عقار';
-            document.getElementById('btn-publish').innerText = 'نشر الإعلان';
+            document.getElementById('badge-none').checked = true; document.getElementById('furn-no').checked = true;
+            document.getElementById('add-modal-title').innerText = 'إضافة عقار'; document.getElementById('btn-publish').innerText = 'نشر الإعلان';
         }
 
         window.openAddModal = () => {
             if(state.user && !state.user.isAnonymous) {
-                resetAddForm();
-                updateFormFields();
-                if(toggleModal('add-modal')){
-                    const newUrl = new URL(window.location); newUrl.searchParams.set('mode', 'add'); window.history.pushState({}, '', newUrl);
-                }
-            } else {
-                showToast('يجب تسجيل الدخول أولاً', 'e');
-                toggleModal('auth-modal');
-            }
+                resetAddForm(); updateFormFields();
+                if(toggleModal('add-modal')){ const newUrl = new URL(window.location); newUrl.searchParams.set('mode', 'add'); window.history.pushState({}, '', newUrl); }
+            } else { showToast('يجب تسجيل الدخول أولاً', 'e'); toggleModal('auth-modal'); }
         };
 
-        // برمجة زر التعديل وتعبئة البيانات القديمة في الفورم
         window.editListing = (id) => {
-            const item = state.listings.find(i => i.id === id);
-            if(!item) return;
-
-            state.editingId = id;
-            state.existingImages = item.images;
+            const item = state.listings.find(i => i.id === id); if(!item) return;
+            state.editingId = id; state.existingImages = item.images;
             closeDetails();
-
-            document.getElementById('add-modal-title').innerText = 'تعديل العقار';
-            document.getElementById('btn-publish').innerText = 'حفظ التعديلات';
-            
-            document.getElementById('in-category').value = item.category;
-            updateFormFields();
-            document.getElementById('in-type').value = item.type;
-            document.getElementById('in-title').value = item.title;
-            document.getElementById('in-price').value = item.price;
-            document.getElementById('in-area').value = item.area || '';
-            document.getElementById('in-gov').value = item.gov;
-            populateCities('in-gov', 'in-city');
-            setTimeout(() => { document.getElementById('in-city').value = item.city; }, 100);
-            
-            document.getElementById('in-address').value = item.address || '';
-            document.getElementById('in-phone').value = item.phone || '';
-            document.getElementById('in-desc').value = item.desc || '';
-            document.getElementById('in-map').value = item.mapLink || '';
-            
-            if(item.level) document.getElementById('in-level').value = item.level;
-            if(item.rooms) document.getElementById('in-rooms').value = item.rooms;
-            if(item.baths) document.getElementById('in-baths').value = item.baths;
-            if(item.balconies) document.getElementById('in-balconies').value = item.balconies;
-            if(item.finishing) document.getElementById('in-finishing').value = item.finishing;
-            if(item.floors) document.getElementById('in-floors-alt').value = item.floors;
-            if(item.apartments) document.getElementById('in-apartments').value = item.apartments;
-            if(item.feddan) document.getElementById('in-feddan').value = item.feddan;
-            if(item.qirat) document.getElementById('in-qirat').value = item.qirat;
-            if(item.landType) document.getElementById('in-land-type').value = item.landType;
-            
+            document.getElementById('add-modal-title').innerText = 'تعديل العقار'; document.getElementById('btn-publish').innerText = 'حفظ التعديلات';
+            document.getElementById('in-category').value = item.category; updateFormFields();
+            document.getElementById('in-type').value = item.type; document.getElementById('in-title').value = item.title; document.getElementById('in-price').value = item.price; document.getElementById('in-area').value = item.area || ''; document.getElementById('in-gov').value = item.gov;
+            populateCities('in-gov', 'in-city'); setTimeout(() => { document.getElementById('in-city').value = item.city; }, 100);
+            document.getElementById('in-address').value = item.address || ''; document.getElementById('in-phone').value = item.phone || ''; document.getElementById('in-desc').value = item.desc || ''; document.getElementById('in-map').value = item.mapLink || '';
+            if(item.level) document.getElementById('in-level').value = item.level; if(item.rooms) document.getElementById('in-rooms').value = item.rooms; if(item.baths) document.getElementById('in-baths').value = item.baths; if(item.balconies) document.getElementById('in-balconies').value = item.balconies; if(item.finishing) document.getElementById('in-finishing').value = item.finishing; if(item.floors) document.getElementById('in-floors-alt').value = item.floors; if(item.apartments) document.getElementById('in-apartments').value = item.apartments; if(item.feddan) document.getElementById('in-feddan').value = item.feddan; if(item.qirat) document.getElementById('in-qirat').value = item.qirat; if(item.landType) document.getElementById('in-land-type').value = item.landType;
             if(item.furnished === 'yes') document.getElementById('furn-yes').checked = true; else document.getElementById('furn-no').checked = true;
             if(item.badge === 'hot') document.getElementById('badge-hot').checked = true; else document.getElementById('badge-none').checked = true;
-            
-            setTimeout(() => {
-                if(item.amenities && Array.isArray(item.amenities)) {
-                    document.querySelectorAll('.amenity-check').forEach(c => {
-                        if(item.amenities.includes(c.value)) c.checked = true;
-                    });
-                }
-            }, 100);
-
-            // عرض تنبيه بشأن الصور
+            setTimeout(() => { if(item.amenities && Array.isArray(item.amenities)) { document.querySelectorAll('.amenity-check').forEach(c => { if(item.amenities.includes(c.value)) c.checked = true; }); } }, 100);
             document.getElementById('preview-area').innerHTML = `<div class="text-[9px] text-slate-500 font-bold p-2 text-center w-full">الصور محفوظة. سيتم تحديث الصور القديمة فقط إذا قمت بإضافة صور جديدة هنا.</div>`;
-
             toggleModal('add-modal');
         };
 
@@ -1069,60 +1063,19 @@
                 const bdg = document.querySelector('input[name="badge"]:checked').value; const am =[]; document.querySelectorAll('.amenity-check:checked').forEach(c => am.push(c.value)); const cat = document.getElementById('in-category').value; const furnished = document.querySelector('input[name="furnished"]:checked')?.value; const landType = document.getElementById('in-land-type').value;
                 
                 const listingData = { 
-                    title: document.getElementById('in-title').value, 
-                    price: Number(document.getElementById('in-price').value), 
-                    type: document.getElementById('in-type').value, 
-                    category: cat, 
-                    area: Number(document.getElementById('in-area').value) || 0, 
-                    feddan: Number(document.getElementById('in-feddan').value) || 0, 
-                    qirat: Number(document.getElementById('in-qirat').value) || 0, 
-                    landType: landType, 
-                    floors: Number(cat === 'building' ? document.getElementById('in-floors-alt').value : document.getElementById('in-floors-alt').value) || 0, 
-                    apartments: Number(document.getElementById('in-apartments').value) || 0, 
-                    rooms: Number(document.getElementById('in-rooms').value) || 0, 
-                    baths: Number(document.getElementById('in-baths').value) || 0, 
-                    balconies: Number(document.getElementById('in-balconies').value) || 0, 
-                    finishing: document.getElementById('in-finishing').value, 
-                    level: document.getElementById('in-level').value, 
-                    furnished: furnished, 
-                    gov: gov, 
-                    city: city, 
-                    address: document.getElementById('in-address').value, 
-                    phone: document.getElementById('in-phone').value, 
-                    desc: document.getElementById('in-desc').value, 
-                    mapLink: document.getElementById('in-map').value, 
-                    amenities: am, 
-                    images: uploadedUrls, 
-                    image: uploadedUrls[0], 
-                    badge: bdg 
+                    title: document.getElementById('in-title').value, price: Number(document.getElementById('in-price').value), type: document.getElementById('in-type').value, category: cat, area: Number(document.getElementById('in-area').value) || 0, feddan: Number(document.getElementById('in-feddan').value) || 0, qirat: Number(document.getElementById('in-qirat').value) || 0, landType: landType, floors: Number(cat === 'building' ? document.getElementById('in-floors-alt').value : document.getElementById('in-floors-alt').value) || 0, apartments: Number(document.getElementById('in-apartments').value) || 0, rooms: Number(document.getElementById('in-rooms').value) || 0, baths: Number(document.getElementById('in-baths').value) || 0, balconies: Number(document.getElementById('in-balconies').value) || 0, finishing: document.getElementById('in-finishing').value, level: document.getElementById('in-level').value, furnished: furnished, gov: gov, city: city, address: document.getElementById('in-address').value, phone: document.getElementById('in-phone').value, desc: document.getElementById('in-desc').value, mapLink: document.getElementById('in-map').value, amenities: am, images: uploadedUrls, image: uploadedUrls[0], badge: bdg 
                 };
 
                 if(state.editingId) {
-                    // التحديث للإعلان الموجود
-                    await updateDoc(doc(db, COLLECTION_NAME, state.editingId), listingData);
-                    showToast('تم حفظ التعديلات بنجاح');
+                    await updateDoc(doc(db, COLLECTION_NAME, state.editingId), listingData); showToast('تم حفظ التعديلات بنجاح');
                 } else {
-                    // إضافة إعلان جديد بكود قصير
                     const generatedCode = Math.floor(100 + Math.random() * 900).toString();
-                    listingData.shortCode = generatedCode;
-                    listingData.status = 'available';
-                    listingData.isPinned = false;
-                    listingData.createdAt = serverTimestamp();
-                    listingData.authorId = state.user.uid;
-                    
-                    await addDoc(collection(db, COLLECTION_NAME), listingData);
-                    showToast('تم النشر بنجاح');
+                    listingData.shortCode = generatedCode; listingData.status = 'available'; listingData.isPinned = false; listingData.createdAt = serverTimestamp(); listingData.authorId = state.user.uid;
+                    await addDoc(collection(db, COLLECTION_NAME), listingData); showToast('تم النشر بنجاح');
                 }
 
-                toggleModal('add-modal'); 
-                resetAddForm();
-                
-            } catch(e) { 
-                console.error(e); 
-                showToast('حدث خطأ أثناء العملية', 'e'); 
-                document.getElementById('btn-publish').innerText = state.editingId ? 'حفظ التعديلات' : 'نشر الإعلان'; 
-                document.getElementById('btn-publish').disabled = false; 
-            }
+                toggleModal('add-modal'); resetAddForm();
+            } catch(e) { console.error(e); showToast('حدث خطأ أثناء العملية', 'e'); document.getElementById('btn-publish').innerText = state.editingId ? 'حفظ التعديلات' : 'نشر الإعلان'; document.getElementById('btn-publish').disabled = false; }
         };
 
         window.del=async(e,id)=>{if(e)e.stopPropagation();if(confirm('هل أنت متأكد من حذف هذا الإعلان بشكل نهائي؟')){await deleteDoc(doc(db, COLLECTION_NAME, id));showToast('تم الحذف'); closeDetails();}};
@@ -1137,11 +1090,43 @@
         function botMsg(t){const d=document.createElement('div');d.className="flex justify-end";d.innerHTML=`<div class="bg-white dark:bg-slate-700 dark:text-white text-slate-800 px-3 py-2 rounded-xl rounded-tl-none shadow-sm text-xs max-w-[85%]">${t}</div>`;document.getElementById('chat-box').appendChild(d);document.getElementById('chat-box').scrollTop=9999}
 
         window.toggleAdminPanel=()=>{document.getElementById('admin-panel').classList.toggle('hidden');if(!document.getElementById('admin-panel').classList.contains('hidden'))refreshAdmin()};
-        document.getElementById('logo-trigger').addEventListener('click',()=>{if(prompt('Code:')==='1532'){state.isAdmin=true;document.getElementById('btn-admin-top').classList.remove('hidden');localStorage.setItem('souq_admin', 'true');showToast('أدمن');}});
+        
+        // نظام إدارة وحظر المستخدمين من الدعم الفني
+        window.applyAdminAction = async (isGranting) => {
+            let phoneInput = document.getElementById('admin-target-phone').value.trim();
+            if(!phoneInput) return showToast('أدخل رقم الهاتف أولاً', 'e');
+            
+            let phone = phoneInput.replace(/\D/g, '');
+            if(phone.startsWith('0')) phone = phone.substring(1);
+            let fullPhone = `+20${phone}`;
+
+            const action = document.querySelector('input[name="admin_role"]:checked').value;
+
+            try {
+                const q = query(collection(db, "users"), where("phoneNumber", "==", fullPhone));
+                const snap = await getDocs(q);
+                
+                if(snap.empty) {
+                    return showToast('لم يتم العثور على حساب بهذا الرقم', 'e');
+                }
+
+                const userDocId = snap.docs[0].id;
+                await updateDoc(doc(db, "users", userDocId), {
+                    [action]: isGranting
+                });
+
+                showToast(`تم ${isGranting ? 'تفعيل' : 'إلغاء'} الخاصية بنجاح`);
+                document.getElementById('admin-target-phone').value = '';
+            } catch(e) {
+                console.error(e);
+                showToast('حدث خطأ في النظام', 'e');
+            }
+        };
+
         window.refreshAdmin=()=>{onSnapshot(query(collection(db,"chats"),where('status','!=','closed')),s=>{const l=document.getElementById('admin-users-list');l.innerHTML='';s.forEach(d=>{const dt=d.data();l.innerHTML+=`<div onclick="loadAdmin('${d.id}','${dt.userName}')" class="p-3 mb-2 bg-white/5 rounded-xl cursor-pointer border border-white/10"><div class="font-bold text-xs text-white flex justify-between"><span>${dt.userName}</span>${dt.status==='waiting'?'<span class="w-2 h-2 bg-red-500 rounded-full animate-pulse"></span>':''}</div><div class="text-[10px] text-gray-400 truncate mt-1">${dt.lastMsg}</div></div>`})})};
-        window.loadAdmin=(id,n)=>{state.activeAdminChat=id;document.getElementById('admin-chat-header').innerHTML=`<span>${n}</span><button onclick="kickUser()" id="btn-end-chat" class="hidden bg-red-600 text-white text-[10px] font-bold px-2 py-1 rounded flex items-center gap-1"><i data-lucide="slash" class="w-3 h-3"></i> إنهاء</button>`;document.getElementById('btn-end-chat').classList.remove('hidden');onSnapshot(doc(db,"chats",id),s=>{const b=document.getElementById('admin-msg-area');b.innerHTML='';if(!s.exists())return;s.data().messages.forEach(m=>{b.innerHTML+=`<div class="${m.s==='support'?'text-left':'text-right'} mb-2"><span class="inline-block px-3 py-2 rounded-lg text-xs ${m.s==='support'?'bg-slate-900 dark:bg-emerald-600 text-white':'bg-white/10'}">${m.t}</span></div>`});b.scrollTop=9999})};
+        window.loadAdmin=(id,n)=>{state.activeAdminChat=id;document.getElementById('admin-chat-header').innerHTML=`<span class="text-xs font-bold">${n}</span><button onclick="kickUser()" id="btn-end-chat" class="hidden bg-red-600 text-white text-[10px] font-bold px-2 py-1 rounded flex items-center gap-1"><i data-lucide="slash" class="w-3 h-3"></i> إنهاء</button>`;document.getElementById('btn-end-chat').classList.remove('hidden');onSnapshot(doc(db,"chats",id),s=>{const b=document.getElementById('admin-msg-area');b.innerHTML='';if(!s.exists())return;s.data().messages.forEach(m=>{b.innerHTML+=`<div class="${m.s==='support'?'text-left':'text-right'} mb-2"><span class="inline-block px-3 py-2 rounded-lg text-xs ${m.s==='support'?'bg-slate-900 dark:bg-emerald-600 text-white':'bg-white/10'}">${m.t}</span></div>`});b.scrollTop=9999})};
         window.sendAdminMsg=async()=>{const t=document.getElementById('admin-input').value;if(!t||!state.activeAdminChat)return;document.getElementById('admin-input').value='';const s=await getDocs(query(collection(db,"chats"),where('__name__','==',state.activeAdminChat)));const m=s.docs[0].data().messages;m.push({s:'support',t,d:new Date()});await updateDoc(doc(db,"chats",state.activeAdminChat),{messages:m,status:'active'})};
-        window.kickUser=async()=>{if(confirm("إنهاء؟")){await updateDoc(doc(db,"chats",state.activeAdminChat),{status:'closed'});document.getElementById('admin-msg-area').innerHTML='';document.getElementById('btn-end-chat').classList.add('hidden');state.activeAdminChat=null}};
+        window.kickUser=async()=>{if(confirm("إنهاء المحادثة؟")){await updateDoc(doc(db,"chats",state.activeAdminChat),{status:'closed'});document.getElementById('admin-msg-area').innerHTML='';document.getElementById('btn-end-chat').classList.add('hidden');state.activeAdminChat=null}};
 
         if ('serviceWorker' in navigator) {
             const swCode = `const CACHE_NAME = 'souq-cache-v1'; const ASSETS =['./', 'https://cdn.tailwindcss.com', 'https://unpkg.com/lucide@latest', 'https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap']; self.addEventListener('install', e => e.waitUntil(caches.open(CACHE_NAME).then(c => c.addAll(ASSETS)))); self.addEventListener('fetch', e => { e.respondWith(caches.match(e.request).then(r => r || fetch(e.request))); });`;
