@@ -118,7 +118,7 @@
         .input-box { width: 100%; background: white; border: 1px solid #cbd5e1; border-radius: 0.5rem; padding: 0.6rem 0.8rem; font-size: 0.85rem; font-weight: 700; outline: none; color: #0f172a; transition: all 0.2s; }
         .dark .input-box { background: #1e293b; border-color: #475569; color: white; }
         .input-box:focus { border-color: #10b981; box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1); }
-        
+
         .custom-select { appearance: none; background-color: #f8fafc; border: 1px solid #000; border-radius: 0.4rem; padding: 0.4rem 1.5rem 0.4rem 0.5rem; width: 100%; font-weight: 700; font-size: 0.75rem; color: #334155; cursor: pointer; }
         .dark .custom-select { background-color: #1e293b; color: white; border-color: #94a3b8; }
         .custom-select-wrapper { position: relative; }
@@ -130,7 +130,7 @@
         .modern-table tr:nth-child(even) { background-color: #f8fafc; }
         .dark .modern-table tr:nth-child(even) { background-color: #1e293b; }
         .amenity-tile input:checked + div { background-color: #10b981; color: white; border-color: #10b981; }
-        
+
         #filter-panel { display: none; opacity: 0; transform: scaleY(0.95); transform-origin: top; transition: opacity 0.15s ease, transform 0.15s ease; }
         #filter-panel.open { display: block; opacity: 1; transform: scaleY(1); }
         body.keyboard-open #bottom-nav { display: none; }
@@ -141,7 +141,7 @@
         .dark .profile-name-header { color: #ffffff; }
         .profile-welcome-sub { font-size: 0.6rem; color: #64748b; font-weight: 600; }
         .dark .profile-welcome-sub { color: #94a3b8; }
-        
+
         /* Toast */
         .toast { animation: slideInDown 0.2s ease-out forwards; }
         .toast.hiding { animation: fadeOut 0.2s ease-in forwards; }
@@ -271,7 +271,8 @@
     </div>
 
     <!-- Publisher Profile Modal -->
-    <div id="publisher-modal" class="hidden modal-overlay">
+    <!-- التعديل الأول: تمت إضافة z-index: 105; لرفع طبقة نافذة البروفايل لتصبح فوق نافذة التفاصيل -->
+    <div id="publisher-modal" class="hidden modal-overlay" style="z-index: 105;">
         <div class="relative w-full max-w-sm bg-white dark:bg-slate-800 rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-700 p-6 overflow-hidden animate-pop text-center z-50">
             <button onclick="toggleModal('publisher-modal')" class="absolute top-3 left-3 text-slate-400 hover:text-red-500 transition z-10"><i data-lucide="x" class="w-5 h-5"></i></button>
             <div class="w-24 h-24 rounded-full border-4 border-emerald-500 p-1 mx-auto mb-4">
@@ -301,7 +302,7 @@
                 </div>
                 <span id="d-type-badge" class="absolute bottom-2 right-2 text-white px-2 py-0.5 rounded text-[10px] font-bold shadow backdrop-blur-sm"></span>
             </div>
-            
+
             <div class="flex-1 overflow-y-auto bg-white dark:bg-darkbg">
                 <div id="publisher-bar" class="flex items-center gap-2 p-2 bg-slate-50 dark:bg-slate-800/50 border-b border-slate-100 dark:border-slate-700 cursor-pointer hover:bg-slate-100 dark:hover:bg-slate-800 transition" onclick="openPublisherProfile()">
                     <div id="d-pub-img-container" class="w-8 h-8 rounded-full border border-slate-300 overflow-hidden bg-slate-200">
@@ -382,7 +383,7 @@
 
     <!-- Chat & Lightbox & Admin -->
     <div id="chat-modal" class="hidden modal-overlay"><div class="mobile-full-modal animate-pop border border-navy/10"><div class="bg-slate-900 dark:bg-emerald-600 p-3 text-white flex justify-between items-center shrink-0"><div class="flex items-center gap-2"><div class="bg-white/10 p-1.5 rounded-full"><i data-lucide="bot" class="w-5 h-5 text-yellow-400"></i></div><div><h4 class="font-bold text-xs">الدعم الفني</h4><span class="text-[9px] opacity-80">متصل الآن</span></div></div><button onclick="toggleChat()" class="bg-red-500 text-black p-1 rounded-full hover:bg-red-600 transition"><i data-lucide="x" class="w-4 h-4"></i></button></div><div id="chat-box" class="flex-1 bg-slate-100 dark:bg-slate-900 p-3 overflow-y-auto space-y-2 text-xs"></div><div class="p-3 bg-white dark:bg-slate-800 border-t dark:border-slate-700 flex items-center gap-2 shrink-0 pb-safe"><input id="chat-msg" type="text" class="flex-1 bg-slate-100 dark:bg-slate-700 border-0 rounded-full px-4 py-3 text-sm outline-none dark:text-white font-bold" placeholder="اكتب رسالتك..."><button onclick="sendMsg()" class="w-10 h-10 bg-slate-900 dark:bg-emerald-600 rounded-full text-white flex items-center justify-center shadow"><i data-lucide="send" class="w-4 h-4"></i></button></div></div></div>
-    
+
     <!-- Lightbox -->
     <div id="lightbox" class="hidden fixed inset-0 bg-black/95 z-[120] flex flex-col items-center justify-center select-none">
         <button onclick="closeLightbox()" class="absolute top-4 left-4 bg-white/20 text-white p-2 rounded-full z-20"><i data-lucide="x" class="w-6 h-6"></i></button>
@@ -406,14 +407,14 @@
         const COLLECTION_NAME = "listings_v2"; 
         const DUMMY_PUBLISHER = { displayName: "وسيط السوق", phoneNumber: "01206244875", photoURL: "https://cdn-icons-png.flaticon.com/512/609/609803.png" };
 
-        let state = { user: null, userProfile: null, listings: [], filesToUpload: [], regImage: null, chatId: null, chatStep: 0, tempName: '', activeAdminChat: null, isAdmin: false, welcomeSent: false, currentFilter: 'all', visibleLimit: 6, lightboxIndex: 0, activeDetailsId: null, currentDetailIndex: 0, publisherCache: {} };
+        let state = { user: null, userProfile: null, listings:[], filesToUpload:[], regImage: null, chatId: null, chatStep: 0, tempName: '', activeAdminChat: null, isAdmin: false, welcomeSent: false, currentFilter: 'all', visibleLimit: 6, lightboxIndex: 0, activeDetailsId: null, currentDetailIndex: 0, publisherCache: {} };
 
-        const ALL_AMENITIES = ["غاز طبيعي", "كهرباء", "مياه", "أسانسير", "واي فاي", "حمام سباحة", "حديقة", "جراج", "أمن وحراسة", "كاميرات مراقبة", "مطبخ أمريكاني", "غرفة خادمة", "مسموح بالحيوانات", "على ناصية"];
+        const ALL_AMENITIES =["غاز طبيعي", "كهرباء", "مياه", "أسانسير", "واي فاي", "حمام سباحة", "حديقة", "جراج", "أمن وحراسة", "كاميرات مراقبة", "مطبخ أمريكاني", "غرفة خادمة", "مسموح بالحيوانات", "على ناصية"];
         const LAND_AMENITIES = ["كهرباء", "مياه", "غاز طبيعي", "على ناصية"];
-        const CAT_MAP = { 'apartment': 'شقة', 'villa': 'فيلا', 'chalet': 'شالية', 'office': 'مكتب', 'shop': 'محل', 'land': 'أرض', 'building': 'عمارة', 'warehouse': 'مخزن' };
+        const CAT_MAP = { 'apartment': 'شقة', 'villa': 'فيلا', 'chalet': 'شالية', 'office': 'مكتب', 'shop': 'محل', 'land': 'أرض', 'building': 'عماير', 'warehouse': 'مخزن' };
         const FINISH_MAP = { 'red': 'طوب أحمر', 'semi': 'نصف تشطيب', 'full': 'تشطيب كامل', 'super': 'سوبر لوكس', 'ultra': 'الترا سوبر لوكس' };
         const CAT_KEYWORDS = { 'شقة': 'apartment', 'شقق': 'apartment', 'فيلا': 'villa', 'فلل': 'villa', 'شالية': 'chalet', 'شاليهات': 'chalet', 'مكتب': 'office', 'مكاتب': 'office', 'محل': 'shop', 'محلات': 'shop', 'ارض': 'land', 'اراضي': 'land', 'عمارة': 'building', 'عماير': 'building', 'مخزن': 'warehouse', 'مخازن': 'warehouse' };
-        const EGYPT_LOCATIONS = { "الشرقية": ["الزقازيق", "العاشر من رمضان", "منيا القمح", "بلبيس", "مشتول السوق", "القنايات", "أبو حماد", "القرين", "ههيا", "أبو كبير", "فاقوس", "الصالحية الجديدة", "الإبراهيمية", "ديرب نجم", "كفر صقر", "أولاد صقر", "الحسينية", "صان الحجر", "منشأة أبو عمر"], "القاهرة": ["مدينة نصر", "مصر الجديدة", "المعادي", "التجمع الخامس", "الرحاب", "مدينتي", "الشروق", "العبور", "المقطم", "الزيتون", "حدائق القبة", "شبرا", "وسط البلد", "المنيل", "الزمالك", "المهندسين", "الدقي", "العجوزة"], "الجيزة": ["6 أكتوبر", "الشيخ زايد", "الهرم", "فيصل", "المهندسين", "الدقي", "العجوزة", "إمبابة", "الوراق", "بولاق الدكرور", "العمرانية", "المنيب"], "الإسكندرية": ["سموحة", "ميامي", "المنتزه", "سيدي بشر", "جليم", "ستانلي", "رشدي", "كفر عبده", "محرم بك", "العجمي", "الساحل الشمالي", "برج العرب"], "الدقهلية": ["المنصورة", "طلخا", "ميت غمر", "دكرنس", "أجا", "منية النصر", "السنبلاوين", "شربين", "بلقاس", "المطرية", "المنزلة", "جمصة"], "القليوبية": ["بنها", "قليوب", "شبرا الخيمة", "القناطر الخيرية", "الخانكة", "كفر شكر", "طوخ", "قها", "العبور"], "المنوفية": ["شبين الكوم", "مدينة السادات", "منوف", "سرس الليان", "أشمون", "الباجور", "قويسنا", "بركة السبع", "تلا", "الشهداء"], "الغربية": ["طنطا", "المحلة الكبرى", "كفر الزيات", "زفتى", "السنطة", "قطور", "بسيون", "سمنود"], "البحيرة": ["دمنهور", "كفر الدوار", "رشيد", "إدكو", "أبو المطامير", "أبو حمص", "الدلنجات", "المحمودية", "الرحمانية", "إيتاي البارود", "حوش عيسى", "شبراخيت", "كوم حمادة", "بدر", "وادي النطرون", "النوبارية الجديدة"], "دمياط": ["دمياط", "دمياط الجديدة", "رأس البر", "فارسكور", "الزرقا", "السرو", "الروضة", "كفر البطيخ", "عزبة البرج", "ميت أبو غالب", "كفر سعد"], "بورسعيد": ["بورسعيد", "بورفؤاد"], "الإسماعيلية": ["الإسماعيلية", "التل الكبير", "فايد", "القنطرة شرق", "القنطرة غرب", "أبو صوير", "القصاصين"], "السويس": ["السويس", "الأربعين", "عتاقة", "الجناين", "فيصل"], "كفر الشيخ": ["كفر الشيخ", "دسوق", "فوه", "مطوبس", "بلطيم", "مصيف بلطيم", "الحامول", "بيلا", "الرياض", "سيدي سالم", "قلين", "برج البرلس"], "الفيوم": ["الفيوم", "الفيوم الجديدة", "طامية", "سنورس", "إطسا", "إبشواي", "يوسف الصديق"], "بني سويف": ["بني سويف", "بني سويف الجديدة", "الواسطى", "ناصر", "إهناسيا", "ببا", "الفشن", "سمسطا"], "المنيا": ["المنيا", "المنيا الجديدة", "العدوة", "مغاغة", "بني مزار", "مطاي", "سمالوط", "أبو قرقاص", "ملوي", "دير مواس"], "أسيوط": ["أسيوط", "أسيوط الجديدة", "ديروط", "القوصية", "أبنوب", "منفلوط", "أبو تيج", "الغنايم", "ساحل سليم", "البداري", "صدفا", "الفتح"], "سوهاج": ["سوهاج", "سوهاج الجديدة", "أخميم", "أخميم الجديدة", "البلينا", "المراغة", "المنشأة", "دار السلام", "جرجا", "جهينة", "ساقلتة", "طما", "طهطا"], "قنا": ["قنا", "قنا الجديدة", "أبو تشت", "نجع حمادي", "دشنا", "الوقف", "قفط", "قوص", "نقادة", "فرشوط"], "الأقصر": ["الأقصر", "الأقصر الجديدة", "إسنا", "طيبة الجديدة", "الزينية", "البياضية", "القرنة", "أرمنت", "الطود"], "أسوان": ["أسوان", "أسوان الجديدة", "دراو", "كوم أمبو", "نصر النوبة", "إدفو"], "البحر الأحمر": ["الغردقة", "رأس غارب", "سفاجا", "القصير", "مرسى علم", "الشلاتين", "حلايب"], "الوادي الجديد": ["الخارجة", "باريس", "موط", "الفرافرة", "بلاط"], "مطروح": ["مرسى مطروح", "الحمام", "العلمين", "الضبعة", "النجيلة", "سيدي براني", "السلوم", "سيوة"], "شمال سيناء": ["العريش", "بئر العبد", "نخل", "الحسنة", "الشيخ زويد", "رفح"], "جنوب سيناء": ["الطور", "شرم الشيخ", "دهب", "نويبع", "طابا", "سانت كاترين", "أبو رديس", "أبو زنيمة", "رأس سدر"] };
+        const EGYPT_LOCATIONS = { "الشرقية":["الزقازيق", "العاشر من رمضان", "منيا القمح", "بلبيس", "مشتول السوق", "القنايات", "أبو حماد", "القرين", "ههيا", "أبو كبير", "فاقوس", "الصالحية الجديدة", "الإبراهيمية", "ديرب نجم", "كفر صقر", "أولاد صقر", "الحسينية", "صان الحجر", "منشأة أبو عمر"], "القاهرة":["مدينة نصر", "مصر الجديدة", "المعادي", "التجمع الخامس", "الرحاب", "مدينتي", "الشروق", "العبور", "المقطم", "الزيتون", "حدائق القبة", "شبرا", "وسط البلد", "المنيل", "الزمالك", "المهندسين", "الدقي", "العجوزة"], "الجيزة":["6 أكتوبر", "الشيخ زايد", "الهرم", "فيصل", "المهندسين", "الدقي", "العجوزة", "إمبابة", "الوراق", "بولاق الدكرور", "العمرانية", "المنيب"], "الإسكندرية":["سموحة", "ميامي", "المنتزه", "سيدي بشر", "جليم", "ستانلي", "رشدي", "كفر عبده", "محرم بك", "العجمي", "الساحل الشمالي", "برج العرب"], "الدقهلية":["المنصورة", "طلخا", "ميت غمر", "دكرنس", "أجا", "منية النصر", "السنبلاوين", "شربين", "بلقاس", "المطرية", "المنزلة", "جمصة"], "القليوبية":["بنها", "قليوب", "شبرا الخيمة", "القناطر الخيرية", "الخانكة", "كفر شكر", "طوخ", "قها", "العبور"], "المنوفية":["شبين الكوم", "مدينة السادات", "منوف", "سرس الليان", "أشمون", "الباجور", "قويسنا", "بركة السبع", "تلا", "الشهداء"], "الغربية":["طنطا", "المحلة الكبرى", "كفر الزيات", "زفتى", "السنطة", "قطور", "بسيون", "سمنود"], "البحيرة":["دمنهور", "كفر الدوار", "رشيد", "إدكو", "أبو المطامير", "أبو حمص", "الدلنجات", "المحمودية", "الرحمانية", "إيتاي البارود", "حوش عيسى", "شبراخيت", "كوم حمادة", "بدر", "وادي النطرون", "النوبارية الجديدة"], "دمياط":["دمياط", "دمياط الجديدة", "رأس البر", "فارسكور", "الزرقا", "السرو", "الروضة", "كفر البطيخ", "عزبة البرج", "ميت أبو غالب", "كفر سعد"], "بورسعيد": ["بورسعيد", "بورفؤاد"], "الإسماعيلية":["الإسماعيلية", "التل الكبير", "فايد", "القنطرة شرق", "القنطرة غرب", "أبو صوير", "القصاصين"], "السويس":["السويس", "الأربعين", "عتاقة", "الجناين", "فيصل"], "كفر الشيخ":["كفر الشيخ", "دسوق", "فوه", "مطوبس", "بلطيم", "مصيف بلطيم", "الحامول", "بيلا", "الرياض", "سيدي سالم", "قلين", "برج البرلس"], "الفيوم":["الفيوم", "الفيوم الجديدة", "طامية", "سنورس", "إطسا", "إبشواي", "يوسف الصديق"], "بني سويف":["بني سويف", "بني سويف الجديدة", "الواسطى", "ناصر", "إهناسيا", "ببا", "الفشن", "سمسطا"], "المنيا":["المنيا", "المنيا الجديدة", "العدوة", "مغاغة", "بني مزار", "مطاي", "سمالوط", "أبو قرقاص", "ملوي", "دير مواس"], "أسيوط":["أسيوط", "أسيوط الجديدة", "ديروط", "القوصية", "أبنوب", "منفلوط", "أبو تيج", "الغنايم", "ساحل سليم", "البداري", "صدفا", "الفتح"], "سوهاج":["سوهاج", "سوهاج الجديدة", "أخميم", "أخميم الجديدة", "البلينا", "المراغة", "المنشأة", "دار السلام", "جرجا", "جهينة", "ساقلتة", "طما", "طهطا"], "قنا":["قنا", "قنا الجديدة", "أبو تشت", "نجع حمادي", "دشنا", "الوقف", "قفط", "قوص", "نقادة", "فرشوط"], "الأقصر":["الأقصر", "الأقصر الجديدة", "إسنا", "طيبة الجديدة", "الزينية", "البياضية", "القرنة", "أرمنت", "الطود"], "أسوان":["أسوان", "أسوان الجديدة", "دراو", "كوم أمبو", "نصر النوبة", "إدفو"], "البحر الأحمر":["الغردقة", "رأس غارب", "سفاجا", "القصير", "مرسى علم", "الشلاتين", "حلايب"], "الوادي الجديد":["الخارجة", "باريس", "موط", "الفرافرة", "بلاط"], "مطروح":["مرسى مطروح", "الحمام", "العلمين", "الضبعة", "النجيلة", "سيدي براني", "السلوم", "سيوة"], "شمال سيناء":["العريش", "بئر العبد", "نخل", "الحسنة", "الشيخ زويد", "رفح"], "جنوب سيناء":["الطور", "شرم الشيخ", "دهب", "نويبع", "طابا", "سانت كاترين", "أبو رديس", "أبو زنيمة", "رأس سدر"] };
 
         function loadCachedData() {
             const cached = localStorage.getItem('souq_listings');
@@ -553,7 +554,7 @@
                 const photoURL = await uploadToCloudinary(state.regImage);
                 const email = `0${phone}@souq.com`;
                 const cred = await createUserWithEmailAndPassword(auth, email, pass);
-                
+
                 const userData = {
                     uid: cred.user.uid,
                     displayName: name,
@@ -562,7 +563,7 @@
                     createdAt: serverTimestamp()
                 };
                 await setDoc(doc(db, "users", cred.user.uid), userData);
-                
+
                 state.userProfile = userData;
                 updateHeader();
                 toggleModal('auth-modal');
@@ -646,7 +647,7 @@
         }
 
         function initLocations() {
-            const govSelects = ['in-gov', 'filter-gov'];
+            const govSelects =['in-gov', 'filter-gov'];
             govSelects.forEach(id => {
                 const sel = document.getElementById(id);
                 if(sel) {
@@ -695,7 +696,7 @@
         function loadListings() { 
             showSkeletons(); 
             onSnapshot(query(collection(db, COLLECTION_NAME)), (snap) => { 
-                state.listings = []; 
+                state.listings =[]; 
                 snap.forEach(d => state.listings.push({id:d.id, ...d.data()})); 
                 localStorage.setItem('souq_listings', JSON.stringify(state.listings));
                 state.listings.sort((a,b) => (a.isPinned === b.isPinned) ? (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0) : (a.isPinned ? -1 : 1));
@@ -764,7 +765,7 @@
         };
 
         function createCard(item) {
-            const imgs = Array.isArray(item.images) ? item.images : [item.image];
+            const imgs = Array.isArray(item.images) ? item.images :[item.image];
             const firstMedia = imgs[0];
             const isVideo = firstMedia.includes('.mp4') || firstMedia.includes('.mov');
             const thumbUrl = getOptimizedUrl(firstMedia, isVideo);
@@ -859,7 +860,7 @@
                             const amCont = document.getElementById('d-amenities'); amCont.innerHTML=''; 
                             if(item.amenities && Array.isArray(item.amenities) && item.amenities.length > 0) { item.amenities.forEach(a => { amCont.innerHTML += `<div class="p-1.5 text-center text-[9px] font-bold text-slate-700 dark:text-slate-300 border-r border-b border-slate-200 dark:border-slate-700 last:border-r-0">${a}</div>`; }); } else { amCont.innerHTML = `<div class="col-span-3 p-2 text-center text-[9px] text-slate-400">لا توجد مميزات إضافية</div>`; }
                             const mapBtn = document.getElementById('d-map'); if(item.mapLink) { mapBtn.classList.remove('hidden'); mapBtn.classList.add('flex'); mapBtn.href = item.mapLink; } else { mapBtn.classList.add('hidden'); mapBtn.classList.remove('flex'); }
-                            
+
                             const typeEl = document.getElementById('d-type-badge');
                             if(item.status !== 'available') { typeEl.innerText = item.status === 'sold' ? 'مباع' : 'مؤجر'; typeEl.className = `absolute bottom-2 right-2 text-white px-2 py-0.5 rounded text-[10px] font-bold shadow backdrop-blur-sm ${item.status==='sold'?'bg-red-600':'bg-blue-600'}`; } 
                             else { typeEl.innerText = item.type === 'sale' ? 'للبيع' : 'للإيجار'; typeEl.className = `absolute bottom-2 right-2 text-white px-2 py-0.5 rounded text-[10px] font-bold shadow backdrop-blur-sm ${item.type === 'sale' ? 'bg-emerald-600/90' : 'bg-blue-600/90'}`; }
@@ -871,8 +872,10 @@
                             const slider = document.getElementById('details-slider'); 
                             slider.innerHTML = imgs.map((src, idx) => { 
                                 const isVid = src.includes('.mp4') || src.includes('.mov'); 
-                                // Use compressed thumbnail for slider (w_500, q_auto:low)
-                                const thumb = getOptimizedUrl(src, isVid).replace('w_512', 'w_500,q_auto:low'); 
+                                
+                                // التعديل الثاني: استخدام نفس دالة الصورة بدون تغيير الأبعاد حتى تتطابق مع كاش الكروت الرئيسية وتحمل بسرعة فورية
+                                const thumb = getOptimizedUrl(src, isVid); 
+                                
                                 return isVid ? `<video src="${src}" controls class="w-full h-full object-contain snap-center shrink-0 bg-black"></video>` : `<img src="${thumb}" loading="lazy" class="w-full h-full object-cover snap-center shrink-0 cursor-pointer" onclick="openLightbox('${src}', ${idx})">` 
                             }).join('');
                             document.getElementById('details-arrows').style.display = imgs.length > 1 ? 'block' : 'none';
@@ -908,8 +911,20 @@
         window.closeLightbox = () => document.getElementById('lightbox').classList.add('hidden');
         window.changeLightboxImage = (dir) => { if (!state.currentItem || !state.currentItem.images) return; const len = state.currentItem.images.length; state.lightboxIndex = (state.lightboxIndex + dir + len) % len; updateLightboxImage(); };
         function updateLightboxImage() { const img = document.getElementById('lightbox-img'); const src = state.currentItem.images[state.lightboxIndex]; if (src.includes('.mp4') || src.includes('.mov')) { img.src = ""; showToast("فيديو: يرجى المشاهدة في التفاصيل"); } else { img.style.opacity = '0.5'; img.src = src; img.onload = () => img.style.opacity = '1'; } }
-        function toggleModal(id) { const m=document.getElementById(id); m.classList.toggle('hidden'); if(!m.classList.contains('hidden')) document.body.style.overflow='hidden'; else document.body.style.overflow=''; return !m.classList.contains('hidden'); }
         
+        // التعديل الثالث: دالة toggleModal أصبحت الآن تفحص لو فيه أي نافذة مفتوحة ولن تفك تجميد الشاشة إلا لو تم إغلاق الكل
+        window.toggleModal = function(id) { 
+            const m = document.getElementById(id); 
+            m.classList.toggle('hidden'); 
+            
+            if(document.querySelectorAll('.modal-overlay:not(.hidden)').length > 0) {
+                document.body.style.overflow = 'hidden'; 
+            } else {
+                document.body.style.overflow = ''; 
+            }
+            return !m.classList.contains('hidden'); 
+        }
+
         window.toggleAddModal=()=>{
             if(state.user && !state.user.isAnonymous) {
                 if(toggleModal('add-modal')){
@@ -934,10 +949,10 @@
                 if(!gov || !city) return showToast('يرجى اختيار المحافظة والمركز', 'e');
                 if(!state.filesToUpload.length) return showToast('مطلوب صورة أو فيديو','e');
                 const btn = document.getElementById('btn-publish'); const originalText = btn.innerText; btn.innerText='جاري الرفع والنشر...'; btn.disabled = true;
-                const uploadedUrls = []; for(let f of state.filesToUpload) { const url = await uploadToCloudinary(f); uploadedUrls.push(url); }
-                const bdg = document.querySelector('input[name="badge"]:checked').value; const am = []; document.querySelectorAll('.amenity-check:checked').forEach(c => am.push(c.value)); const cat = document.getElementById('in-category').value; const furnished = document.querySelector('input[name="furnished"]:checked')?.value; const landType = document.getElementById('in-land-type').value;
+                const uploadedUrls =[]; for(let f of state.filesToUpload) { const url = await uploadToCloudinary(f); uploadedUrls.push(url); }
+                const bdg = document.querySelector('input[name="badge"]:checked').value; const am =[]; document.querySelectorAll('.amenity-check:checked').forEach(c => am.push(c.value)); const cat = document.getElementById('in-category').value; const furnished = document.querySelector('input[name="furnished"]:checked')?.value; const landType = document.getElementById('in-land-type').value;
                 await addDoc(collection(db, COLLECTION_NAME),{ title: document.getElementById('in-title').value, price: Number(document.getElementById('in-price').value), type: document.getElementById('in-type').value, category: cat, area: Number(document.getElementById('in-area').value) || 0, feddan: Number(document.getElementById('in-feddan').value) || 0, qirat: Number(document.getElementById('in-qirat').value) || 0, landType: landType, floors: Number(cat === 'building' ? document.getElementById('in-floors-alt').value : document.getElementById('in-floors-alt').value) || 0, apartments: Number(document.getElementById('in-apartments').value) || 0, rooms: Number(document.getElementById('in-rooms').value) || 0, baths: Number(document.getElementById('in-baths').value) || 0, balconies: Number(document.getElementById('in-balconies').value) || 0, finishing: document.getElementById('in-finishing').value, level: document.getElementById('in-level').value, furnished: furnished, gov: gov, city: city, address: document.getElementById('in-address').value, location: document.getElementById('in-loc')?.value || '', phone: document.getElementById('in-phone').value, desc: document.getElementById('in-desc').value, mapLink: document.getElementById('in-map').value, amenities: am, images: uploadedUrls, image: uploadedUrls[0], badge: bdg, status: 'available', isPinned: false, createdAt: serverTimestamp(), authorId: state.user.uid });
-                showToast('تم النشر بنجاح'); toggleModal('add-modal'); state.filesToUpload = []; document.getElementById('preview-area').innerHTML = ''; document.getElementById('in-title').value = ''; document.getElementById('in-price').value = ''; document.getElementById('in-area').value = ''; document.getElementById('in-desc').value = ''; btn.innerText = originalText; btn.disabled = false;
+                showToast('تم النشر بنجاح'); toggleModal('add-modal'); state.filesToUpload =[]; document.getElementById('preview-area').innerHTML = ''; document.getElementById('in-title').value = ''; document.getElementById('in-price').value = ''; document.getElementById('in-area').value = ''; document.getElementById('in-desc').value = ''; btn.innerText = originalText; btn.disabled = false;
             } catch(e) { console.error(e); showToast('حدث خطأ أثناء النشر', 'e'); document.getElementById('btn-publish').innerText = 'نشر الإعلان'; document.getElementById('btn-publish').disabled = false; }
         };
 
@@ -960,7 +975,7 @@
         window.kickUser=async()=>{if(confirm("إنهاء؟")){await updateDoc(doc(db,"chats",state.activeAdminChat),{status:'closed'});document.getElementById('admin-msg-area').innerHTML='';document.getElementById('btn-end-chat').classList.add('hidden');state.activeAdminChat=null}};
 
         if ('serviceWorker' in navigator) {
-            const swCode = `const CACHE_NAME = 'souq-cache-v1'; const ASSETS = ['./', 'https://cdn.tailwindcss.com', 'https://unpkg.com/lucide@latest', 'https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap']; self.addEventListener('install', e => e.waitUntil(caches.open(CACHE_NAME).then(c => c.addAll(ASSETS)))); self.addEventListener('fetch', e => { e.respondWith(caches.match(e.request).then(r => r || fetch(e.request))); });`;
+            const swCode = `const CACHE_NAME = 'souq-cache-v1'; const ASSETS =['./', 'https://cdn.tailwindcss.com', 'https://unpkg.com/lucide@latest', 'https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap']; self.addEventListener('install', e => e.waitUntil(caches.open(CACHE_NAME).then(c => c.addAll(ASSETS)))); self.addEventListener('fetch', e => { e.respondWith(caches.match(e.request).then(r => r || fetch(e.request))); });`;
             const blob = new Blob([swCode], {type: 'application/javascript'}); const swUrl = URL.createObjectURL(blob); navigator.serviceWorker.register(swUrl).catch(e => console.log(e));
         }
         lucide.createIcons();
