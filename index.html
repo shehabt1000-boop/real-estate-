@@ -1,8 +1,9 @@
+
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, interactive-widget=resizes-content">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, interactive-widget=overlays-content">
 
     <!-- PWA Settings -->
     <link rel="manifest" href="manifest.json">
@@ -47,7 +48,7 @@
 
         /* Background */
         #app-background {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100vh; height: 100lvh; 
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100lvh; min-height: 100vh;
             z-index: -50;
             background-image: url('https://images.pexels.com/photos/14270540/pexels-photo-14270540.jpeg?auto=compress&cs=tinysrgb&w=1600&h=900&dpr=1');
             background-size: cover; background-position: center; background-repeat: no-repeat;
@@ -147,6 +148,19 @@
 </head>
 <body class="text-slate-800 dark:text-slate-100 select-none">
 
+    <!-- Prevent background resizing when keyboard opens -->
+    <script>
+        window.addEventListener('DOMContentLoaded', () => {
+            const bg = document.getElementById('app-background');
+            if (bg) {
+                bg.style.height = window.innerHeight + 'px';
+                window.addEventListener('orientationchange', () => {
+                    setTimeout(() => { bg.style.height = window.innerHeight + 'px'; }, 100);
+                });
+            }
+        });
+    </script>
+
     <!-- Splash Screen -->
     <div id="splash-screen">
         <div class="splash-icon-container">
@@ -207,7 +221,7 @@
         <!-- Floating Dock -->
         <nav id="bottom-nav" class="fixed bottom-4 left-1/2 -translate-x-1/2 bg-white/90 dark:bg-slate-800/90 backdrop-blur-none border border-slate-200 dark:border-slate-600 px-5 py-2 rounded-full flex items-center gap-6 shadow-xl transform transition-all hover:scale-105 transform-gpu">
             <button onclick="resetFilters(); window.scrollTo({top:0, behavior:'smooth'})" class="flex items-center justify-center text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition group"><i data-lucide="home" class="w-5 h-5 group-hover:scale-110 transition"></i></button>
-            <button onclick="openAddModal()" class="w-10 h-10 bg-slate-900 text-white rounded-full flex items-center justify-center shadow-lg shadow-slate-900/20 transform -translate-y-4 border-2 border-emerald-600 dark:border-emerald-500 hover:scale-110 transition active:scale-90"><i data-lucide="plus" class="w-5 h-5"></i></button>
+            <button onclick="openAddModal()" class="w-10 h-10 bg-emerald-100/70 dark:bg-emerald-800/60 backdrop-blur-md text-emerald-700 dark:text-emerald-300 border border-emerald-500 rounded-full flex items-center justify-center shadow-lg transform -translate-y-4 hover:scale-110 transition active:scale-90"><i data-lucide="plus" class="w-5 h-5"></i></button>
             <button onclick="toggleChat()" class="flex items-center justify-center text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition group relative"><div id="chat-badge" class="hidden absolute top-0 right-0 w-2 h-2 bg-red-500 rounded-full border border-white dark:border-slate-800"></div><i data-lucide="message-circle" class="w-5 h-5 group-hover:scale-110 transition"></i></button>
         </nav>
 
@@ -845,7 +859,7 @@
                             <span>${timeAgo(item.createdAt)}</span>
                         </div>
                         
-                        ${item.address ? `<div class="flex items-center gap-1 text-[9px] text-slate-500 dark:text-slate-400 mb-1"><i data-lucide="map" class="w-3 h-3 text-emerald-500 shrink-0"></i><span class="truncate leading-tight font-bold text-slate-700 dark:text-slate-300">${item.address}</span></div>` : ''}
+                        ${item.address ? `<div class="flex items-center gap-1 text-[9px] text-slate-500 dark:text-slate-400 mb-1"><i data-lucide="map" class="w-3 h-3 text-emerald-500 shrink-0"></i><span class="text-[8px] text-slate-400 dark:text-slate-500 shrink-0 font-normal ml-0.5">العنوان:</span><span class="truncate leading-tight font-bold text-slate-700 dark:text-slate-300">${item.address}</span></div>` : ''}
                         <div class="flex items-center gap-1 text-[9px] text-slate-500 dark:text-slate-400 mb-1"><i data-lucide="map-pin" class="w-3 h-3 text-slate-400 shrink-0"></i><span class="truncate leading-tight">${locDisplay}</span></div>
                     </div>
                     
@@ -940,6 +954,13 @@
                         return isVid ? `<video src="${src}" controls class="w-full h-full object-contain snap-center shrink-0 bg-black"></video>` : `<img src="${thumb}" ${idx > 0 ? 'loading="lazy"' : ''} decoding="async" class="w-full h-full object-cover snap-center shrink-0 cursor-pointer" onclick="openLightbox('${src}', ${idx})">` 
                     }).join('');
                     
+                    // Reset slider strictly to the first image
+                    setTimeout(() => { 
+                        if(slider && slider.firstElementChild) {
+                            slider.firstElementChild.scrollIntoView({ behavior: 'instant', block: 'nearest', inline: 'center' });
+                        }
+                    }, 10);
+
                     document.getElementById('details-arrows').style.display = imgs.length > 1 ? 'block' : 'none';
 
                     const locDisplay = item.gov ? `${item.gov}، ${item.city}` : item.location;
@@ -981,7 +1002,7 @@
 
         window.closeDetails = () => { 
             const slider = document.getElementById('details-slider'); 
-            if(slider) slider.scrollLeft = 0; 
+            if(slider && slider.firstElementChild) { slider.firstElementChild.scrollIntoView({ behavior: 'instant', block: 'nearest', inline: 'center' }); }
             toggleModal('details-modal'); 
             const newUrl = new URL(window.location); 
             newUrl.searchParams.delete('id'); 
