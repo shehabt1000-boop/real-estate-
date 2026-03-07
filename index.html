@@ -1,3 +1,6 @@
+
+
+
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
@@ -78,7 +81,6 @@
             border-radius: 1.5rem; overflow: hidden; 
             box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
         }
-        /* Mobile Full Screen Override */
         @media (max-width: 767px) {
             .mobile-full-modal { height: 100dvh; max-height: 100dvh; border-radius: 0; }
             .modal-overlay { padding: 0; }
@@ -95,7 +97,7 @@
         .dark .sticky-header { background-color: rgba(15, 23, 42, 0.95); }
 
         .sticky-search-bar {
-            position: sticky; top: 3.5rem; z-index: 30; margin: 0 0.5rem 0.5rem 0.5rem; 
+            position: sticky; top: 3.5rem; z-index: 30; margin: 0 0 0.5rem 0; /* تم إزالة الهوامش الجانبية لتطابق البطاقات */
             padding: 0.25rem; border-radius: 0.75rem; background: rgba(255, 255, 255, 0.9); 
             border: 1px solid rgba(0,0,0,0.1); box-shadow: 0 2px 5px rgba(0,0,0,0.05); transition: transform 0.2s;
         }
@@ -184,7 +186,7 @@
         </header>
 
         <!-- Main Content -->
-        <main class="pt-[3rem] pb-20 container mx-auto px-2 max-w-5xl min-h-screen">
+        <main class="pt-[3rem] pb-20 container mx-auto px-4 max-w-5xl min-h-screen">
             <div class="sticky-search-bar">
                 <div class="relative w-full">
                     <button onclick="toggleFilterPanel()" class="absolute left-1 top-0 h-full w-9 flex items-center justify-center text-slate-500 hover:text-slate-800 dark:hover:text-white transition z-10"><i data-lucide="sliders-horizontal" class="w-4 h-4"></i></button>
@@ -207,7 +209,7 @@
             </div>
 
             <!-- شبكة من بطاقة واحدة في الهواتف -->
-            <div id="grid-container" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 mt-4"></div>
+            <div id="grid-container" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mt-4"></div>
             <div id="load-more-container" class="hidden mt-4 text-center"><button onclick="loadMore()" class="bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 text-slate-700 dark:text-slate-200 px-6 py-2 rounded-full text-xs font-bold shadow-sm hover:bg-slate-50 dark:hover:bg-slate-700 transition">عرض المزيد</button></div>
             <div id="empty-state" class="hidden text-center py-16 opacity-60 flex flex-col items-center"><div class="bg-slate-200 dark:bg-slate-700 p-3 rounded-full inline-block mb-2"><i data-lucide="search-x" class="w-6 h-6 text-slate-400"></i></div><p class="text-slate-500 dark:text-slate-400 font-bold text-xs">لا توجد نتائج</p><button onclick="resetFilters()" class="mt-1 text-emerald-600 dark:text-emerald-400 text-[10px] font-bold underline">عرض الكل</button></div>
         </main>
@@ -215,7 +217,7 @@
         <!-- Floating Dock -->
         <nav id="bottom-nav" class="fixed bottom-4 left-1/2 -translate-x-1/2 bg-white/90 dark:bg-slate-800/90 backdrop-blur-none border border-slate-200 dark:border-slate-600 px-5 py-2 rounded-full flex items-center gap-6 shadow-xl transform transition-all hover:scale-105 transform-gpu">
             <button onclick="resetFilters(); window.scrollTo({top:0, behavior:'smooth'})" class="flex items-center justify-center text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition group"><i data-lucide="home" class="w-5 h-5 group-hover:scale-110 transition"></i></button>
-            <button onclick="toggleAddModal()" class="w-10 h-10 bg-slate-900 text-white rounded-full flex items-center justify-center shadow-lg shadow-slate-900/20 transform -translate-y-4 border-2 border-emerald-600 dark:border-emerald-500 hover:scale-110 transition active:scale-90"><i data-lucide="plus" class="w-5 h-5"></i></button>
+            <button onclick="openAddModal()" class="w-10 h-10 bg-slate-900 text-white rounded-full flex items-center justify-center shadow-lg shadow-slate-900/20 transform -translate-y-4 border-2 border-emerald-600 dark:border-emerald-500 hover:scale-110 transition active:scale-90"><i data-lucide="plus" class="w-5 h-5"></i></button>
             <button onclick="toggleChat()" class="flex items-center justify-center text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition group relative"><div id="chat-badge" class="hidden absolute top-0 right-0 w-2 h-2 bg-red-500 rounded-full border border-white dark:border-slate-800"></div><i data-lucide="message-circle" class="w-5 h-5 group-hover:scale-110 transition"></i></button>
         </nav>
 
@@ -355,35 +357,35 @@
         </div>
     </div>
 
-    <!-- Add Modal -->
+    <!-- Add/Edit Modal -->
     <div id="add-modal" class="hidden modal-overlay">
         <div class="mobile-full-modal animate-pop">
             <div class="p-2.5 border-b border-slate-100 dark:border-slate-700 flex justify-between items-center bg-white dark:bg-darkbg shrink-0">
-                <h3 class="font-bold text-slate-800 dark:text-white text-sm">إضافة عقار</h3>
-                <button onclick="toggleAddModal()" class="bg-red-500 text-black p-2 rounded-full hover:bg-red-600 transition"><i data-lucide="x" class="w-5 h-5"></i></button>
+                <h3 id="add-modal-title" class="font-bold text-slate-800 dark:text-white text-sm">إضافة عقار</h3>
+                <button onclick="toggleModal('add-modal')" class="bg-red-500 text-black p-2 rounded-full hover:bg-red-600 transition"><i data-lucide="x" class="w-5 h-5"></i></button>
             </div>
             <div class="flex-1 overflow-y-auto p-2.5 bg-slate-50 dark:bg-darkbg">
                 <div class="space-y-2.5">
                     <div class="bg-white dark:bg-slate-800 p-2.5 rounded-lg border border-black dark:border-slate-500 shadow-sm">
-                        <label class="block text-[10px] font-bold text-slate-700 dark:text-slate-300 mb-1.5">صور وفيديوهات العقار (بحد أقصى 10) <span class="text-red-500">*</span></label>
+                        <label class="block text-[10px] font-bold text-slate-700 dark:text-slate-300 mb-1.5">صور وفيديوهات العقار (بحد أقصى 10)</label>
                         <div class="grid grid-cols-4 gap-1.5">
                             <label class="aspect-square border-2 border-dashed border-emerald-300 dark:border-emerald-700 bg-emerald-50 dark:bg-emerald-900/20 rounded-lg flex flex-col items-center justify-center cursor-pointer hover:bg-emerald-100 transition text-emerald-600 dark:text-emerald-400 relative overflow-hidden">
-                                <input type="file" multiple accept="image/*,video/*" onchange="handleUpload(this)" class="absolute inset-0 opacity-0 z-10"><i data-lucide="camera" class="w-4 h-4 mb-0.5"></i><span class="text-[8px] font-bold">إضافة</span>
+                                <input type="file" id="file-upload-input" multiple accept="image/*,video/*" onchange="handleUpload(this)" class="absolute inset-0 opacity-0 z-10"><i data-lucide="camera" class="w-4 h-4 mb-0.5"></i><span class="text-[8px] font-bold">إضافة</span>
                             </label>
                             <div id="preview-area" class="col-span-3 flex gap-1.5 overflow-x-auto no-scrollbar py-0.5"></div>
                         </div>
                     </div>
                     <div class="bg-white dark:bg-slate-800 p-2.5 rounded-lg border border-black dark:border-slate-500 shadow-sm space-y-1.5">
                         <h4 class="text-[9px] font-bold text-slate-400 uppercase tracking-wider border-b border-slate-100 dark:border-slate-700 pb-0.5 mb-0.5">بيانات أساسية</h4>
-                        <div class="flex gap-1.5"><div class="custom-select-wrapper flex-1"><select id="in-category" onchange="updateFormFields()" class="custom-select"><option value="apartment">شقة</option><option value="villa">فيلا</option><option value="chalet">شالية</option><option value="office">مكتب</option><option value="shop">محل</option><option value="land">أرض</option><option value="building">عمارة</option><option value="warehouse">مخزن</option></select><i data-lucide="chevron-down" class="custom-select-icon w-3 h-3"></i></div><div class="custom-select-wrapper w-20 shrink-0"><select id="in-type" class="custom-select"><option value="sale">بيع</option><option value="rent">إيجار</option></select><i data-lucide="chevron-down" class="custom-select-icon w-3 h-3"></i></div></div>
+                        <div class="flex gap-1.5"><div class="custom-select-wrapper flex-1"><select id="in-category" onchange="updateFormFields()" class="custom-select"><option value="apartment">شقة</option><option value="villa">فيلا</option><option value="chalet">شاليهات</option><option value="office">مكتب</option><option value="shop">محل</option><option value="land">أرض</option><option value="building">عمارة</option><option value="warehouse">مخزن</option></select><i data-lucide="chevron-down" class="custom-select-icon w-3 h-3"></i></div><div class="custom-select-wrapper w-20 shrink-0"><select id="in-type" class="custom-select"><option value="sale">بيع</option><option value="rent">إيجار</option></select><i data-lucide="chevron-down" class="custom-select-icon w-3 h-3"></i></div></div>
                         <input id="in-title" class="input-box" placeholder="عنوان الإعلان"><input id="in-price" type="number" class="input-box" placeholder="السعر (جنيه)">
                         <div class="grid grid-cols-2 gap-1.5"><input id="in-area" type="number" class="input-box" placeholder="المساحة (م²)"><input id="in-level" type="text" class="input-box" placeholder="الدور"><input id="in-floors-alt" type="number" class="input-box hidden" placeholder="عدد الأدوار"><div id="land-type-wrapper" class="hidden custom-select-wrapper"><select id="in-land-type" class="custom-select"><option value="building">مباني</option><option value="agriculture">زراعية</option></select><i data-lucide="chevron-down" class="custom-select-icon w-3 h-3"></i></div></div>
                         <div id="land-fields" class="hidden grid grid-cols-2 gap-1.5"><input id="in-feddan" type="number" class="input-box" placeholder="فدان (اختياري)"><input id="in-qirat" type="number" class="input-box" placeholder="قيراط (اختياري)"></div>
                         <div id="building-fields" class="hidden grid grid-cols-2 gap-1.5"><input id="in-apartments" type="number" class="input-box" placeholder="عدد الشقق"></div>
                         <div id="room-fields" class="grid grid-cols-2 gap-1.5"><input id="in-rooms" type="number" class="input-box" placeholder="عدد الغرف"><input id="in-baths" type="number" class="input-box" placeholder="عدد الحمامات"></div>
                         <div id="extra-fields" class="grid grid-cols-2 gap-1.5"><input id="in-balconies" type="number" class="input-box" placeholder="عدد البلكونات"><div class="custom-select-wrapper"><select id="in-finishing" class="custom-select"><option value="" disabled selected>نوع التشطيب</option><option value="red">طوب أحمر</option><option value="semi">نصف تشطيب</option><option value="full">تشطيب كامل</option><option value="super">سوبر لوكس</option><option value="ultra">الترا سوبر لوكس</option></select><i data-lucide="chevron-down" class="custom-select-icon w-3 h-3"></i></div></div>
-                        <div id="furnished-field" class="flex items-center justify-between bg-slate-50 dark:bg-slate-700/50 p-1.5 rounded-lg border border-black dark:border-slate-500"><span class="text-[10px] font-bold text-slate-600 dark:text-slate-300">مفروش؟</span><div class="flex gap-1.5"><label class="cursor-pointer"><input type="radio" name="furnished" value="yes" class="peer hidden"><span class="px-2 py-0.5 rounded text-[9px] font-bold bg-white dark:bg-slate-600 border border-slate-200 dark:border-slate-500 text-slate-500 peer-checked:bg-emerald-500 peer-checked:text-white peer-checked:border-emerald-500 transition">نعم</span></label><label class="cursor-pointer"><input type="radio" name="furnished" value="no" checked class="peer hidden"><span class="px-2 py-0.5 rounded text-[9px] font-bold bg-white dark:bg-slate-600 border border-slate-200 dark:border-slate-500 text-slate-500 peer-checked:bg-slate-800 peer-checked:text-white peer-checked:border-slate-800 transition">لا</span></label></div></div>
-                        <div class="flex gap-2 items-center pt-0.5"><span class="text-[10px] font-bold text-slate-600 dark:text-slate-400">شارة:</span><div class="flex gap-1.5"><label class="cursor-pointer amenity-tile"><input type="radio" name="badge" value="none" checked class="hidden"><div class="px-2 py-0.5 rounded border border-slate-200 dark:border-slate-600 text-[9px] font-bold text-slate-600 dark:text-slate-300 transition">عادي</div></label><label class="cursor-pointer amenity-tile"><input type="radio" name="badge" value="hot" class="hidden"><div class="px-2 py-0.5 rounded border border-orange-200 text-[9px] font-bold text-orange-600 transition hover:bg-orange-50">🔥 لقطة</div></label></div></div>
+                        <div id="furnished-field" class="flex items-center justify-between bg-slate-50 dark:bg-slate-700/50 p-1.5 rounded-lg border border-black dark:border-slate-500"><span class="text-[10px] font-bold text-slate-600 dark:text-slate-300">مفروش؟</span><div class="flex gap-1.5"><label class="cursor-pointer"><input type="radio" name="furnished" id="furn-yes" value="yes" class="peer hidden"><span class="px-2 py-0.5 rounded text-[9px] font-bold bg-white dark:bg-slate-600 border border-slate-200 dark:border-slate-500 text-slate-500 peer-checked:bg-emerald-500 peer-checked:text-white peer-checked:border-emerald-500 transition">نعم</span></label><label class="cursor-pointer"><input type="radio" name="furnished" id="furn-no" value="no" checked class="peer hidden"><span class="px-2 py-0.5 rounded text-[9px] font-bold bg-white dark:bg-slate-600 border border-slate-200 dark:border-slate-500 text-slate-500 peer-checked:bg-slate-800 peer-checked:text-white peer-checked:border-slate-800 transition">لا</span></label></div></div>
+                        <div class="flex gap-2 items-center pt-0.5"><span class="text-[10px] font-bold text-slate-600 dark:text-slate-400">شارة:</span><div class="flex gap-1.5"><label class="cursor-pointer amenity-tile"><input type="radio" name="badge" id="badge-none" value="none" checked class="hidden"><div class="px-2 py-0.5 rounded border border-slate-200 dark:border-slate-600 text-[9px] font-bold text-slate-600 dark:text-slate-300 transition">عادي</div></label><label class="cursor-pointer amenity-tile"><input type="radio" name="badge" id="badge-hot" value="hot" class="hidden"><div class="px-2 py-0.5 rounded border border-orange-200 text-[9px] font-bold text-orange-600 transition hover:bg-orange-50">🔥 لقطة</div></label></div></div>
                     </div>
                     <div class="bg-white dark:bg-slate-800 p-2.5 rounded-lg border border-black dark:border-slate-500 shadow-sm space-y-1.5"><h4 class="text-[9px] font-bold text-slate-400 uppercase tracking-wider border-b border-slate-100 dark:border-slate-700 pb-0.5 mb-0.5">المميزات</h4><div class="grid grid-cols-4 gap-1" id="amenities-grid"></div><textarea id="in-desc" rows="2" class="input-box resize-none" placeholder="وصف تفصيلي..."></textarea></div>
                     <div class="bg-white dark:bg-slate-800 p-2.5 rounded-lg border border-black dark:border-slate-500 shadow-sm space-y-1.5"><h4 class="text-[9px] font-bold text-slate-400 uppercase tracking-wider border-b border-slate-100 dark:border-slate-700 pb-0.5 mb-0.5">الموقع والتواصل</h4><input id="in-address" class="input-box mb-1.5" placeholder="العنوان بالتفصيل (اسم الشارع، علامة مميزة)..."><div class="grid grid-cols-2 gap-1.5"><div class="custom-select-wrapper"><select id="in-gov" onchange="populateCities('in-gov', 'in-city')" class="custom-select"><option value="" disabled selected>المحافظة</option></select><i data-lucide="chevron-down" class="custom-select-icon w-3 h-3"></i></div><div class="custom-select-wrapper"><select id="in-city" class="custom-select"><option value="" disabled selected>المركز/المدينة</option></select><i data-lucide="chevron-down" class="custom-select-icon w-3 h-3"></i></div></div><input id="in-map" class="input-box" placeholder="رابط جوجل ماب (اختياري)"><input id="in-phone" type="tel" class="input-box" placeholder="رقم الهاتف"></div>
@@ -421,11 +423,11 @@
         const COLLECTION_NAME = "listings_v2"; 
         const DUMMY_PUBLISHER = { displayName: "وسيط السوق", phoneNumber: "01206244875", photoURL: "https://cdn-icons-png.flaticon.com/512/609/609803.png" };
 
-        let state = { user: null, userProfile: null, listings:[], filesToUpload:[], regImage: null, chatId: null, chatStep: 0, tempName: '', activeAdminChat: null, isAdmin: false, welcomeSent: false, currentFilter: 'all', visibleLimit: 6, lightboxIndex: 0, activeDetailsId: null, currentDetailIndex: 0, publisherCache: {} };
+        let state = { user: null, userProfile: null, listings:[], filesToUpload:[], editingId: null, existingImages:[], regImage: null, chatId: null, chatStep: 0, tempName: '', activeAdminChat: null, isAdmin: false, welcomeSent: false, currentFilter: 'all', visibleLimit: 6, lightboxIndex: 0, activeDetailsId: null, currentDetailIndex: 0, publisherCache: {} };
 
         const ALL_AMENITIES =["غاز طبيعي", "كهرباء", "مياه", "أسانسير", "واي فاي", "حمام سباحة", "حديقة", "جراج", "أمن وحراسة", "كاميرات مراقبة", "مطبخ أمريكاني", "غرفة خادمة", "مسموح بالحيوانات", "على ناصية"];
         const LAND_AMENITIES =["كهرباء", "مياه", "غاز طبيعي", "على ناصية"];
-        const CAT_MAP = { 'apartment': 'شقة', 'villa': 'فيلا', 'chalet': 'شالية', 'office': 'مكتب', 'shop': 'محل', 'land': 'أرض', 'building': 'عماير', 'warehouse': 'مخزن' };
+        const CAT_MAP = { 'apartment': 'شقة', 'villa': 'فيلا', 'chalet': 'شالية', 'office': 'مكتب', 'shop': 'محل', 'land': 'أرض', 'building': 'عمارة', 'warehouse': 'مخزن' };
         const FINISH_MAP = { 'red': 'طوب أحمر', 'semi': 'نصف تشطيب', 'full': 'تشطيب كامل', 'super': 'سوبر لوكس', 'ultra': 'الترا سوبر لوكس' };
         const CAT_KEYWORDS = { 'شقة': 'apartment', 'شقق': 'apartment', 'فيلا': 'villa', 'فلل': 'villa', 'شالية': 'chalet', 'شاليهات': 'chalet', 'مكتب': 'office', 'مكاتب': 'office', 'محل': 'shop', 'محلات': 'shop', 'ارض': 'land', 'اراضي': 'land', 'عمارة': 'building', 'عماير': 'building', 'مخزن': 'warehouse', 'مخازن': 'warehouse' };
         const EGYPT_LOCATIONS = { "الشرقية":["الزقازيق", "العاشر من رمضان", "منيا القمح", "بلبيس", "مشتول السوق", "القنايات", "أبو حماد", "القرين", "ههيا", "أبو كبير", "فاقوس", "الصالحية الجديدة", "الإبراهيمية", "ديرب نجم", "كفر صقر", "أولاد صقر", "الحسينية", "صان الحجر", "منشأة أبو عمر"], "القاهرة":["مدينة نصر", "مصر الجديدة", "المعادي", "التجمع الخامس", "الرحاب", "مدينتي", "الشروق", "العبور", "المقطم", "الزيتون", "حدائق القبة", "شبرا", "وسط البلد", "المنيل", "الزمالك", "المهندسين", "الدقي", "العجوزة"], "الجيزة":["6 أكتوبر", "الشيخ زايد", "الهرم", "فيصل", "المهندسين", "الدقي", "العجوزة", "إمبابة", "الوراق", "بولاق الدكرور", "العمرانية", "المنيب"], "الإسكندرية":["سموحة", "ميامي", "المنتزه", "سيدي بشر", "جليم", "ستانلي", "رشدي", "كفر عبده", "محرم بك", "العجمي", "الساحل الشمالي", "برج العرب"], "الدقهلية":["المنصورة", "طلخا", "ميت غمر", "دكرنس", "أجا", "منية النصر", "السنبلاوين", "شربين", "بلقاس", "المطرية", "المنزلة", "جمصة"], "القليوبية":["بنها", "قليوب", "شبرا الخيمة", "القناطر الخيرية", "الخانكة", "كفر شكر", "طوخ", "قها", "العبور"], "المنوفية":["شبين الكوم", "مدينة السادات", "منوف", "سرس الليان", "أشمون", "الباجور", "قويسنا", "بركة السبع", "تلا", "الشهداء"], "الغربية":["طنطا", "المحلة الكبرى", "كفر الزيات", "زفتى", "السنطة", "قطور", "بسيون", "سمنود"], "البحيرة":["دمنهور", "كفر الدوار", "رشيد", "إدكو", "أبو المطامير", "أبو حمص", "الدلنجات", "المحمودية", "الرحمانية", "إيتاي البارود", "حوش عيسى", "شبراخيت", "كوم حمادة", "بدر", "وادي النطرون", "النوبارية الجديدة"], "دمياط":["دمياط", "دمياط الجديدة", "رأس البر", "فارسكور", "الزرقا", "السرو", "الروضة", "كفر البطيخ", "عزبة البرج", "ميت أبو غالب", "كفر سعد"], "بورسعيد":["بورسعيد", "بورفؤاد"], "الإسماعيلية":["الإسماعيلية", "التل الكبير", "فايد", "القنطرة شرق", "القنطرة غرب", "أبو صوير", "القصاصين"], "السويس":["السويس", "الأربعين", "عتاقة", "الجناين", "فيصل"], "كفر الشيخ":["كفر الشيخ", "دسوق", "فوه", "مطوبس", "بلطيم", "مصيف بلطيم", "الحامول", "بيلا", "الرياض", "سيدي سالم", "قلين", "برج البرلس"], "الفيوم":["الفيوم", "الفيوم الجديدة", "طامية", "سنورس", "إطسا", "إبشواي", "يوسف الصديق"], "بني سويف":["بني سويف", "بني سويف الجديدة", "الواسطى", "ناصر", "إهناسيا", "ببا", "الفشن", "سمسطا"], "المنيا":["المنيا", "المنيا الجديدة", "العدوة", "مغاغة", "بني مزار", "مطاي", "سمالوط", "أبو قرقاص", "ملوي", "دير مواس"], "أسيوط":["أسيوط", "أسيوط الجديدة", "ديروط", "القوصية", "أبنوب", "منفلوط", "أبو تيج", "الغنايم", "ساحل سليم", "البداري", "صدفا", "الفتح"], "سوهاج":["سوهاج", "سوهاج الجديدة", "أخميم", "أخميم الجديدة", "البلينا", "المراغة", "المنشأة", "دار السلام", "جرجا", "جهينة", "ساقلتة", "طما", "طهطا"], "قنا":["قنا", "قنا الجديدة", "أبو تشت", "نجع حمادي", "دشنا", "الوقف", "قفط", "قوص", "نقادة", "فرشوط"], "الأقصر":["الأقصر", "الأقصر الجديدة", "إسنا", "طيبة الجديدة", "الزينية", "البياضية", "القرنة", "أرمنت", "الطود"], "أسوان":["أسوان", "أسوان الجديدة", "دراو", "كوم أمبو", "نصر النوبة", "إدفو"], "البحر الأحمر":["الغردقة", "رأس غارب", "سفاجا", "القصير", "مرسى علم", "الشلاتين", "حلايب"], "الوادي الجديد":["الخارجة", "باريس", "موط", "الفرافرة", "بلاط"], "مطروح":["مرسى مطروح", "الحمام", "العلمين", "الضبعة", "النجيلة", "سيدي براني", "السلوم", "سيوة"], "شمال سيناء":["العريش", "بئر العبد", "نخل", "الحسنة", "الشيخ زويد", "رفح"], "جنوب سيناء":["الطور", "شرم الشيخ", "دهب", "نويبع", "طابا", "سانت كاترين", "أبو رديس", "أبو زنيمة", "رأس سدر"] };
@@ -455,7 +457,7 @@
 
             if(mode === 'add') {
                 if(state.user && !state.user.isAnonymous) {
-                    toggleAddModal();
+                    openAddModal();
                 } else {
                     const newUrl = new URL(window.location);
                     newUrl.searchParams.delete('mode');
@@ -574,15 +576,9 @@
                 showToast(`مرحباً ${name}`);
             } catch(e) {
                 console.error(e);
-                if(e.code === 'auth/email-already-in-use') {
-                    showToast('هذا الرقم مسجل بالفعل، يرجى تسجيل الدخول', 'e');
-                } else if(e.code === 'auth/weak-password') {
-                    showToast('كلمة المرور ضعيفة! يجب أن تكون 6 أحرف أو أكثر', 'e');
-                } else if(e.code === 'auth/operation-not-allowed') {
-                    showToast('يجب تفعيل Email/Password في لوحة تحكم Firebase', 'e');
-                } else {
-                    showToast('خطأ في التسجيل: ' + e.message, 'e');
-                }
+                if(e.code === 'auth/email-already-in-use') { showToast('هذا الرقم مسجل بالفعل، يرجى تسجيل الدخول', 'e'); } 
+                else if(e.code === 'auth/weak-password') { showToast('كلمة المرور ضعيفة! يجب أن تكون 6 أحرف أو أكثر', 'e'); } 
+                else { showToast('خطأ في التسجيل: ' + e.message, 'e'); }
             } finally {
                 btn.innerText = 'إنشاء حساب جديد';
                 btn.disabled = false;
@@ -593,7 +589,6 @@
             const phone = document.getElementById('login-phone').value;
             const pass = document.getElementById('login-pass').value;
             if(!phone || !pass) return showToast('بيانات ناقصة', 'e');
-
             try {
                 const email = `0${phone}@souq.com`;
                 await signInWithEmailAndPassword(auth, email, pass);
@@ -604,15 +599,8 @@
             }
         };
 
-        /* تم استبدال رسالة التأكيد المزعجة بنافذة منبثقة احترافية */
-        window.logoutUser = () => {
-            toggleModal('logout-modal');
-        };
-
-        window.confirmLogout = async () => {
-            await signOut(auth);
-            window.location.reload(); 
-        };
+        window.logoutUser = () => { toggleModal('logout-modal'); };
+        window.confirmLogout = async () => { await signOut(auth); window.location.reload(); };
 
         function updateHeader() {
             const welcomeSection = document.getElementById('header-welcome-section');
@@ -621,24 +609,11 @@
 
             if(state.userProfile) {
                 const optimizedProfile = getOptimizedUrl(state.userProfile.photoURL).replace('w_512,h_512', 'w_100,h_100,r_max');
-                welcomeSection.innerHTML = `
-                    <div class="profile-btn-header" onclick="handleProfileClick()">
-                        <img src="${optimizedProfile}" class="profile-img-header">
-                        <div class="profile-name-header">
-                            <span>${state.userProfile.displayName}</span>
-                            <span class="profile-welcome-sub">أهلاً بك</span>
-                        </div>
-                    </div>
-                `;
-                logoutBtn.classList.remove('hidden');
-                loginBtn.classList.add('hidden');
+                welcomeSection.innerHTML = `<div class="profile-btn-header" onclick="handleProfileClick()"><img src="${optimizedProfile}" class="profile-img-header"><div class="profile-name-header"><span>${state.userProfile.displayName}</span><span class="profile-welcome-sub">أهلاً بك</span></div></div>`;
+                logoutBtn.classList.remove('hidden'); loginBtn.classList.add('hidden');
             } else {
-                welcomeSection.innerHTML = `
-                    <span class="text-[9px] font-bold text-slate-500 dark:text-slate-400 leading-none">مرحبا بكم في</span>
-                    <span class="text-[10px] font-black text-slate-800 dark:text-white leading-tight">سوق <span class="text-emerald-600 dark:text-emerald-400">العقارات</span></span>
-                `;
-                logoutBtn.classList.add('hidden');
-                loginBtn.classList.remove('hidden');
+                welcomeSection.innerHTML = `<span class="text-[9px] font-bold text-slate-500 dark:text-slate-400 leading-none">مرحبا بكم في</span><span class="text-[10px] font-black text-slate-800 dark:text-white leading-tight">سوق <span class="text-emerald-600 dark:text-emerald-400">العقارات</span></span>`;
+                logoutBtn.classList.add('hidden'); loginBtn.classList.remove('hidden');
             }
             if(document.querySelector('.sticky-header')) lucide.createIcons({root: document.querySelector('.sticky-header')});
         }
@@ -651,24 +626,18 @@
             toggleModal('publisher-modal');
         };
 
-        function renderAmenities(list) { 
-            document.getElementById('amenities-grid').innerHTML = list.map(a => `<label class="amenity-tile cursor-pointer"><input type="checkbox" class="amenity-check hidden" value="${a}"><div class="text-center py-1 border border-slate-200 dark:border-slate-600 rounded-lg text-[8px] font-bold text-slate-600 dark:text-slate-300 transition hover:bg-slate-50 dark:hover:bg-slate-700 truncate">${a}</div></label>`).join(''); 
-        }
+        function renderAmenities(list) { document.getElementById('amenities-grid').innerHTML = list.map(a => `<label class="amenity-tile cursor-pointer"><input type="checkbox" class="amenity-check hidden" value="${a}"><div class="text-center py-1 border border-slate-200 dark:border-slate-600 rounded-lg text-[8px] font-bold text-slate-600 dark:text-slate-300 transition hover:bg-slate-50 dark:hover:bg-slate-700 truncate">${a}</div></label>`).join(''); }
 
         function initLocations() {
             const govSelects =['in-gov', 'filter-gov'];
             govSelects.forEach(id => {
                 const sel = document.getElementById(id);
-                if(sel) {
-                    sel.innerHTML = `<option value="" ${id==='in-gov'?'disabled selected':'selected'}>${id==='in-gov'?'المحافظة':'كل المحافظات'}</option>`;
-                    Object.keys(EGYPT_LOCATIONS).forEach(gov => { sel.innerHTML += `<option value="${gov}">${gov}</option>`; });
-                }
+                if(sel) { sel.innerHTML = `<option value="" ${id==='in-gov'?'disabled selected':'selected'}>${id==='in-gov'?'المحافظة':'كل المحافظات'}</option>`; Object.keys(EGYPT_LOCATIONS).forEach(gov => { sel.innerHTML += `<option value="${gov}">${gov}</option>`; }); }
             });
         }
 
         window.populateCities = (govId, cityId) => {
-            const gov = document.getElementById(govId).value;
-            const citySel = document.getElementById(cityId);
+            const gov = document.getElementById(govId).value; const citySel = document.getElementById(cityId);
             citySel.innerHTML = `<option value="" ${govId==='in-gov'?'disabled selected':'selected'}>${govId==='in-gov'?'المركز/المدينة':'كل المراكز'}</option>`;
             if(gov && EGYPT_LOCATIONS[gov]) { EGYPT_LOCATIONS[gov].forEach(city => { citySel.innerHTML += `<option value="${city}">${city}</option>`; }); }
         };
@@ -677,14 +646,7 @@
 
         window.updateFormFields = () => {
             const cat = document.getElementById('in-category').value;
-            const roomFields = document.getElementById('room-fields');
-            const furnishedField = document.getElementById('furnished-field');
-            const levelInput = document.getElementById('in-level');
-            const floorsAltInput = document.getElementById('in-floors-alt');
-            const landTypeWrapper = document.getElementById('land-type-wrapper');
-            const landFields = document.getElementById('land-fields');
-            const buildingFields = document.getElementById('building-fields');
-            const extraFields = document.getElementById('extra-fields'); 
+            const roomFields = document.getElementById('room-fields'); const furnishedField = document.getElementById('furnished-field'); const levelInput = document.getElementById('in-level'); const floorsAltInput = document.getElementById('in-floors-alt'); const landTypeWrapper = document.getElementById('land-type-wrapper'); const landFields = document.getElementById('land-fields'); const buildingFields = document.getElementById('building-fields'); const extraFields = document.getElementById('extra-fields'); 
 
             roomFields.classList.remove('hidden'); furnishedField.classList.remove('hidden'); levelInput.classList.remove('hidden'); floorsAltInput.classList.add('hidden'); landTypeWrapper.classList.add('hidden'); landFields.classList.add('hidden'); buildingFields.classList.add('hidden'); extraFields.classList.remove('hidden');
 
@@ -700,7 +662,7 @@
 
         function normalizeText(t) { return t ? t.toString().toLowerCase().replace(/[أإآ]/g, 'ا').replace(/ة/g, 'ه').replace(/ى/g, 'ي') : ""; }
         function timeAgo(d) { if(!d) return 'جديد'; const s=Math.floor((new Date()-d.toDate())/1000); if(s<60)return 'الآن'; if(s<3600)return `منذ ${Math.floor(s/60)} د`; if(s<86400)return `منذ ${Math.floor(s/3600)} س`; return `منذ ${Math.floor(s/86400)} ي`; }
-        function showSkeletons() { const c=document.getElementById('grid-container'); if(state.listings.length === 0) { c.innerHTML=''; for(let i=0;i<6;i++) c.innerHTML+=`<div class="bg-white dark:bg-slate-800 rounded-lg overflow-hidden shadow-sm border-2 border-navy/10 dark:border-slate-700 h-full"><div class="h-48 skeleton rounded-t-lg"></div><div class="p-2 space-y-2"><div class="h-3 rounded skeleton w-3/4"></div><div class="h-2 rounded skeleton w-1/2"></div></div></div>`; } }
+        function showSkeletons() { const c=document.getElementById('grid-container'); if(state.listings.length === 0) { c.innerHTML=''; for(let i=0;i<6;i++) c.innerHTML+=`<div class="bg-white dark:bg-slate-800 rounded-lg overflow-hidden shadow-sm border-2 border-navy/10 dark:border-slate-700 h-full"><div class="h-36 skeleton rounded-t-lg"></div><div class="p-2 space-y-2"><div class="h-3 rounded skeleton w-3/4"></div><div class="h-2 rounded skeleton w-1/2"></div></div></div>`; } }
 
         function loadListings() { 
             showSkeletons(); 
@@ -730,7 +692,6 @@
                 if (filterType && item.type !== filterType) matchType = false; if (filterCat && item.category !== filterCat) matchType = false; 
                 const catNameAr = CAT_MAP[item.category] || '';
                 
-                // إضافة الكود القصير إلى نص البحث ليتم الفلترة بسببه
                 const codeSearch = (item.shortCode || item.id.substring(0,3)).toLowerCase();
                 const itemText = normalizeText(item.title + item.desc + item.phone + item.gov + item.city + item.location + (item.address || '') + catNameAr + codeSearch);
                 
@@ -754,8 +715,7 @@
             if (parts.length < 2) return url;
             let params = 'w_512,h_512,c_fill,q_auto,f_auto';
             if (isVideo) {
-                let cleanUrl = parts[1];
-                const lastDot = cleanUrl.lastIndexOf('.');
+                let cleanUrl = parts[1]; const lastDot = cleanUrl.lastIndexOf('.');
                 if (lastDot !== -1) cleanUrl = cleanUrl.substring(0, lastDot) + '.jpg';
                 return `${parts[0]}/upload/${params},so_0/${cleanUrl}`;
             }
@@ -770,7 +730,6 @@
             let badge = item.badge==='hot' ? `<span class="inline-block bg-orange-500 text-white text-[9px] font-bold px-1.5 py-0.5 rounded shadow animate-pulse">🔥 لقطة</span>` : (item.badge==='verified' ? `<span class="inline-block bg-blue-500 text-white text-[9px] font-bold px-1.5 py-0.5 rounded shadow flex items-center gap-0.5"><i data-lucide="check-circle" class="w-3 h-3"></i> موثوق</span>` : '');
             let statusOverlay = ''; if(item.status && item.status !== 'available') { const txt = item.status==='sold'?'تم البيع':'تم التأجير'; const clr = item.status==='sold'?'bg-red-600':'bg-blue-600'; statusOverlay=`<div class="absolute inset-0 sold-overlay flex items-center justify-center z-30 pointer-events-none bg-black/40"><span class="${clr} text-white font-bold px-4 py-1.5 rounded-lg shadow-xl transform -rotate-12 text-sm">${txt}</span></div>`; }
             
-            // توزيع احترافي لأيقونات البطاقة (كبسولات متساوية)
             let iconsHtml = '';
             const pillClass = "flex-1 bg-slate-50 dark:bg-slate-700/50 border border-slate-100 dark:border-slate-600 rounded py-1 flex justify-center items-center gap-1 shadow-sm";
             if(item.category === 'land') { 
@@ -787,12 +746,11 @@
             const code = item.shortCode || item.id.substring(0,3).toUpperCase();
             const shareUrl = window.location.origin + window.location.pathname + '?id=' + item.id;
             
-            // رسالة واتساب معدلة تشمل الكود والرابط
             const waMsg = `مهتم بهذا العقار: ${item.title} (${Number(item.price).toLocaleString()} ج)\nكود الإعلان: ${code}\nالرابط: ${shareUrl}`;
             const waLink = `https://wa.me/20${item.phone}?text=${encodeURIComponent(waMsg)}`;
 
             return `<div class="listing-card bg-white dark:bg-slate-800 rounded-lg overflow-hidden shadow-sm border border-black dark:border-slate-500 flex flex-col h-full cursor-pointer active:scale-95 transition-transform group relative transform-gpu" onclick="openDetails('${item.id}')">
-                <div class="relative w-full h-48 sm:h-40 bg-gray-200 dark:bg-slate-700 shrink-0">
+                <div class="relative w-full h-36 shrink-0">
                     ${statusOverlay}
                     <span class="absolute top-2 right-2 ${item.type === 'sale' ? 'bg-emerald-600' : 'bg-blue-600'} text-white px-2 py-0.5 rounded text-[10px] font-bold shadow z-20">${item.type === 'sale' ? 'بيع' : 'إيجار'}</span>
                     <img src="${thumbUrl}" loading="lazy" decoding="async" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105 ${statusOverlay?'grayscale':''}">
@@ -805,17 +763,17 @@
                         <div class="h-4 flex justify-end items-center mb-1">${!statusOverlay ? badge : ''}</div>
                         <div class="flex items-center gap-1 text-[10px] text-slate-500 dark:text-slate-400 mb-1"><i data-lucide="map-pin" class="w-3 h-3 text-emerald-500 shrink-0"></i><span class="truncate leading-tight">${locDisplay}</span></div>
                         ${item.address ? `<div class="flex items-center gap-1 text-[10px] text-slate-500 dark:text-slate-400 mb-1"><i data-lucide="map" class="w-3 h-3 text-slate-400 shrink-0"></i><span class="truncate leading-tight">${item.address}</span></div>` : ''}
-                        
-                        <!-- توزيع الأيقونات هنا -->
-                        <div class="flex items-center gap-1.5 text-[10px] text-slate-700 dark:text-slate-200 font-bold mb-3 mt-2">${iconsHtml}</div>
                     </div>
                     
                     <div class="mt-auto">
                         <!-- عرض الكود -->
-                        <div class="flex justify-between items-center text-[9px] font-bold text-slate-500 dark:text-slate-400 mb-1.5 px-1">
+                        <div class="flex justify-between items-center text-[9px] font-bold text-slate-500 dark:text-slate-400 mb-1.5 px-1 mt-1">
                             <span>كود العقار: <span class="text-slate-800 dark:text-white bg-slate-100 dark:bg-slate-700 px-1.5 py-0.5 rounded shadow-sm">${code}</span></span>
                             <span>${timeAgo(item.createdAt)}</span>
                         </div>
+                        
+                        <!-- توزيع الأيقونات -->
+                        <div class="flex items-center gap-1.5 text-[10px] text-slate-700 dark:text-slate-200 font-bold mb-2">${iconsHtml}</div>
                         
                         <div class="flex gap-1.5 pt-2 border-t border-slate-100 dark:border-slate-700">
                             <a href="${waLink}" target="_blank" onclick="event.stopPropagation()" class="flex-1 bg-emerald-600 text-white py-1.5 rounded flex justify-center items-center gap-1 text-[10px] font-bold hover:bg-emerald-700 transition shadow-sm"><i data-lucide="message-circle" class="w-3 h-3"></i> واتساب</a>
@@ -831,7 +789,6 @@
             document.getElementById('d-pub-name').innerText = '';
             document.getElementById('d-pub-img').src = '';
             document.getElementById('d-pub-img').classList.add('hidden');
-            const slider = document.getElementById('details-slider'); if(slider) slider.scrollLeft = 0;
         }
 
         window.openDetails = async (id) => {
@@ -877,8 +834,6 @@
                     document.getElementById('d-title').innerText = item.title; 
                     document.getElementById('d-price').innerText = Number(item.price).toLocaleString() + ' جنيه'; 
                     document.getElementById('d-desc').innerText = item.desc; 
-                    
-                    // إضافة الكود بجوار الوقت
                     document.getElementById('d-time-badge').innerHTML = `${timeAgo(item.createdAt)} &nbsp;|&nbsp; كود: <span class="text-slate-700 dark:text-slate-200">${code}</span>`;
                     
                     const amCont = document.getElementById('d-amenities'); amCont.innerHTML=''; 
@@ -901,19 +856,9 @@
                     slider.innerHTML = imgs.map((src, idx) => { 
                         const isVid = src.includes('.mp4') || src.includes('.mov'); 
                         let thumb = "";
-                        if(idx === 0) {
-                             thumb = getOptimizedUrl(src, isVid);
-                        } else {
-                             thumb = getOptimizedUrl(src, isVid).replace('w_512', 'w_700');
-                        }
-                        
+                        if(idx === 0) { thumb = getOptimizedUrl(src, isVid); } else { thumb = getOptimizedUrl(src, isVid).replace('w_512', 'w_700'); }
                         return isVid ? `<video src="${src}" controls class="w-full h-full object-contain snap-center shrink-0 bg-black"></video>` : `<img src="${thumb}" ${idx > 0 ? 'loading="lazy"' : ''} decoding="async" class="w-full h-full object-cover snap-center shrink-0 cursor-pointer" onclick="openLightbox('${src}', ${idx})">` 
                     }).join('');
-                    
-                    // إجبار المتصفح على العودة لأول صورة برمجياً لمنع اللاج المذكور
-                    setTimeout(() => {
-                        slider.scrollLeft = 0;
-                    }, 10);
                     
                     document.getElementById('details-arrows').style.display = imgs.length > 1 ? 'block' : 'none';
 
@@ -930,16 +875,43 @@
                     const isOwner = state.user && state.user.uid === item.authorId;
                     const showControls = state.isAdmin || isOwner;
                     const controlsDiv = document.getElementById('d-controls');
+                    
                     if(showControls) {
                         controlsDiv.classList.remove('hidden');
-                        controlsDiv.innerHTML = `<div class="flex items-center gap-2"><button onclick="del(event,'${item.id}')" class="bg-red-50 text-red-600 border border-red-200 py-1 px-3 rounded text-[9px] font-bold flex items-center justify-center gap-1"><i data-lucide="trash-2" class="w-3 h-3"></i> حذف</button><div class="custom-select-wrapper w-24"><select onchange="updateStatus(event, '${item.id}', this.value)" class="custom-select h-7 py-0 text-[9px] border-emerald-200 bg-emerald-50 text-emerald-800"><option value="available" ${item.status==='available'?'selected':''}>🟢 متاح</option><option value="sold" ${item.status==='sold'?'selected':''}>🔴 مباع</option><option value="rented" ${item.status==='rented'?'selected':''}>🔵 مؤجر</option></select><i data-lucide="chevron-down" class="custom-select-icon w-3 h-3"></i></div>${state.isAdmin ? `<button onclick="pin(event,'${item.id}',${item.isPinned})" class="${item.isPinned ? 'bg-yellow-100 text-yellow-600 border-yellow-300' : 'bg-slate-100 text-slate-600 border-slate-200'} border py-1 px-3 rounded text-[9px] font-bold flex items-center justify-center gap-1"><i data-lucide="star" class="w-3 h-3 ${item.isPinned?'fill-current':''}"></i> تثبيت</button>` : ''}</div>`;
+                        let controlsHtml = `<div class="flex items-center gap-2">`;
+                        controlsHtml += `<button onclick="del(event,'${item.id}')" class="bg-red-50 text-red-600 border border-red-200 py-1 px-3 rounded text-[9px] font-bold flex items-center justify-center gap-1"><i data-lucide="trash-2" class="w-3 h-3"></i> حذف</button>`;
+                        
+                        // إضافة زر التعديل فقط لصاحب الإعلان
+                        if(isOwner) {
+                            controlsHtml += `<button onclick="editListing('${item.id}')" class="bg-blue-50 text-blue-600 border border-blue-200 py-1 px-3 rounded text-[9px] font-bold flex items-center justify-center gap-1"><i data-lucide="edit" class="w-3 h-3"></i> تعديل</button>`;
+                        }
+
+                        controlsHtml += `<div class="custom-select-wrapper w-24"><select onchange="updateStatus(event, '${item.id}', this.value)" class="custom-select h-7 py-0 text-[9px] border-emerald-200 bg-emerald-50 text-emerald-800"><option value="available" ${item.status==='available'?'selected':''}>🟢 متاح</option><option value="sold" ${item.status==='sold'?'selected':''}>🔴 مباع</option><option value="rented" ${item.status==='rented'?'selected':''}>🔵 مؤجر</option></select><i data-lucide="chevron-down" class="custom-select-icon w-3 h-3"></i></div>`;
+                        
+                        if(state.isAdmin) {
+                            controlsHtml += `<button onclick="pin(event,'${item.id}',${item.isPinned})" class="${item.isPinned ? 'bg-yellow-100 text-yellow-600 border-yellow-300' : 'bg-slate-100 text-slate-600 border-slate-200'} border py-1 px-3 rounded text-[9px] font-bold flex items-center justify-center gap-1"><i data-lucide="star" class="w-3 h-3 ${item.isPinned?'fill-current':''}"></i> تثبيت</button>`;
+                        }
+                        controlsHtml += `</div>`;
+                        controlsDiv.innerHTML = controlsHtml;
                     } else { controlsDiv.classList.add('hidden'); }
                     
                     lucide.createIcons({root: document.getElementById('details-modal')});
                 } catch(e) { console.error(e); showToast('حدث خطأ في عرض التفاصيل', 'e'); }
             }
         }
-        window.closeDetails = () => { toggleModal('details-modal'); const newUrl = new URL(window.location); newUrl.searchParams.delete('id'); window.history.pushState({}, '', newUrl); state.activeDetailsId = null; }
+
+        // إرجاع شريط الصور للصورة الأولى عند الإغلاق لمنع تداخل البطاقات
+        window.closeDetails = () => { 
+            const slider = document.getElementById('details-slider'); 
+            if(slider) slider.scrollLeft = 0; 
+
+            toggleModal('details-modal'); 
+            const newUrl = new URL(window.location); 
+            newUrl.searchParams.delete('id'); 
+            window.history.pushState({}, '', newUrl); 
+            state.activeDetailsId = null; 
+        }
+
         window.shareListing = async () => { if(!state.currentItem) return; const d = { title: 'السوق وياك', text: `شاهد عقار: ${state.currentItem.title}`, url: window.location.href + '?id=' + state.currentItem.id }; try { await navigator.share(d); showToast('تمت المشاركة'); } catch(e) { navigator.clipboard.writeText(d.url); showToast('تم النسخ'); } };
         window.downloadImages = async () => { if(!state.currentItem || !state.currentItem.images) return; showToast('جاري تحضير الصور...'); for(let i=0; i<state.currentItem.images.length; i++) { const url = state.currentItem.images[i]; const a = document.createElement('a'); a.href = url; a.target = '_blank'; a.download = `souq_${state.currentItem.id}_${i+1}`; document.body.appendChild(a); a.click(); document.body.removeChild(a); await new Promise(r => setTimeout(r, 500)); } };
         window.scrollDetails = (dir) => { const slider = document.getElementById('details-slider'); const count = slider.children.length; if(count === 0) return; let newIndex = state.currentDetailIndex + dir; if (newIndex >= count) newIndex = 0; if (newIndex < 0) newIndex = count - 1; state.currentDetailIndex = newIndex; const target = slider.children[newIndex]; target.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'start' }); }
@@ -979,16 +951,96 @@
             return !m.classList.contains('hidden'); 
         }
 
-        window.toggleAddModal=()=>{
+        // تفريغ فورم الإضافة لضمان عدم تداخل الإعلانات المضافة تباعاً
+        function resetAddForm() {
+            state.filesToUpload = [];
+            state.editingId = null;
+            state.existingImages =[];
+            document.getElementById('preview-area').innerHTML = '';
+            document.getElementById('file-upload-input').value = '';
+            
+            document.getElementById('in-title').value = '';
+            document.getElementById('in-price').value = '';
+            document.getElementById('in-area').value = '';
+            document.getElementById('in-desc').value = '';
+            document.getElementById('in-map').value = '';
+            document.getElementById('in-address').value = '';
+            document.getElementById('in-phone').value = state.userProfile ? state.userProfile.phoneNumber.replace('+20', '') : '';
+            
+            document.querySelectorAll('.amenity-check').forEach(c => c.checked = false);
+            document.getElementById('badge-none').checked = true;
+            document.getElementById('furn-no').checked = true;
+
+            document.getElementById('add-modal-title').innerText = 'إضافة عقار';
+            document.getElementById('btn-publish').innerText = 'نشر الإعلان';
+        }
+
+        window.openAddModal = () => {
             if(state.user && !state.user.isAnonymous) {
+                resetAddForm();
+                updateFormFields();
                 if(toggleModal('add-modal')){
-                    state.filesToUpload=[]; document.getElementById('preview-area').innerHTML=''; updateFormFields();
-                    const newUrl = new URL(window.location); if(!document.getElementById('add-modal').classList.contains('hidden')) { newUrl.searchParams.set('mode', 'add'); } else { newUrl.searchParams.delete('mode'); } window.history.pushState({}, '', newUrl);
+                    const newUrl = new URL(window.location); newUrl.searchParams.set('mode', 'add'); window.history.pushState({}, '', newUrl);
                 }
             } else {
                 showToast('يجب تسجيل الدخول أولاً', 'e');
                 toggleModal('auth-modal');
             }
+        };
+
+        // برمجة زر التعديل وتعبئة البيانات القديمة في الفورم
+        window.editListing = (id) => {
+            const item = state.listings.find(i => i.id === id);
+            if(!item) return;
+
+            state.editingId = id;
+            state.existingImages = item.images;
+            closeDetails();
+
+            document.getElementById('add-modal-title').innerText = 'تعديل العقار';
+            document.getElementById('btn-publish').innerText = 'حفظ التعديلات';
+            
+            document.getElementById('in-category').value = item.category;
+            updateFormFields();
+            document.getElementById('in-type').value = item.type;
+            document.getElementById('in-title').value = item.title;
+            document.getElementById('in-price').value = item.price;
+            document.getElementById('in-area').value = item.area || '';
+            document.getElementById('in-gov').value = item.gov;
+            populateCities('in-gov', 'in-city');
+            setTimeout(() => { document.getElementById('in-city').value = item.city; }, 100);
+            
+            document.getElementById('in-address').value = item.address || '';
+            document.getElementById('in-phone').value = item.phone || '';
+            document.getElementById('in-desc').value = item.desc || '';
+            document.getElementById('in-map').value = item.mapLink || '';
+            
+            if(item.level) document.getElementById('in-level').value = item.level;
+            if(item.rooms) document.getElementById('in-rooms').value = item.rooms;
+            if(item.baths) document.getElementById('in-baths').value = item.baths;
+            if(item.balconies) document.getElementById('in-balconies').value = item.balconies;
+            if(item.finishing) document.getElementById('in-finishing').value = item.finishing;
+            if(item.floors) document.getElementById('in-floors-alt').value = item.floors;
+            if(item.apartments) document.getElementById('in-apartments').value = item.apartments;
+            if(item.feddan) document.getElementById('in-feddan').value = item.feddan;
+            if(item.qirat) document.getElementById('in-qirat').value = item.qirat;
+            if(item.landType) document.getElementById('in-land-type').value = item.landType;
+            
+            if(item.furnished === 'yes') document.getElementById('furn-yes').checked = true; else document.getElementById('furn-no').checked = true;
+            if(item.badge === 'hot') document.getElementById('badge-hot').checked = true; else document.getElementById('badge-none').checked = true;
+            
+            setTimeout(() => {
+                if(item.amenities && Array.isArray(item.amenities)) {
+                    document.querySelectorAll('.amenity-check').forEach(c => {
+                        if(item.amenities.includes(c.value)) c.checked = true;
+                    });
+                }
+            }, 100);
+
+            // عرض تنبيه بشأن الصور
+            document.getElementById('preview-area').innerHTML = `<div class="text-[9px] text-slate-500 font-bold p-2 text-center w-full">الصور محفوظة. سيتم تحديث الصور القديمة فقط إذا قمت بإضافة صور جديدة هنا.</div>`;
+
+            toggleModal('add-modal');
         };
 
         async function compressImage(file) { if (file.type.startsWith('video')) return file; return new Promise((resolve) => { const reader = new FileReader(); reader.readAsDataURL(file); reader.onload = (e) => { const img = new Image(); img.src = e.target.result; img.onload = () => { const canvas = document.createElement('canvas'); const ctx = canvas.getContext('2d'); const maxWidth = 1024; let width = img.width; let height = img.height; if (width > maxWidth) { height *= maxWidth / width; width = maxWidth; } canvas.width = width; canvas.height = height; ctx.drawImage(img, 0, 0, width, height); canvas.toBlob((blob) => { resolve(new File([blob], file.name, { type: 'image/jpeg', lastModified: Date.now() })); }, 'image/jpeg', 0.7); }; }; }); }
@@ -1001,20 +1053,79 @@
             try {
                 const gov = document.getElementById('in-gov').value; const city = document.getElementById('in-city').value;
                 if(!gov || !city) return showToast('يرجى اختيار المحافظة والمركز', 'e');
-                if(!state.filesToUpload.length) return showToast('مطلوب صورة أو فيديو','e');
-                const btn = document.getElementById('btn-publish'); const originalText = btn.innerText; btn.innerText='جاري الرفع والنشر...'; btn.disabled = true;
-                const uploadedUrls =[]; for(let f of state.filesToUpload) { const url = await uploadToCloudinary(f); uploadedUrls.push(url); }
+                
+                let uploadedUrls =[];
+                if(state.filesToUpload.length > 0) {
+                    const btn = document.getElementById('btn-publish'); const originalText = btn.innerText; btn.innerText='جاري الرفع والنشر...'; btn.disabled = true;
+                    for(let f of state.filesToUpload) { const url = await uploadToCloudinary(f); uploadedUrls.push(url); }
+                } else if (state.editingId) {
+                    uploadedUrls = state.existingImages;
+                } else {
+                    return showToast('مطلوب صورة أو فيديو','e');
+                }
+                
+                document.getElementById('btn-publish').innerText = 'جاري المعالجة...'; document.getElementById('btn-publish').disabled = true;
+
                 const bdg = document.querySelector('input[name="badge"]:checked').value; const am =[]; document.querySelectorAll('.amenity-check:checked').forEach(c => am.push(c.value)); const cat = document.getElementById('in-category').value; const furnished = document.querySelector('input[name="furnished"]:checked')?.value; const landType = document.getElementById('in-land-type').value;
                 
-                // توليد كود العقار (3 أرقام عشوائية)
-                const generatedCode = Math.floor(100 + Math.random() * 900).toString();
+                const listingData = { 
+                    title: document.getElementById('in-title').value, 
+                    price: Number(document.getElementById('in-price').value), 
+                    type: document.getElementById('in-type').value, 
+                    category: cat, 
+                    area: Number(document.getElementById('in-area').value) || 0, 
+                    feddan: Number(document.getElementById('in-feddan').value) || 0, 
+                    qirat: Number(document.getElementById('in-qirat').value) || 0, 
+                    landType: landType, 
+                    floors: Number(cat === 'building' ? document.getElementById('in-floors-alt').value : document.getElementById('in-floors-alt').value) || 0, 
+                    apartments: Number(document.getElementById('in-apartments').value) || 0, 
+                    rooms: Number(document.getElementById('in-rooms').value) || 0, 
+                    baths: Number(document.getElementById('in-baths').value) || 0, 
+                    balconies: Number(document.getElementById('in-balconies').value) || 0, 
+                    finishing: document.getElementById('in-finishing').value, 
+                    level: document.getElementById('in-level').value, 
+                    furnished: furnished, 
+                    gov: gov, 
+                    city: city, 
+                    address: document.getElementById('in-address').value, 
+                    phone: document.getElementById('in-phone').value, 
+                    desc: document.getElementById('in-desc').value, 
+                    mapLink: document.getElementById('in-map').value, 
+                    amenities: am, 
+                    images: uploadedUrls, 
+                    image: uploadedUrls[0], 
+                    badge: bdg 
+                };
 
-                await addDoc(collection(db, COLLECTION_NAME),{ shortCode: generatedCode, title: document.getElementById('in-title').value, price: Number(document.getElementById('in-price').value), type: document.getElementById('in-type').value, category: cat, area: Number(document.getElementById('in-area').value) || 0, feddan: Number(document.getElementById('in-feddan').value) || 0, qirat: Number(document.getElementById('in-qirat').value) || 0, landType: landType, floors: Number(cat === 'building' ? document.getElementById('in-floors-alt').value : document.getElementById('in-floors-alt').value) || 0, apartments: Number(document.getElementById('in-apartments').value) || 0, rooms: Number(document.getElementById('in-rooms').value) || 0, baths: Number(document.getElementById('in-baths').value) || 0, balconies: Number(document.getElementById('in-balconies').value) || 0, finishing: document.getElementById('in-finishing').value, level: document.getElementById('in-level').value, furnished: furnished, gov: gov, city: city, address: document.getElementById('in-address').value, location: document.getElementById('in-loc')?.value || '', phone: document.getElementById('in-phone').value, desc: document.getElementById('in-desc').value, mapLink: document.getElementById('in-map').value, amenities: am, images: uploadedUrls, image: uploadedUrls[0], badge: bdg, status: 'available', isPinned: false, createdAt: serverTimestamp(), authorId: state.user.uid });
-                showToast('تم النشر بنجاح'); toggleModal('add-modal'); state.filesToUpload =[]; document.getElementById('preview-area').innerHTML = ''; document.getElementById('in-title').value = ''; document.getElementById('in-price').value = ''; document.getElementById('in-area').value = ''; document.getElementById('in-desc').value = ''; btn.innerText = originalText; btn.disabled = false;
-            } catch(e) { console.error(e); showToast('حدث خطأ أثناء النشر', 'e'); document.getElementById('btn-publish').innerText = 'نشر الإعلان'; document.getElementById('btn-publish').disabled = false; }
+                if(state.editingId) {
+                    // التحديث للإعلان الموجود
+                    await updateDoc(doc(db, COLLECTION_NAME, state.editingId), listingData);
+                    showToast('تم حفظ التعديلات بنجاح');
+                } else {
+                    // إضافة إعلان جديد بكود قصير
+                    const generatedCode = Math.floor(100 + Math.random() * 900).toString();
+                    listingData.shortCode = generatedCode;
+                    listingData.status = 'available';
+                    listingData.isPinned = false;
+                    listingData.createdAt = serverTimestamp();
+                    listingData.authorId = state.user.uid;
+                    
+                    await addDoc(collection(db, COLLECTION_NAME), listingData);
+                    showToast('تم النشر بنجاح');
+                }
+
+                toggleModal('add-modal'); 
+                resetAddForm();
+                
+            } catch(e) { 
+                console.error(e); 
+                showToast('حدث خطأ أثناء العملية', 'e'); 
+                document.getElementById('btn-publish').innerText = state.editingId ? 'حفظ التعديلات' : 'نشر الإعلان'; 
+                document.getElementById('btn-publish').disabled = false; 
+            }
         };
 
-        window.del=async(e,id)=>{if(e)e.stopPropagation();if(confirm('حذف؟')){await deleteDoc(doc(db, COLLECTION_NAME, id));showToast('تم الحذف'); closeDetails();}};
+        window.del=async(e,id)=>{if(e)e.stopPropagation();if(confirm('هل أنت متأكد من حذف هذا الإعلان بشكل نهائي؟')){await deleteDoc(doc(db, COLLECTION_NAME, id));showToast('تم الحذف'); closeDetails();}};
         window.pin=async(e,id,s)=>{if(e)e.stopPropagation();await updateDoc(doc(db, COLLECTION_NAME, id),{isPinned:!s});showToast(s?'تم إلغاء التثبيت':'تم التثبيت'); closeDetails();};
         window.updateStatus = async (e, id, newStatus) => { if(e) e.stopPropagation(); const item = state.listings.find(i => i.id === id); if(item) { item.status = newStatus; const typeEl = document.getElementById('d-type-badge'); if(typeEl) { if(newStatus !== 'available') { typeEl.innerText = newStatus === 'sold' ? 'مباع' : 'مؤجر'; typeEl.className = `absolute bottom-2 right-2 text-white px-2 py-0.5 rounded text-[10px] font-bold shadow backdrop-blur-sm ${newStatus==='sold'?'bg-red-600':'bg-blue-600'}`; } else { typeEl.innerText = item.type === 'sale' ? 'للبيع' : 'للإيجار'; typeEl.className = `absolute bottom-2 right-2 text-white px-2 py-0.5 rounded text-[10px] font-bold shadow backdrop-blur-sm ${item.type === 'sale' ? 'bg-emerald-600/90' : 'bg-blue-600/90'}`; } } } try { await updateDoc(doc(db, COLLECTION_NAME, id), { status: newStatus }); showToast('تم تحديث الحالة'); } catch(err) { console.error(err); showToast('خطأ في التحديث', 'e'); } };
 
