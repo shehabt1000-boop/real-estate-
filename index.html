@@ -168,6 +168,12 @@
                 <span class="text-[10px] font-black text-slate-800 dark:text-white leading-tight">سوق <span class="text-emerald-600 dark:text-emerald-400">العقارات</span></span>
             </div>
 
+            <div class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center cursor-pointer group" id="logo-trigger">
+                <div class="w-10 h-10 flex items-center justify-center bg-slate-900 text-white rounded-full border-2 border-emerald-600 dark:border-emerald-500 shadow-lg group-hover:scale-110 transition-all duration-300">
+                    <i data-lucide="building-2" class="w-5 h-5 text-white"></i>
+                </div>
+            </div>
+
             <div class="flex gap-2 items-center">
                 <button id="btn-header-login" onclick="toggleModal('auth-modal')" class="p-1.5 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-white hover:bg-slate-200 transition"><i data-lucide="user" class="w-4 h-4"></i></button>
                 <button id="btn-logout" onclick="logoutUser()" class="hidden p-1.5 rounded-full bg-red-50 dark:bg-red-900/20 text-red-600 hover:bg-red-100 transition"><i data-lucide="log-out" class="w-4 h-4"></i></button>
@@ -253,7 +259,7 @@
                     <label class="text-[10px] font-bold text-slate-500">كلمة المرور</label>
                     <input id="login-pass" type="password" class="input-box" placeholder="••••••••">
                 </div>
-                <button onclick="loginUser()" class="w-full bg-emerald-600 text-white py-3 rounded-xl font-bold text-sm shadow-lg hover:bg-emerald-700 transition transform active:scale-95">تسجيل الدخول</button>
+                <button id="btn-login" onclick="loginUser()" class="w-full bg-emerald-600 text-white py-3 rounded-xl font-bold text-sm shadow-lg hover:bg-emerald-700 transition transform active:scale-95">تسجيل الدخول</button>
             </div>
             <div id="form-register" class="hidden space-y-4">
                 <div class="flex justify-center">
@@ -366,7 +372,7 @@
                     </div>
                     <div class="bg-white dark:bg-slate-800 p-2.5 rounded-lg border border-black dark:border-slate-500 shadow-sm space-y-1.5">
                         <h4 class="text-[9px] font-bold text-slate-400 uppercase tracking-wider border-b border-slate-100 dark:border-slate-700 pb-0.5 mb-0.5">بيانات أساسية</h4>
-                        <div class="flex gap-1.5"><div class="custom-select-wrapper flex-1"><select id="in-category" onchange="updateFormFields()" class="custom-select"><option value="apartment">شقة</option><option value="villa">فيلا</option><option value="chalet">شاليهات</option><option value="office">مكتب</option><option value="shop">محلات</option><option value="land">أراضي</option><option value="building">عماير</option><option value="warehouse">مخازن</option></select><i data-lucide="chevron-down" class="custom-select-icon w-3 h-3"></i></div><div class="custom-select-wrapper w-20 shrink-0"><select id="in-type" class="custom-select"><option value="sale">بيع</option><option value="rent">إيجار</option></select><i data-lucide="chevron-down" class="custom-select-icon w-3 h-3"></i></div></div>
+                        <div class="flex gap-1.5"><div class="custom-select-wrapper flex-1"><select id="in-category" onchange="updateFormFields()" class="custom-select"><option value="apartment">شقة</option><option value="villa">فيلا</option><option value="chalet">شاليهات</option><option value="office">مكاتب</option><option value="shop">محلات</option><option value="land">أراضي</option><option value="building">عمارة</option><option value="warehouse">مخزن</option></select><i data-lucide="chevron-down" class="custom-select-icon w-3 h-3"></i></div><div class="custom-select-wrapper w-20 shrink-0"><select id="in-type" class="custom-select"><option value="sale">بيع</option><option value="rent">إيجار</option></select><i data-lucide="chevron-down" class="custom-select-icon w-3 h-3"></i></div></div>
                         <input id="in-title" class="input-box" placeholder="عنوان الإعلان"><input id="in-price" type="number" class="input-box" placeholder="السعر (جنيه)">
                         <div class="grid grid-cols-2 gap-1.5"><input id="in-area" type="number" class="input-box" placeholder="المساحة (م²)"><input id="in-level" type="text" class="input-box" placeholder="الدور"><input id="in-floors-alt" type="number" class="input-box hidden" placeholder="عدد الأدوار"><div id="land-type-wrapper" class="hidden custom-select-wrapper"><select id="in-land-type" class="custom-select"><option value="building">مباني</option><option value="agriculture">زراعية</option></select><i data-lucide="chevron-down" class="custom-select-icon w-3 h-3"></i></div></div>
                         <div id="land-fields" class="hidden grid grid-cols-2 gap-1.5"><input id="in-feddan" type="number" class="input-box" placeholder="فدان (اختياري)"><input id="in-qirat" type="number" class="input-box" placeholder="قيراط (اختياري)"></div>
@@ -518,7 +524,6 @@
                     if(userDoc.exists()) {
                         state.userProfile = userDoc.data();
                         
-                        // نظام الحظر (Block System) - شاشة إجبارية حمراء
                         if(state.userProfile.isBlocked) {
                             document.body.innerHTML = `
                                 <div style="display:flex; flex-direction:column; height:100vh; align-items:center; justify-content:center; background-color:#0f172a; color:#ef4444; font-family:'Cairo',sans-serif; text-align:center; padding:20px;">
@@ -526,10 +531,9 @@
                                     <h1 style="font-size:24px; font-weight:bold; margin-bottom:10px;">عذراً، تم حظر هذا الحساب!</h1>
                                     <p style="font-size:14px; color:#94a3b8; max-width:300px;">لا يمكنك استخدام المنصة بسبب مخالفة شروط الاستخدام. يرجى التواصل مع الدعم الفني.</p>
                                 </div>`;
-                            return; // توقف عن تنفيذ الكود تماماً
+                            return; 
                         }
 
-                        // إعطاء صلاحية الأدمن تلقائياً للحساب الرئيسي أو من تم ترقيته
                         if(state.userProfile.phoneNumber === '+201206244875' || state.userProfile.isAdmin) {
                             state.isAdmin = true;
                             document.getElementById('btn-admin-top').classList.remove('hidden');
@@ -638,6 +642,11 @@
             const phone = document.getElementById('login-phone').value;
             const pass = document.getElementById('login-pass').value;
             if(!phone || !pass) return showToast('بيانات ناقصة', 'e');
+            
+            const btn = document.getElementById('btn-login');
+            btn.innerText = 'جاري التحميل...';
+            btn.disabled = true;
+            
             try {
                 const email = `0${phone}@souq.com`;
                 await signInWithEmailAndPassword(auth, email, pass);
@@ -645,6 +654,9 @@
                 showToast('تم تسجيل الدخول');
             } catch(e) {
                 showToast('البيانات غير صحيحة، تأكد من الرقم وكلمة المرور', 'e');
+            } finally {
+                btn.innerText = 'تسجيل الدخول';
+                btn.disabled = false;
             }
         };
 
@@ -715,7 +727,6 @@
         }
 
         function checkAdminStatus() { 
-            // الإدارة تعتمد الآن على البروفايل، هذا الكود احتياطي للمزامنة
             if(localStorage.getItem('souq_admin') === 'true' && state.userProfile) { 
                 state.isAdmin = true; document.getElementById('btn-admin-top').classList.remove('hidden'); 
             } 
@@ -727,14 +738,34 @@
         window.showToast=(m,t='s')=>{const d=document.createElement('div');d.className=`toast fixed top-4 left-1/2 -translate-x-1/2 bg-white dark:bg-slate-800 shadow-xl px-4 py-2 rounded-lg border border-${t==='e'?'red':'emerald'}-500 flex items-center gap-2 text-xs font-bold z-[100] text-slate-800 dark:text-white`;d.innerHTML=`<i data-lucide="${t==='e'?'alert-circle':'check-circle'}" class="w-4 h-4 text-${t==='e'?'red':'emerald'}-500"></i> ${m}`;document.getElementById('toast-container').appendChild(d);lucide.createIcons({root:d});setTimeout(()=>{d.classList.add('hiding');setTimeout(()=>d.remove(),300)},3000)};
 
         function normalizeText(t) { return t ? t.toString().toLowerCase().replace(/[أإآ]/g, 'ا').replace(/ة/g, 'ه').replace(/ى/g, 'ي') : ""; }
-        function timeAgo(d) { if(!d) return 'جديد'; const s=Math.floor((new Date()-d.toDate())/1000); if(s<60)return 'الآن'; if(s<3600)return `منذ ${Math.floor(s/60)} د`; if(s<86400)return `منذ ${Math.floor(s/3600)} س`; return `منذ ${Math.floor(s/86400)} ي`; }
-        function showSkeletons() { const c=document.getElementById('grid-container'); if(state.listings.length === 0) { c.innerHTML=''; for(let i=0;i<6;i++) c.innerHTML+=`<div class="bg-white dark:bg-slate-800 rounded-lg overflow-hidden shadow-sm border-2 border-navy/10 dark:border-slate-700 h-full"><div class="h-36 skeleton rounded-t-lg"></div><div class="p-2 space-y-2"><div class="h-3 rounded skeleton w-3/4"></div><div class="h-2 rounded skeleton w-1/2"></div></div></div>`; } }
+        
+        // إصلاح دالة timeAgo لتمنع خطأ الكاش
+        function timeAgo(d) { 
+            if(!d) return 'جديد'; 
+            let timeMs;
+            if(d.toDate) timeMs = d.toDate().getTime();
+            else if (d.seconds) timeMs = d.seconds * 1000;
+            else if (typeof d === 'number') timeMs = d;
+            else return 'جديد';
+            
+            const s=Math.floor((new Date().getTime() - timeMs)/1000); 
+            if(s<60)return 'الآن'; if(s<3600)return `منذ ${Math.floor(s/60)} د`; if(s<86400)return `منذ ${Math.floor(s/3600)} س`; return `منذ ${Math.floor(s/86400)} ي`; 
+        }
+
+        function showSkeletons() { 
+            const c=document.getElementById('grid-container'); 
+            if(state.listings.length === 0) { 
+                c.innerHTML=''; 
+                for(let i=0;i<6;i++) c.innerHTML+=`<div class="bg-white dark:bg-slate-800 rounded-lg overflow-hidden shadow-sm border border-slate-200 dark:border-slate-700 h-full"><div class="h-36 skeleton rounded-t-lg"></div><div class="p-2 space-y-2"><div class="h-3 rounded skeleton w-3/4"></div><div class="h-2 rounded skeleton w-1/2"></div></div></div>`; 
+            } 
+        }
 
         function loadListings() { 
             showSkeletons(); 
             onSnapshot(query(collection(db, COLLECTION_NAME)), (snap) => { 
-                state.listings =[]; 
-                snap.forEach(d => state.listings.push({id:d.id, ...d.data()})); 
+                const newListings =[]; 
+                snap.forEach(d => newListings.push({id:d.id, ...d.data()})); 
+                state.listings = newListings;
                 localStorage.setItem('souq_listings', JSON.stringify(state.listings));
                 state.listings.sort((a,b) => (a.isPinned === b.isPinned) ? (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0) : (a.isPinned ? -1 : 1));
                 performSearch(); 
@@ -823,7 +854,7 @@
                     ${imgs.length > 1 ? `<div class="absolute bottom-1 left-1 bg-black/50 text-white text-[10px] px-2 rounded flex items-center gap-1"><i data-lucide="images" class="w-3 h-3"></i> +${imgs.length-1}</div>` : ''}
                     ${isVideo ? `<div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-black/30 rounded-full p-2"><i data-lucide="play-circle" class="w-8 h-8 text-white/90"></i></div>` : ''}
                 </div>
-                <div class="p-1.5 flex-1 flex flex-col">
+                <div class="p-2 flex-1 flex flex-col">
                     <div class="flex-1">
                         <div class="flex justify-between items-start mb-0.5">
                             <h3 class="font-bold text-slate-900 dark:text-white text-[11px] line-clamp-1 leading-tight">${item.title}</h3>
@@ -835,10 +866,18 @@
                             <span>${timeAgo(item.createdAt)}</span>
                         </div>
 
-                        <div class="h-3 flex justify-end items-center mb-0.5">${!statusOverlay ? badge : ''}</div>
+                        <!-- العنوان التفصيلي مع الشارة في نفس السطر -->
+                        <div class="flex justify-between items-start gap-1 mb-1 mt-1">
+                            <div class="flex items-start gap-1 text-[10px] text-slate-600 dark:text-slate-300 flex-1 overflow-hidden">
+                                ${item.address ? `<i data-lucide="map" class="w-3 h-3 text-slate-400 shrink-0 mt-0.5"></i><span class="truncate leading-tight">${item.address}</span>` : '<div></div>'}
+                            </div>
+                            <div class="shrink-0">${!statusOverlay ? badge : ''}</div>
+                        </div>
                         
-                        <div class="flex items-center gap-1 text-[9px] text-slate-500 dark:text-slate-400 mb-1"><i data-lucide="map-pin" class="w-3 h-3 text-emerald-500 shrink-0"></i><span class="truncate leading-tight">${locDisplay}</span></div>
-                        ${item.address ? `<div class="flex items-center gap-1 text-[9px] text-slate-500 dark:text-slate-400 mb-1"><i data-lucide="map" class="w-3 h-3 text-slate-400 shrink-0"></i><span class="truncate leading-tight">${item.address}</span></div>` : ''}
+                        <!-- المحافظة والمركز تحت العنوان مباشرة -->
+                        <div class="flex items-center gap-1 text-[9px] text-slate-500 dark:text-slate-400 mb-1">
+                            <i data-lucide="map-pin" class="w-3 h-3 text-emerald-500 shrink-0"></i><span class="truncate leading-tight">${locDisplay}</span>
+                        </div>
                     </div>
                     
                     <div class="mt-auto">
@@ -1091,7 +1130,6 @@
 
         window.toggleAdminPanel=()=>{document.getElementById('admin-panel').classList.toggle('hidden');if(!document.getElementById('admin-panel').classList.contains('hidden'))refreshAdmin()};
         
-        // نظام إدارة وحظر المستخدمين من الدعم الفني
         window.applyAdminAction = async (isGranting) => {
             let phoneInput = document.getElementById('admin-target-phone').value.trim();
             if(!phoneInput) return showToast('أدخل رقم الهاتف أولاً', 'e');
@@ -1111,9 +1149,7 @@
                 }
 
                 const userDocId = snap.docs[0].id;
-                await updateDoc(doc(db, "users", userDocId), {
-                    [action]: isGranting
-                });
+                await updateDoc(doc(db, "users", userDocId), { [action]: isGranting });
 
                 showToast(`تم ${isGranting ? 'تفعيل' : 'إلغاء'} الخاصية بنجاح`);
                 document.getElementById('admin-target-phone').value = '';
