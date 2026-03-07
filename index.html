@@ -168,12 +168,6 @@
                 <span class="text-[10px] font-black text-slate-800 dark:text-white leading-tight">سوق <span class="text-emerald-600 dark:text-emerald-400">العقارات</span></span>
             </div>
 
-            <div class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col items-center cursor-pointer group" id="logo-trigger">
-                <div class="w-10 h-10 flex items-center justify-center bg-slate-900 text-white rounded-full border-2 border-emerald-600 dark:border-emerald-500 shadow-lg group-hover:scale-110 transition-all duration-300">
-                    <i data-lucide="building-2" class="w-5 h-5 text-white"></i>
-                </div>
-            </div>
-
             <div class="flex gap-2 items-center">
                 <button id="btn-header-login" onclick="toggleModal('auth-modal')" class="p-1.5 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-white hover:bg-slate-200 transition"><i data-lucide="user" class="w-4 h-4"></i></button>
                 <button id="btn-logout" onclick="logoutUser()" class="hidden p-1.5 rounded-full bg-red-50 dark:bg-red-900/20 text-red-600 hover:bg-red-100 transition"><i data-lucide="log-out" class="w-4 h-4"></i></button>
@@ -372,7 +366,7 @@
                     </div>
                     <div class="bg-white dark:bg-slate-800 p-2.5 rounded-lg border border-black dark:border-slate-500 shadow-sm space-y-1.5">
                         <h4 class="text-[9px] font-bold text-slate-400 uppercase tracking-wider border-b border-slate-100 dark:border-slate-700 pb-0.5 mb-0.5">بيانات أساسية</h4>
-                        <div class="flex gap-1.5"><div class="custom-select-wrapper flex-1"><select id="in-category" onchange="updateFormFields()" class="custom-select"><option value="apartment">شقة</option><option value="villa">فيلا</option><option value="chalet">شاليهات</option><option value="office">مكاتب</option><option value="shop">محلات</option><option value="land">أراضي</option><option value="building">عمارة</option><option value="warehouse">مخزن</option></select><i data-lucide="chevron-down" class="custom-select-icon w-3 h-3"></i></div><div class="custom-select-wrapper w-20 shrink-0"><select id="in-type" class="custom-select"><option value="sale">بيع</option><option value="rent">إيجار</option></select><i data-lucide="chevron-down" class="custom-select-icon w-3 h-3"></i></div></div>
+                        <div class="flex gap-1.5"><div class="custom-select-wrapper flex-1"><select id="in-category" onchange="updateFormFields()" class="custom-select"><option value="apartment">شقة</option><option value="villa">فيلا</option><option value="chalet">شاليهات</option><option value="office">مكتب</option><option value="shop">محلات</option><option value="land">أراضي</option><option value="building">عماير</option><option value="warehouse">مخازن</option></select><i data-lucide="chevron-down" class="custom-select-icon w-3 h-3"></i></div><div class="custom-select-wrapper w-20 shrink-0"><select id="in-type" class="custom-select"><option value="sale">بيع</option><option value="rent">إيجار</option></select><i data-lucide="chevron-down" class="custom-select-icon w-3 h-3"></i></div></div>
                         <input id="in-title" class="input-box" placeholder="عنوان الإعلان"><input id="in-price" type="number" class="input-box" placeholder="السعر (جنيه)">
                         <div class="grid grid-cols-2 gap-1.5"><input id="in-area" type="number" class="input-box" placeholder="المساحة (م²)"><input id="in-level" type="text" class="input-box" placeholder="الدور"><input id="in-floors-alt" type="number" class="input-box hidden" placeholder="عدد الأدوار"><div id="land-type-wrapper" class="hidden custom-select-wrapper"><select id="in-land-type" class="custom-select"><option value="building">مباني</option><option value="agriculture">زراعية</option></select><i data-lucide="chevron-down" class="custom-select-icon w-3 h-3"></i></div></div>
                         <div id="land-fields" class="hidden grid grid-cols-2 gap-1.5"><input id="in-feddan" type="number" class="input-box" placeholder="فدان (اختياري)"><input id="in-qirat" type="number" class="input-box" placeholder="قيراط (اختياري)"></div>
@@ -380,7 +374,6 @@
                         <div id="room-fields" class="grid grid-cols-2 gap-1.5"><input id="in-rooms" type="number" class="input-box" placeholder="عدد الغرف"><input id="in-baths" type="number" class="input-box" placeholder="عدد الحمامات"></div>
                         <div id="extra-fields" class="grid grid-cols-2 gap-1.5"><input id="in-balconies" type="number" class="input-box" placeholder="عدد البلكونات"><div class="custom-select-wrapper"><select id="in-finishing" class="custom-select"><option value="" disabled selected>نوع التشطيب</option><option value="red">طوب أحمر</option><option value="semi">نصف تشطيب</option><option value="full">تشطيب كامل</option><option value="super">سوبر لوكس</option><option value="ultra">الترا سوبر لوكس</option></select><i data-lucide="chevron-down" class="custom-select-icon w-3 h-3"></i></div></div>
                         <div id="furnished-field" class="flex items-center justify-between bg-slate-50 dark:bg-slate-700/50 p-1.5 rounded-lg border border-black dark:border-slate-500"><span class="text-[10px] font-bold text-slate-600 dark:text-slate-300">مفروش؟</span><div class="flex gap-1.5"><label class="cursor-pointer"><input type="radio" name="furnished" id="furn-yes" value="yes" class="peer hidden"><span class="px-2 py-0.5 rounded text-[9px] font-bold bg-white dark:bg-slate-600 border border-slate-200 dark:border-slate-500 text-slate-500 peer-checked:bg-emerald-500 peer-checked:text-white peer-checked:border-emerald-500 transition">نعم</span></label><label class="cursor-pointer"><input type="radio" name="furnished" id="furn-no" value="no" checked class="peer hidden"><span class="px-2 py-0.5 rounded text-[9px] font-bold bg-white dark:bg-slate-600 border border-slate-200 dark:border-slate-500 text-slate-500 peer-checked:bg-slate-800 peer-checked:text-white peer-checked:border-slate-800 transition">لا</span></label></div></div>
-                        <div class="flex gap-2 items-center pt-0.5"><span class="text-[10px] font-bold text-slate-600 dark:text-slate-400">شارة:</span><div class="flex gap-1.5"><label class="cursor-pointer amenity-tile"><input type="radio" name="badge" id="badge-none" value="none" checked class="hidden"><div class="px-2 py-0.5 rounded border border-slate-200 dark:border-slate-600 text-[9px] font-bold text-slate-600 dark:text-slate-300 transition">عادي</div></label><label class="cursor-pointer amenity-tile"><input type="radio" name="badge" id="badge-hot" value="hot" class="hidden"><div class="px-2 py-0.5 rounded border border-orange-200 text-[9px] font-bold text-orange-600 transition hover:bg-orange-50">🔥 لقطة</div></label></div></div>
                     </div>
                     <div class="bg-white dark:bg-slate-800 p-2.5 rounded-lg border border-black dark:border-slate-500 shadow-sm space-y-1.5"><h4 class="text-[9px] font-bold text-slate-400 uppercase tracking-wider border-b border-slate-100 dark:border-slate-700 pb-0.5 mb-0.5">المميزات</h4><div class="grid grid-cols-4 gap-1" id="amenities-grid"></div><textarea id="in-desc" rows="2" class="input-box resize-none" placeholder="وصف تفصيلي..."></textarea></div>
                     <div class="bg-white dark:bg-slate-800 p-2.5 rounded-lg border border-black dark:border-slate-500 shadow-sm space-y-1.5"><h4 class="text-[9px] font-bold text-slate-400 uppercase tracking-wider border-b border-slate-100 dark:border-slate-700 pb-0.5 mb-0.5">الموقع والتواصل</h4><input id="in-address" class="input-box mb-1.5" placeholder="العنوان بالتفصيل (اسم الشارع، علامة مميزة)..."><div class="grid grid-cols-2 gap-1.5"><div class="custom-select-wrapper"><select id="in-gov" onchange="populateCities('in-gov', 'in-city')" class="custom-select"><option value="" disabled selected>المحافظة</option></select><i data-lucide="chevron-down" class="custom-select-icon w-3 h-3"></i></div><div class="custom-select-wrapper"><select id="in-city" class="custom-select"><option value="" disabled selected>المركز/المدينة</option></select><i data-lucide="chevron-down" class="custom-select-icon w-3 h-3"></i></div></div><input id="in-map" class="input-box" placeholder="رابط جوجل ماب (اختياري)"><input id="in-phone" type="tel" class="input-box" placeholder="رقم الهاتف"></div>
@@ -524,6 +517,7 @@
                     if(userDoc.exists()) {
                         state.userProfile = userDoc.data();
                         
+                        // نظام الحظر (Block System) - شاشة إجبارية حمراء
                         if(state.userProfile.isBlocked) {
                             document.body.innerHTML = `
                                 <div style="display:flex; flex-direction:column; height:100vh; align-items:center; justify-content:center; background-color:#0f172a; color:#ef4444; font-family:'Cairo',sans-serif; text-align:center; padding:20px;">
@@ -531,9 +525,10 @@
                                     <h1 style="font-size:24px; font-weight:bold; margin-bottom:10px;">عذراً، تم حظر هذا الحساب!</h1>
                                     <p style="font-size:14px; color:#94a3b8; max-width:300px;">لا يمكنك استخدام المنصة بسبب مخالفة شروط الاستخدام. يرجى التواصل مع الدعم الفني.</p>
                                 </div>`;
-                            return; 
+                            return; // توقف عن تنفيذ الكود تماماً
                         }
 
+                        // إعطاء صلاحية الأدمن تلقائياً للحساب الرئيسي أو من تم ترقيته
                         if(state.userProfile.phoneNumber === '+201206244875' || state.userProfile.isAdmin) {
                             state.isAdmin = true;
                             document.getElementById('btn-admin-top').classList.remove('hidden');
@@ -646,7 +641,7 @@
             const btn = document.getElementById('btn-login');
             btn.innerText = 'جاري التحميل...';
             btn.disabled = true;
-            
+
             try {
                 const email = `0${phone}@souq.com`;
                 await signInWithEmailAndPassword(auth, email, pass);
@@ -738,34 +733,16 @@
         window.showToast=(m,t='s')=>{const d=document.createElement('div');d.className=`toast fixed top-4 left-1/2 -translate-x-1/2 bg-white dark:bg-slate-800 shadow-xl px-4 py-2 rounded-lg border border-${t==='e'?'red':'emerald'}-500 flex items-center gap-2 text-xs font-bold z-[100] text-slate-800 dark:text-white`;d.innerHTML=`<i data-lucide="${t==='e'?'alert-circle':'check-circle'}" class="w-4 h-4 text-${t==='e'?'red':'emerald'}-500"></i> ${m}`;document.getElementById('toast-container').appendChild(d);lucide.createIcons({root:d});setTimeout(()=>{d.classList.add('hiding');setTimeout(()=>d.remove(),300)},3000)};
 
         function normalizeText(t) { return t ? t.toString().toLowerCase().replace(/[أإآ]/g, 'ا').replace(/ة/g, 'ه').replace(/ى/g, 'ي') : ""; }
-        
-        // إصلاح دالة timeAgo لتمنع خطأ الكاش
-        function timeAgo(d) { 
-            if(!d) return 'جديد'; 
-            let timeMs;
-            if(d.toDate) timeMs = d.toDate().getTime();
-            else if (d.seconds) timeMs = d.seconds * 1000;
-            else if (typeof d === 'number') timeMs = d;
-            else return 'جديد';
-            
-            const s=Math.floor((new Date().getTime() - timeMs)/1000); 
-            if(s<60)return 'الآن'; if(s<3600)return `منذ ${Math.floor(s/60)} د`; if(s<86400)return `منذ ${Math.floor(s/3600)} س`; return `منذ ${Math.floor(s/86400)} ي`; 
-        }
-
-        function showSkeletons() { 
-            const c=document.getElementById('grid-container'); 
-            if(state.listings.length === 0) { 
-                c.innerHTML=''; 
-                for(let i=0;i<6;i++) c.innerHTML+=`<div class="bg-white dark:bg-slate-800 rounded-lg overflow-hidden shadow-sm border border-slate-200 dark:border-slate-700 h-full"><div class="h-36 skeleton rounded-t-lg"></div><div class="p-2 space-y-2"><div class="h-3 rounded skeleton w-3/4"></div><div class="h-2 rounded skeleton w-1/2"></div></div></div>`; 
-            } 
-        }
+        function timeAgo(d) { if(!d) return 'جديد'; const s=Math.floor((new Date()-d.toDate())/1000); if(s<60)return 'الآن'; if(s<3600)return `منذ ${Math.floor(s/60)} د`; if(s<86400)return `منذ ${Math.floor(s/3600)} س`; return `منذ ${Math.floor(s/86400)} ي`; }
+        function showSkeletons() { const c=document.getElementById('grid-container'); if(state.listings.length === 0) { c.innerHTML=''; for(let i=0;i<6;i++) c.innerHTML+=`<div class="bg-white dark:bg-slate-800 rounded-lg overflow-hidden shadow-sm border-2 border-navy/10 dark:border-slate-700 h-full"><div class="h-36 skeleton rounded-t-lg"></div><div class="p-2 space-y-2"><div class="h-3 rounded skeleton w-3/4"></div><div class="h-2 rounded skeleton w-1/2"></div></div></div>`; } }
 
         function loadListings() { 
-            showSkeletons(); 
+            if (state.listings.length === 0) {
+                showSkeletons(); 
+            }
             onSnapshot(query(collection(db, COLLECTION_NAME)), (snap) => { 
-                const newListings =[]; 
-                snap.forEach(d => newListings.push({id:d.id, ...d.data()})); 
-                state.listings = newListings;
+                state.listings =[]; 
+                snap.forEach(d => state.listings.push({id:d.id, ...d.data()})); 
                 localStorage.setItem('souq_listings', JSON.stringify(state.listings));
                 state.listings.sort((a,b) => (a.isPinned === b.isPinned) ? (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0) : (a.isPinned ? -1 : 1));
                 performSearch(); 
@@ -824,7 +801,6 @@
             const firstMedia = imgs[0];
             const isVideo = firstMedia.includes('.mp4') || firstMedia.includes('.mov');
             const thumbUrl = getOptimizedUrl(firstMedia, isVideo);
-            let badge = item.badge==='hot' ? `<span class="inline-block bg-orange-500 text-white text-[9px] font-bold px-1.5 py-0.5 rounded shadow animate-pulse">🔥 لقطة</span>` : (item.badge==='verified' ? `<span class="inline-block bg-blue-500 text-white text-[9px] font-bold px-1.5 py-0.5 rounded shadow flex items-center gap-0.5"><i data-lucide="check-circle" class="w-3 h-3"></i> موثوق</span>` : '');
             let statusOverlay = ''; if(item.status && item.status !== 'available') { const txt = item.status==='sold'?'تم البيع':'تم التأجير'; const clr = item.status==='sold'?'bg-red-600':'bg-blue-600'; statusOverlay=`<div class="absolute inset-0 sold-overlay flex items-center justify-center z-30 pointer-events-none bg-black/40"><span class="${clr} text-white font-bold px-4 py-1.5 rounded-lg shadow-xl transform -rotate-12 text-sm">${txt}</span></div>`; }
             
             let iconsHtml = '';
@@ -850,34 +826,27 @@
                 <div class="relative w-full h-36 shrink-0">
                     ${statusOverlay}
                     <span class="absolute top-2 right-2 ${item.type === 'sale' ? 'bg-emerald-600' : 'bg-blue-600'} text-white px-2 py-0.5 rounded text-[10px] font-bold shadow z-20">${item.type === 'sale' ? 'بيع' : 'إيجار'}</span>
+                    
+                    ${item.isPinned ? `<span class="absolute top-2 left-2 bg-orange-500 text-white px-2 py-0.5 rounded text-[10px] font-bold shadow z-20 animate-pulse">🔥 لقطة</span>` : ''}
+
                     <img src="${thumbUrl}" loading="lazy" decoding="async" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105 ${statusOverlay?'grayscale':''}">
                     ${imgs.length > 1 ? `<div class="absolute bottom-1 left-1 bg-black/50 text-white text-[10px] px-2 rounded flex items-center gap-1"><i data-lucide="images" class="w-3 h-3"></i> +${imgs.length-1}</div>` : ''}
                     ${isVideo ? `<div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-black/30 rounded-full p-2"><i data-lucide="play-circle" class="w-8 h-8 text-white/90"></i></div>` : ''}
                 </div>
-                <div class="p-2 flex-1 flex flex-col">
+                <div class="p-1.5 flex-1 flex flex-col">
                     <div class="flex-1">
                         <div class="flex justify-between items-start mb-0.5">
                             <h3 class="font-bold text-slate-900 dark:text-white text-[11px] line-clamp-1 leading-tight">${item.title}</h3>
                             <span class="font-black text-emerald-600 dark:text-emerald-400 text-[11px] whitespace-nowrap mr-2">${Number(item.price).toLocaleString()} ج</span>
                         </div>
                         
-                        <div class="flex justify-between items-center text-[9px] text-slate-500 dark:text-slate-400 mb-1 px-0.5">
+                        <div class="flex justify-between items-center text-[9px] text-slate-500 dark:text-slate-400 mb-2 px-0.5">
                             <span>كود: <span class="font-bold text-slate-700 dark:text-slate-300">${code}</span></span>
                             <span>${timeAgo(item.createdAt)}</span>
                         </div>
-
-                        <!-- العنوان التفصيلي مع الشارة في نفس السطر -->
-                        <div class="flex justify-between items-start gap-1 mb-1 mt-1">
-                            <div class="flex items-start gap-1 text-[10px] text-slate-600 dark:text-slate-300 flex-1 overflow-hidden">
-                                ${item.address ? `<i data-lucide="map" class="w-3 h-3 text-slate-400 shrink-0 mt-0.5"></i><span class="truncate leading-tight">${item.address}</span>` : '<div></div>'}
-                            </div>
-                            <div class="shrink-0">${!statusOverlay ? badge : ''}</div>
-                        </div>
                         
-                        <!-- المحافظة والمركز تحت العنوان مباشرة -->
-                        <div class="flex items-center gap-1 text-[9px] text-slate-500 dark:text-slate-400 mb-1">
-                            <i data-lucide="map-pin" class="w-3 h-3 text-emerald-500 shrink-0"></i><span class="truncate leading-tight">${locDisplay}</span>
-                        </div>
+                        ${item.address ? `<div class="flex items-center gap-1 text-[9px] text-slate-500 dark:text-slate-400 mb-1"><i data-lucide="map" class="w-3 h-3 text-emerald-500 shrink-0"></i><span class="truncate leading-tight font-bold text-slate-700 dark:text-slate-300">${item.address}</span></div>` : ''}
+                        <div class="flex items-center gap-1 text-[9px] text-slate-500 dark:text-slate-400 mb-1"><i data-lucide="map-pin" class="w-3 h-3 text-slate-400 shrink-0"></i><span class="truncate leading-tight">${locDisplay}</span></div>
                     </div>
                     
                     <div class="mt-auto">
@@ -975,8 +944,8 @@
 
                     const locDisplay = item.gov ? `${item.gov}، ${item.city}` : item.location;
                     let tableHtml = `<tr><th class="w-1/3 text-slate-500 dark:text-slate-400 font-normal bg-slate-50 dark:bg-slate-800/50 text-[10px] flex items-center gap-1"><i data-lucide="home" class="w-3 h-3"></i> نوع العقار</th><td class="font-bold text-slate-800 dark:text-slate-200">${CAT_MAP[item.category] || 'عقار'}</td></tr>`;
-                    tableHtml += `<tr><th class="text-slate-500 dark:text-slate-400 font-normal bg-slate-50 dark:bg-slate-800/50 text-[10px] flex items-center gap-1"><i data-lucide="map-pin" class="w-3 h-3"></i> الموقع</th><td class="font-bold text-slate-800 dark:text-slate-200">${locDisplay}</td></tr>`;
-                    if(item.address) tableHtml += `<tr><th class="text-slate-500 dark:text-slate-400 font-normal bg-slate-50 dark:bg-slate-800/50 text-[10px] flex items-center gap-1"><i data-lucide="map" class="w-3 h-3"></i> العنوان</th><td class="font-bold text-slate-800 dark:text-slate-200">${item.address}</td></tr>`;
+                    if(item.address) tableHtml += `<tr><th class="text-slate-500 dark:text-slate-400 font-normal bg-slate-50 dark:bg-slate-800/50 text-[10px] flex items-center gap-1"><i data-lucide="map" class="w-3 h-3"></i> العنوان التفصيلي</th><td class="font-bold text-slate-800 dark:text-slate-200">${item.address}</td></tr>`;
+                    tableHtml += `<tr><th class="text-slate-500 dark:text-slate-400 font-normal bg-slate-50 dark:bg-slate-800/50 text-[10px] flex items-center gap-1"><i data-lucide="map-pin" class="w-3 h-3"></i> المحافظة/المركز</th><td class="font-bold text-slate-800 dark:text-slate-200">${locDisplay}</td></tr>`;
                     if(item.area) tableHtml += `<tr><th class="text-slate-500 dark:text-slate-400 font-normal bg-slate-50 dark:bg-slate-800/50 text-[10px] flex items-center gap-1"><i data-lucide="ruler" class="w-3 h-3"></i> المساحة</th><td class="font-bold text-slate-800 dark:text-slate-200">${item.area} م²</td></tr>`;
                     if(item.category === 'land') { if(item.landType) tableHtml += `<tr><th class="text-slate-500 dark:text-slate-400 font-normal bg-slate-50 dark:bg-slate-800/50 text-[10px] flex items-center gap-1"><i data-lucide="sprout" class="w-3 h-3"></i> نوع الأرض</th><td class="font-bold text-slate-800 dark:text-slate-200">${item.landType==='building'?'مباني':'زراعية'}</td></tr>`; if(item.feddan) tableHtml += `<tr><th class="text-slate-500 dark:text-slate-400 font-normal bg-slate-50 dark:bg-slate-800/50 text-[10px] flex items-center gap-1"><i data-lucide="maximize" class="w-3 h-3"></i> فدان</th><td class="font-bold text-slate-800 dark:text-slate-200">${item.feddan}</td></tr>`; if(item.qirat) tableHtml += `<tr><th class="text-slate-500 dark:text-slate-400 font-normal bg-slate-50 dark:bg-slate-800/50 text-[10px] flex items-center gap-1"><i data-lucide="minimize" class="w-3 h-3"></i> قيراط</th><td class="font-bold text-slate-800 dark:text-slate-200">${item.qirat}</td></tr>`; } 
                     else if (item.category === 'building') { if(item.floors) tableHtml += `<tr><th class="text-slate-500 dark:text-slate-400 font-normal bg-slate-50 dark:bg-slate-800/50 text-[10px] flex items-center gap-1"><i data-lucide="layers" class="w-3 h-3"></i> عدد الأدوار</th><td class="font-bold text-slate-800 dark:text-slate-200">${item.floors}</td></tr>`; if(item.apartments) tableHtml += `<tr><th class="text-slate-500 dark:text-slate-400 font-normal bg-slate-50 dark:bg-slate-800/50 text-[10px] flex items-center gap-1"><i data-lucide="grid" class="w-3 h-3"></i> عدد الشقق</th><td class="font-bold text-slate-800 dark:text-slate-200">${item.apartments}</td></tr>`; } 
@@ -1048,7 +1017,7 @@
             document.getElementById('in-title').value = ''; document.getElementById('in-price').value = ''; document.getElementById('in-area').value = ''; document.getElementById('in-desc').value = ''; document.getElementById('in-map').value = ''; document.getElementById('in-address').value = '';
             document.getElementById('in-phone').value = state.userProfile ? state.userProfile.phoneNumber.replace('+20', '') : '';
             document.querySelectorAll('.amenity-check').forEach(c => c.checked = false);
-            document.getElementById('badge-none').checked = true; document.getElementById('furn-no').checked = true;
+            document.getElementById('furn-no').checked = true;
             document.getElementById('add-modal-title').innerText = 'إضافة عقار'; document.getElementById('btn-publish').innerText = 'نشر الإعلان';
         }
 
@@ -1070,7 +1039,6 @@
             document.getElementById('in-address').value = item.address || ''; document.getElementById('in-phone').value = item.phone || ''; document.getElementById('in-desc').value = item.desc || ''; document.getElementById('in-map').value = item.mapLink || '';
             if(item.level) document.getElementById('in-level').value = item.level; if(item.rooms) document.getElementById('in-rooms').value = item.rooms; if(item.baths) document.getElementById('in-baths').value = item.baths; if(item.balconies) document.getElementById('in-balconies').value = item.balconies; if(item.finishing) document.getElementById('in-finishing').value = item.finishing; if(item.floors) document.getElementById('in-floors-alt').value = item.floors; if(item.apartments) document.getElementById('in-apartments').value = item.apartments; if(item.feddan) document.getElementById('in-feddan').value = item.feddan; if(item.qirat) document.getElementById('in-qirat').value = item.qirat; if(item.landType) document.getElementById('in-land-type').value = item.landType;
             if(item.furnished === 'yes') document.getElementById('furn-yes').checked = true; else document.getElementById('furn-no').checked = true;
-            if(item.badge === 'hot') document.getElementById('badge-hot').checked = true; else document.getElementById('badge-none').checked = true;
             setTimeout(() => { if(item.amenities && Array.isArray(item.amenities)) { document.querySelectorAll('.amenity-check').forEach(c => { if(item.amenities.includes(c.value)) c.checked = true; }); } }, 100);
             document.getElementById('preview-area').innerHTML = `<div class="text-[9px] text-slate-500 font-bold p-2 text-center w-full">الصور محفوظة. سيتم تحديث الصور القديمة فقط إذا قمت بإضافة صور جديدة هنا.</div>`;
             toggleModal('add-modal');
@@ -1099,10 +1067,10 @@
                 
                 document.getElementById('btn-publish').innerText = 'جاري المعالجة...'; document.getElementById('btn-publish').disabled = true;
 
-                const bdg = document.querySelector('input[name="badge"]:checked').value; const am =[]; document.querySelectorAll('.amenity-check:checked').forEach(c => am.push(c.value)); const cat = document.getElementById('in-category').value; const furnished = document.querySelector('input[name="furnished"]:checked')?.value; const landType = document.getElementById('in-land-type').value;
+                const am =[]; document.querySelectorAll('.amenity-check:checked').forEach(c => am.push(c.value)); const cat = document.getElementById('in-category').value; const furnished = document.querySelector('input[name="furnished"]:checked')?.value; const landType = document.getElementById('in-land-type').value;
                 
                 const listingData = { 
-                    title: document.getElementById('in-title').value, price: Number(document.getElementById('in-price').value), type: document.getElementById('in-type').value, category: cat, area: Number(document.getElementById('in-area').value) || 0, feddan: Number(document.getElementById('in-feddan').value) || 0, qirat: Number(document.getElementById('in-qirat').value) || 0, landType: landType, floors: Number(cat === 'building' ? document.getElementById('in-floors-alt').value : document.getElementById('in-floors-alt').value) || 0, apartments: Number(document.getElementById('in-apartments').value) || 0, rooms: Number(document.getElementById('in-rooms').value) || 0, baths: Number(document.getElementById('in-baths').value) || 0, balconies: Number(document.getElementById('in-balconies').value) || 0, finishing: document.getElementById('in-finishing').value, level: document.getElementById('in-level').value, furnished: furnished, gov: gov, city: city, address: document.getElementById('in-address').value, phone: document.getElementById('in-phone').value, desc: document.getElementById('in-desc').value, mapLink: document.getElementById('in-map').value, amenities: am, images: uploadedUrls, image: uploadedUrls[0], badge: bdg 
+                    title: document.getElementById('in-title').value, price: Number(document.getElementById('in-price').value), type: document.getElementById('in-type').value, category: cat, area: Number(document.getElementById('in-area').value) || 0, feddan: Number(document.getElementById('in-feddan').value) || 0, qirat: Number(document.getElementById('in-qirat').value) || 0, landType: landType, floors: Number(cat === 'building' ? document.getElementById('in-floors-alt').value : document.getElementById('in-floors-alt').value) || 0, apartments: Number(document.getElementById('in-apartments').value) || 0, rooms: Number(document.getElementById('in-rooms').value) || 0, baths: Number(document.getElementById('in-baths').value) || 0, balconies: Number(document.getElementById('in-balconies').value) || 0, finishing: document.getElementById('in-finishing').value, level: document.getElementById('in-level').value, furnished: furnished, gov: gov, city: city, address: document.getElementById('in-address').value, phone: document.getElementById('in-phone').value, desc: document.getElementById('in-desc').value, mapLink: document.getElementById('in-map').value, amenities: am, images: uploadedUrls, image: uploadedUrls[0]
                 };
 
                 if(state.editingId) {
@@ -1130,6 +1098,7 @@
 
         window.toggleAdminPanel=()=>{document.getElementById('admin-panel').classList.toggle('hidden');if(!document.getElementById('admin-panel').classList.contains('hidden'))refreshAdmin()};
         
+        // نظام إدارة وحظر المستخدمين من الدعم الفني
         window.applyAdminAction = async (isGranting) => {
             let phoneInput = document.getElementById('admin-target-phone').value.trim();
             if(!phoneInput) return showToast('أدخل رقم الهاتف أولاً', 'e');
@@ -1149,7 +1118,9 @@
                 }
 
                 const userDocId = snap.docs[0].id;
-                await updateDoc(doc(db, "users", userDocId), { [action]: isGranting });
+                await updateDoc(doc(db, "users", userDocId), {
+                    [action]: isGranting
+                });
 
                 showToast(`تم ${isGranting ? 'تفعيل' : 'إلغاء'} الخاصية بنجاح`);
                 document.getElementById('admin-target-phone').value = '';
