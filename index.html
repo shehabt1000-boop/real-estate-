@@ -148,13 +148,12 @@
                             العروض المميزة
                         </div>
                     </div>
-                    <!-- الحاوية لا تحتوي على padding يمين/يسار للسلايدر، لضمان عرض 100% للبطاقة -->
                     <div class="relative w-full rounded-xl overflow-hidden shadow-lg border border-slate-200 dark:border-slate-700">
                         <div id="featured-slider" class="flex overflow-x-auto snap-x snap-mandatory no-scrollbar w-full bg-slate-100 dark:bg-slate-800">
                             <!-- Items Populated via JS -->
                         </div>
-                        <button onclick="scrollFeatured(-1)" class="absolute right-0 top-1/2 -translate-y-1/2 bg-black/40 text-white p-2.5 rounded-l-xl z-10 hover:bg-black/60 transition-all duration-100"><i data-lucide="chevron-right" class="w-5 h-5"></i></button>
-                        <button onclick="scrollFeatured(1)" class="absolute left-0 top-1/2 -translate-y-1/2 bg-black/40 text-white p-2.5 rounded-r-xl z-10 hover:bg-black/60 transition-all duration-100"><i data-lucide="chevron-left" class="w-5 h-5"></i></button>
+                        <button onclick="window.scrollFeatured(-1)" class="absolute right-0 top-1/2 -translate-y-1/2 bg-black/40 text-white p-2.5 rounded-l-xl z-10 hover:bg-black/60 transition-all duration-100"><i data-lucide="chevron-right" class="w-5 h-5"></i></button>
+                        <button onclick="window.scrollFeatured(1)" class="absolute left-0 top-1/2 -translate-y-1/2 bg-black/40 text-white p-2.5 rounded-r-xl z-10 hover:bg-black/60 transition-all duration-100"><i data-lucide="chevron-left" class="w-5 h-5"></i></button>
                     </div>
                 </div>
 
@@ -367,28 +366,59 @@
 
         setTimeout(() => { document.getElementById('splash-screen').classList.add('hidden-splash'); document.body.classList.add('app-loaded'); renderCategories(); }, 5000);
 
+        // --- نظام التمرير التلقائي للسلايدر ---
+        let featuredAutoScroll; 
+
+        function startAutoScroll() {
+            clearInterval(featuredAutoScroll);
+            const slider = document.getElementById('featured-slider');
+            if (!slider || slider.children.length <= 1) return;
+            
+            featuredAutoScroll = setInterval(() => {
+                const maxScroll = slider.scrollWidth - slider.clientWidth;
+                const currentScroll = Math.abs(slider.scrollLeft);
+                
+                // التمرير التلقائي: إذا وصلنا للنهاية ارجع للبداية، وإلا انتقل للتالي
+                if (currentScroll >= maxScroll - 5) {
+                    slider.scrollTo({ left: 0, behavior: 'smooth' });
+                } else {
+                    window.scrollFeatured(-1, false); 
+                }
+            }, 3000); 
+        }
+
         function updateFeaturedSlider() {
             const featuredList = state.listings.filter(i => i.isPinned);
             const container = document.getElementById('featured-slider');
             const section = document.getElementById('featured-section');
             if(featuredList.length === 0) {
                 section.classList.add('hidden');
+                clearInterval(featuredAutoScroll);
             } else {
                 section.classList.remove('hidden');
-                // جعل البطاقة تأخذ 100% من العرض لكي لا يظهر أطراف البطاقات الأخرى
                 container.innerHTML = featuredList.map(item => {
                     return `<div class="w-full flex-[0_0_100%] snap-center shrink-0">${createCard(item, 'feat')}</div>`;
                 }).join('');
                 lucide.createIcons({ root: container });
+                
+                // تشغيل التمرير التلقائي
+                startAutoScroll();
+                
+                // التوقف عند التمرير أو وضع الماوس
+                container.onmouseenter = () => clearInterval(featuredAutoScroll);
+                container.onmouseleave = startAutoScroll;
+                container.ontouchstart = () => clearInterval(featuredAutoScroll);
+                container.ontouchend = startAutoScroll;
             }
         }
 
-        window.scrollFeatured = (dir) => { 
+        window.scrollFeatured = (dir, resetTimer = true) => { 
             const slider = document.getElementById('featured-slider'); 
             const card = slider.querySelector('.snap-center');
             if(card) {
                 slider.scrollBy({ left: dir * card.offsetWidth, behavior: 'smooth' }); 
             }
+            if(resetTimer) startAutoScroll();
         }
 
         // --- نظام التقييمات ---
@@ -421,7 +451,7 @@
                         </div>
                         <span class="text-[8px] font-bold text-slate-500 dark:text-slate-400">${timeAgo(r.createdAt)}</span>
                     </div>
-                    <div class="text-[10px] text-slate-700 dark:text-slate-300 font-bold leading-relaxed bg-slate-50 dark:bg-slate-800 p-2 rounded-lg border border-slate-100 dark:border-slate-700 whitespace-pre-wrap">${r.text}</div>
+                    <div class="text-[10px] text-slate-800 dark:text-slate-300 font-bold leading-relaxed bg-slate-200 dark:bg-slate-800 p-2 rounded-lg border border-slate-300 dark:border-slate-700 whitespace-pre-wrap">${r.text}</div>
                 </div>
             `).join('');
         }
