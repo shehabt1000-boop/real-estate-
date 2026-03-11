@@ -54,7 +54,6 @@
         .skeleton { animation: shimmer 1.5s infinite linear; background: linear-gradient(to right, #f8fafc 4%, #e2e8f0 25%, #f8fafc 36%); background-size: 1000px 100%; }
         .dark .skeleton { background: linear-gradient(to right, #1e293b 4%, #334155 25%, #1e293b 36%); }
         
-        /* تسريع الأنيميشن */
         @keyframes popIn { from { transform: scale(0.98); opacity: 0; } to { transform: scale(1); opacity: 1; } }
         .animate-pop { animation: popIn 0.08s ease-out forwards; will-change: transform, opacity; }
 
@@ -141,43 +140,42 @@
                     <div class="grid grid-cols-2 md:grid-cols-4 gap-3" id="categories-grid"></div>
                 </div>
 
-                <!-- Featured Slider Section (تعديل الأطراف والأسهم) -->
+                <!-- Featured Slider Section -->
                 <div id="featured-section" class="mb-8 hidden">
                     <div class="flex justify-center mb-3">
                         <div class="bg-white dark:bg-slate-800 text-emerald-600 dark:text-emerald-400 border border-slate-200 dark:border-slate-700 shadow-sm px-8 py-1.5 rounded-full text-[11px] font-black tracking-widest select-none">
                             العروض المميزة
                         </div>
                     </div>
-                    <!-- الحاوية لا تحتوي على padding يمين/يسار للسلايدر، لضمان عرض 100% للبطاقة -->
-                    <div class="relative w-full rounded-xl overflow-hidden shadow-lg border border-slate-200 dark:border-slate-700">
-                        <div id="featured-slider" class="flex overflow-x-auto snap-x snap-mandatory no-scrollbar w-full bg-slate-100 dark:bg-slate-800">
+                    <div class="relative w-full">
+                        <!-- مساحة px-[7.5%] تجعل البطاقة التي تمثل 85% تتمركز، وتترك مجال للأسهم خارجها -->
+                        <div id="featured-slider" class="flex gap-4 overflow-x-auto snap-x snap-mandatory no-scrollbar pb-3 pt-1 px-[7.5%] sm:px-[10%] w-full">
                             <!-- Items Populated via JS -->
                         </div>
-                        <!-- الأسهم ملتصقة تماماً بالحواف -->
-                        <button onclick="scrollFeatured(-1)" class="absolute right-0 top-1/2 -translate-y-1/2 bg-black/40 text-white p-2.5 rounded-l-xl z-10 hover:bg-black/60 transition-all duration-100"><i data-lucide="chevron-right" class="w-5 h-5"></i></button>
-                        <button onclick="scrollFeatured(1)" class="absolute left-0 top-1/2 -translate-y-1/2 bg-black/40 text-white p-2.5 rounded-r-xl z-10 hover:bg-black/60 transition-all duration-100"><i data-lucide="chevron-left" class="w-5 h-5"></i></button>
+                        <!-- الأسهم مثبتة على الحواف الخارجية تماماً (خارج البطاقة) -->
+                        <button onclick="scrollFeatured(-1)" class="absolute right-0 top-1/2 -translate-y-1/2 bg-white/95 dark:bg-slate-800/95 text-emerald-700 dark:text-emerald-400 border border-slate-200 dark:border-slate-700 p-2.5 rounded-l-xl z-10 shadow-lg hover:bg-slate-50 transition-all duration-100"><i data-lucide="chevron-right" class="w-5 h-5"></i></button>
+                        <button onclick="scrollFeatured(1)" class="absolute left-0 top-1/2 -translate-y-1/2 bg-white/95 dark:bg-slate-800/95 text-emerald-700 dark:text-emerald-400 border border-slate-200 dark:border-slate-700 p-2.5 rounded-r-xl z-10 shadow-lg hover:bg-slate-50 transition-all duration-100"><i data-lucide="chevron-left" class="w-5 h-5"></i></button>
                     </div>
                 </div>
 
-                <!-- Reviews Section (تقييمات العملاء) -->
+                <!-- Reviews Section -->
                 <div id="reviews-section" class="mb-8">
                     <div class="flex justify-center mb-3">
                         <div class="bg-white dark:bg-slate-800 text-emerald-600 dark:text-emerald-400 border border-slate-200 dark:border-slate-700 shadow-sm px-8 py-1.5 rounded-full text-[11px] font-black tracking-widest select-none">
                             تقييمات العملاء
                         </div>
                     </div>
-                    <div class="bg-white dark:bg-slate-800 rounded-2xl p-3 shadow-sm border border-slate-200 dark:border-slate-700">
-                        <div class="flex justify-between items-center mb-3 border-b border-slate-100 dark:border-slate-700 pb-2">
-                            <!-- زر الإضافة المطلوب نص أبيض واطار مستطيل بحواف دائرية -->
-                            <button onclick="openReviewModal()" class="bg-emerald-600 text-white border border-emerald-500 px-4 py-1.5 rounded-xl text-[11px] font-bold shadow-sm hover:bg-emerald-700 transition-all duration-100 flex items-center gap-1"><i data-lucide="pen-line" class="w-3.5 h-3.5"></i> إضافة تقييم</button>
+                    <!-- حاوية التقيمات: لون رصاصي هادئ مريح للعين bg-slate-100 بدلاً من الأبيض -->
+                    <div class="bg-slate-100 dark:bg-slate-800 rounded-2xl p-2.5 shadow-sm border border-slate-300 dark:border-slate-700">
+                        <div class="flex justify-between items-center mb-3 border-b border-slate-200 dark:border-slate-700 pb-2">
+                            <button onclick="openReviewModal()" class="bg-emerald-600 text-white border border-emerald-500 px-3 py-1.5 rounded-xl text-[10px] font-bold shadow-sm hover:bg-emerald-700 transition-all duration-100 flex items-center gap-1"><i data-lucide="pen-line" class="w-3 h-3"></i> إضافة تقييم</button>
                             <div class="flex gap-1.5">
-                                <button onclick="changeReviewPage(1)" class="bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 p-1.5 rounded-lg border border-slate-200 dark:border-slate-600 hover:bg-slate-200 transition-all duration-100"><i data-lucide="chevron-right" class="w-4 h-4"></i></button>
-                                <button onclick="changeReviewPage(-1)" class="bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 p-1.5 rounded-lg border border-slate-200 dark:border-slate-600 hover:bg-slate-200 transition-all duration-100"><i data-lucide="chevron-left" class="w-4 h-4"></i></button>
+                                <button onclick="changeReviewPage(1)" class="bg-white dark:bg-slate-700 text-slate-600 dark:text-slate-300 p-1.5 rounded-lg border border-slate-200 dark:border-slate-600 hover:bg-slate-50 transition-all duration-100 shadow-sm"><i data-lucide="chevron-right" class="w-4 h-4"></i></button>
+                                <button onclick="changeReviewPage(-1)" class="bg-white dark:bg-slate-700 text-slate-600 dark:text-slate-300 p-1.5 rounded-lg border border-slate-200 dark:border-slate-600 hover:bg-slate-50 transition-all duration-100 shadow-sm"><i data-lucide="chevron-left" class="w-4 h-4"></i></button>
                             </div>
                         </div>
-                        <!-- حاوية التقييمات -->
-                        <div id="reviews-container" class="space-y-2.5 min-h-[120px]">
-                            <div class="flex justify-center items-center h-20 text-slate-400 text-xs">جاري تحميل التقييمات...</div>
+                        <div id="reviews-container" class="space-y-2 min-h-[100px]">
+                            <div class="flex justify-center items-center h-20 text-slate-400 text-[10px] font-bold">جاري تحميل التقييمات...</div>
                         </div>
                     </div>
                 </div>
@@ -233,7 +231,6 @@
         <!-- Floating Dock -->
         <nav id="bottom-nav" class="fixed bottom-4 left-1/2 -translate-x-1/2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 px-6 py-2.5 rounded-full flex items-center gap-8 shadow-xl transition-all hover:scale-105 z-50">
             <button onclick="openHome()" class="flex flex-col items-center justify-center text-slate-500 dark:text-slate-400 hover:text-emerald-600 dark:hover:text-emerald-400 transition-all group"><i data-lucide="home" class="w-5 h-5 group-hover:-translate-y-1 transition-transform"></i><span class="text-[8px] font-bold mt-0.5">الرئيسية</span></button>
-            <!-- تعديل لون زر الإضافة: إزالة الإطار الداكن وجعله أفتح ومتناسق مع الهيدر -->
             <button onclick="openAddModal()" class="w-12 h-12 bg-[#064e3b] text-white border-[3px] border-white dark:border-slate-700 rounded-full flex items-center justify-center shadow-lg transform -translate-y-5 hover:scale-110 transition-all duration-300 active:scale-90"><i data-lucide="plus" class="w-6 h-6"></i></button>
             <button onclick="toggleChat()" class="flex flex-col items-center justify-center text-slate-500 dark:text-slate-400 hover:text-emerald-600 dark:hover:text-emerald-400 transition-all group relative"><div id="chat-badge" class="hidden absolute top-0 right-1 w-2.5 h-2.5 bg-red-500 rounded-full border-2 border-white dark:border-slate-800"></div><i data-lucide="message-circle" class="w-5 h-5 group-hover:-translate-y-1 transition-transform"></i><span class="text-[8px] font-bold mt-0.5">الدعم</span></button>
         </nav>
@@ -272,7 +269,6 @@
 
         let state = { user: null, userProfile: null, listings:[], filesToUpload:[], editingId: null, existingImages:[], regImage: null, chatId: null, chatStep: 0, tempName: '', activeAdminChat: null, isAdmin: false, welcomeSent: false, currentFilter: 'all', visibleLimit: 8, lightboxIndex: 0, activeDetailsId: null, currentDetailIndex: 0, publisherCache: {} };
 
-        // بيانات التقييمات
         let reviewsData =[];
         let currentReviewPage = 0;
         const REVIEWS_PER_PAGE = 5;
@@ -377,9 +373,8 @@
                 section.classList.add('hidden');
             } else {
                 section.classList.remove('hidden');
-                // جعل البطاقة تأخذ 100% من العرض لكي لا يظهر أطراف البطاقات الأخرى
                 container.innerHTML = featuredList.map(item => {
-                    return `<div class="w-full flex-[0_0_100%] snap-center shrink-0">${createCard(item, 'feat')}</div>`;
+                    return `<div class="w-[85%] flex-[0_0_85%] snap-center shrink-0 shadow-lg rounded-xl overflow-hidden border border-slate-200 dark:border-slate-700">${createCard(item, 'feat')}</div>`;
                 }).join('');
                 lucide.createIcons({ root: container });
             }
@@ -393,12 +388,10 @@
             }
         }
 
-        // --- نظام التقييمات ---
         function loadReviews() {
             onSnapshot(query(collection(db, "reviews")), (snap) => {
                 reviewsData =[];
                 snap.forEach(doc => reviewsData.push({ id: doc.id, ...doc.data() }));
-                // ترتيب أحدث أولاً
                 reviewsData.sort((a,b) => (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0));
                 renderReviews();
             });
@@ -407,7 +400,7 @@
         function renderReviews() {
             const container = document.getElementById('reviews-container');
             if (reviewsData.length === 0) {
-                container.innerHTML = '<div class="flex justify-center items-center h-20 text-slate-400 text-xs font-bold">لا توجد تقييمات بعد. كن أول من يضيف تقييماً!</div>';
+                container.innerHTML = '<div class="flex justify-center items-center h-20 text-slate-400 text-[10px] font-bold">لا توجد تقييمات بعد. كن أول من يضيف تقييماً!</div>';
                 return;
             }
 
@@ -415,15 +408,15 @@
             const pageReviews = reviewsData.slice(startIndex, startIndex + REVIEWS_PER_PAGE);
 
             container.innerHTML = pageReviews.map(r => `
-                <div class="bg-slate-50 dark:bg-slate-900 p-3 rounded-xl border border-slate-100 dark:border-slate-700 animate-pop">
-                    <div class="flex justify-between items-center mb-2">
-                        <div class="flex items-center gap-2">
-                            <img src="${r.userPhoto || 'https://cdn-icons-png.flaticon.com/512/609/609803.png'}" class="w-8 h-8 rounded-full object-cover border border-slate-200 dark:border-slate-600">
-                            <span class="font-black text-xs text-slate-800 dark:text-white">${r.userName}</span>
+                <div class="bg-white dark:bg-slate-900 p-2.5 rounded-xl border-[1.5px] border-[#064e3b] dark:border-emerald-600 animate-pop shadow-sm">
+                    <div class="flex justify-between items-center mb-1.5">
+                        <div class="flex items-center gap-1.5">
+                            <img src="${r.userPhoto || 'https://cdn-icons-png.flaticon.com/512/609/609803.png'}" class="w-6 h-6 rounded-full object-cover border border-slate-200 dark:border-slate-600">
+                            <span class="font-black text-[10px] text-slate-800 dark:text-white">${r.userName}</span>
                         </div>
-                        <span class="text-[9px] font-bold text-slate-500 dark:text-slate-400">${timeAgo(r.createdAt)}</span>
+                        <span class="text-[8px] font-bold text-slate-500 dark:text-slate-400">${timeAgo(r.createdAt)}</span>
                     </div>
-                    <div class="text-[11px] text-slate-700 dark:text-slate-300 font-bold leading-relaxed bg-white dark:bg-slate-800 p-2.5 rounded-lg border border-slate-100 dark:border-slate-700 whitespace-pre-wrap">${r.text}</div>
+                    <div class="text-[10px] text-slate-700 dark:text-slate-300 font-bold leading-relaxed bg-slate-50 dark:bg-slate-800 p-2 rounded-lg border border-slate-100 dark:border-slate-700 whitespace-pre-wrap">${r.text}</div>
                 </div>
             `).join('');
         }
@@ -432,8 +425,8 @@
             const maxPage = Math.ceil(reviewsData.length / REVIEWS_PER_PAGE) - 1;
             if (maxPage < 0) return;
             currentReviewPage += dir;
-            if (currentReviewPage < 0) currentReviewPage = maxPage; // دوران
-            if (currentReviewPage > maxPage) currentReviewPage = 0; // دوران
+            if (currentReviewPage < 0) currentReviewPage = maxPage; 
+            if (currentReviewPage > maxPage) currentReviewPage = 0; 
             renderReviews();
         };
 
@@ -466,7 +459,7 @@
                 });
                 showToast('تم نشر التقييم بنجاح');
                 toggleModal('review-modal');
-                currentReviewPage = 0; // العودة للصفحة الأولى لمشاهدة التقييم الجديد
+                currentReviewPage = 0; 
             } catch(e) {
                 console.error(e);
                 showToast('حدث خطأ أثناء النشر', 'e');
@@ -652,7 +645,7 @@
         };
 
         function createCard(item, prefix = 'grid') {
-            const imgs = Array.isArray(item.images) ? item.images : (item.image ? [item.image] :[]); 
+            const imgs = Array.isArray(item.images) ? item.images : (item.image ?[item.image] :[]); 
             const firstMedia = imgs[0]; const isVideo = firstMedia && (firstMedia.includes('.mp4') || firstMedia.includes('.mov')); 
             const thumbUrl = getOptimizedUrl(firstMedia, isVideo, 500); 
             
