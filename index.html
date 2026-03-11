@@ -6,7 +6,7 @@
 
     <!-- PWA Settings -->
     <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#ffffff">
+    <meta name="theme-color" content="#f0fdf4">
     <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/609/609803.png">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -41,9 +41,9 @@
     <script src="https://unpkg.com/lucide@latest"></script>
 
     <style>
-        /* Solid Comfortable Background & Header Separation */
-        html { background-color: #f1f5f9; } /* Slate 100 - لون رصاصي فاتح مريح */
-        .dark html { background-color: #020617; } /* Slate 950 - لون داكن جدا لتمييز الهيدر */
+        /* أفتح درجة أخضر في النهاري، وداكن في الليلي */
+        html { background-color: #f0fdf4; } 
+        .dark html { background-color: #0f172a; } 
         body { 
             font-family: 'Cairo', sans-serif; 
             -webkit-tap-highlight-color: transparent;
@@ -83,16 +83,16 @@
         }
         .dark .mobile-full-modal { background-color: #0f172a; }
 
-        /* Header & Nav (Performance Optimized - No Backdrop Blur) */
+        /* Header (بدون تأثير blur لتسريع الأداء) */
         .sticky-header { 
             z-index: 40; 
             background-color: #ffffff;
             border-bottom-left-radius: 1.5rem; border-bottom-right-radius: 1.5rem;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
         }
         .dark .sticky-header { 
-            background-color: #0f172a; 
-            border-bottom: 1px solid #1e293b;
+            background-color: #1e293b; 
+            border-bottom: 1px solid rgba(255,255,255,0.05);
             box-shadow: none;
         }
 
@@ -104,11 +104,11 @@
             box-shadow: 0 2px 5px rgba(0,0,0,0.05); 
             transition: transform 0.2s;
         }
-        .dark .sticky-search-bar { background: #0f172a; border-color: #1e293b; }
+        .dark .sticky-search-bar { background: #1e293b; border-color: #334155; }
 
         #bottom-nav { z-index: 40; }
 
-        /* Splash Screen (Original Recovered) */
+        /* Splash Screen */
         #splash-screen { 
             position: fixed; inset: 0; z-index: 9999; background-color: #0f172a;
             background-image: linear-gradient(rgba(15, 23, 42, 0.40), rgba(15, 23, 42, 0.60)), url('https://images.pexels.com/photos/19213018/pexels-photo-19213018.jpeg?auto=compress&cs=tinysrgb&w=800&h=600&dpr=1');
@@ -123,13 +123,13 @@
         .splash-logo { color: #ffffff; z-index: 2; }
 
         /* UI Elements */
-        .input-box { width: 100%; background: #f1f5f9; border: 1px solid #cbd5e1; border-radius: 0.5rem; padding: 0.6rem 0.8rem; font-size: 0.85rem; font-weight: 700; outline: none; color: #0f172a; transition: all 0.2s; }
-        .dark .input-box { background: #1e293b; border-color: #475569; color: white; }
+        .input-box { width: 100%; background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 0.5rem; padding: 0.6rem 0.8rem; font-size: 0.85rem; font-weight: 700; outline: none; color: #0f172a; transition: all 0.2s; }
+        .dark .input-box { background: #0f172a; border-color: #475569; color: white; }
         .input-box:focus { border-color: #10b981; background: #ffffff; box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1); }
-        .dark .input-box:focus { background: #0f172a; }
+        .dark .input-box:focus { background: #020617; }
 
-        .custom-select { appearance: none; background-color: #f1f5f9; border: 1px solid #cbd5e1; border-radius: 0.4rem; padding: 0.4rem 1.5rem 0.4rem 0.5rem; width: 100%; font-weight: 700; font-size: 0.75rem; color: #334155; cursor: pointer; transition: all 0.2s; }
-        .dark .custom-select { background-color: #1e293b; color: white; border-color: #475569; }
+        .custom-select { appearance: none; background-color: #f8fafc; border: 1px solid #cbd5e1; border-radius: 0.4rem; padding: 0.4rem 1.5rem 0.4rem 0.5rem; width: 100%; font-weight: 700; font-size: 0.75rem; color: #334155; cursor: pointer; transition: all 0.2s; }
+        .dark .custom-select { background-color: #0f172a; color: white; border-color: #475569; }
         .custom-select-wrapper { position: relative; }
         .custom-select-icon { position: absolute; left: 0.5rem; top: 50%; transform: translateY(-50%); pointer-events: none; color: #64748b; width: 0.8rem; height: 0.8rem; }
 
@@ -156,7 +156,7 @@
 </head>
 <body class="text-slate-800 dark:text-slate-100 select-none">
 
-    <!-- Splash Screen (Original Reverted) -->
+    <!-- Splash Screen -->
     <div id="splash-screen">
         <div class="splash-icon-container mb-3">
             <div class="splash-ring"></div>
@@ -176,10 +176,10 @@
                 <span class="text-[10px] font-black text-slate-800 dark:text-white leading-tight">السوق <span class="text-emerald-600 dark:text-emerald-400">وياك</span></span>
             </div>
             <div class="flex gap-2 items-center">
-                <button id="btn-header-login" onclick="toggleModal('auth-modal')" class="p-1.5 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-white hover:bg-slate-200 transition"><i data-lucide="user" class="w-4 h-4"></i></button>
+                <button id="btn-header-login" onclick="toggleModal('auth-modal')" class="p-1.5 rounded-full bg-slate-50 dark:bg-slate-800 text-slate-600 dark:text-white hover:bg-slate-100 transition"><i data-lucide="user" class="w-4 h-4"></i></button>
                 <button id="btn-logout" onclick="logoutUser()" class="hidden p-1.5 rounded-full bg-red-50 dark:bg-red-900/20 text-red-600 hover:bg-red-100 transition"><i data-lucide="log-out" class="w-4 h-4"></i></button>
-                <button onclick="toggleDarkMode()" class="p-1.5 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-yellow-500 hover:bg-slate-200 transition"><i data-lucide="moon" class="w-3.5 h-3.5 block dark:hidden"></i><i data-lucide="sun" class="w-3.5 h-3.5 hidden dark:block"></i></button>
-                <button onclick="toggleAdminPanel()" id="btn-admin-top" class="hidden bg-slate-100 dark:bg-slate-800 p-1.5 rounded-full text-slate-600 dark:text-white"><i data-lucide="shield" class="w-3.5 h-3.5"></i></button>
+                <button onclick="toggleDarkMode()" class="p-1.5 rounded-full bg-slate-50 dark:bg-slate-800 text-slate-600 dark:text-yellow-500 hover:bg-slate-100 transition"><i data-lucide="moon" class="w-3.5 h-3.5 block dark:hidden"></i><i data-lucide="sun" class="w-3.5 h-3.5 hidden dark:block"></i></button>
+                <button onclick="toggleAdminPanel()" id="btn-admin-top" class="hidden bg-slate-50 dark:bg-slate-800 p-1.5 rounded-full text-slate-600 dark:text-white"><i data-lucide="shield" class="w-3.5 h-3.5"></i></button>
             </div>
         </header>
 
@@ -188,17 +188,17 @@
             <!-- ====== HOME VIEW ====== -->
             <div id="home-view" class="block w-full animate-fade-in mt-2">
                 
-                <!-- 1. Categories Grid (يظهر أولاً وبدون نص تعريفي) -->
+                <!-- 1. Categories Grid (تظهر أولاً بدون عنوان) -->
                 <div class="mb-6">
                     <div class="grid grid-cols-2 md:grid-cols-4 gap-3" id="categories-grid">
                         <!-- Populated via JS -->
                     </div>
                 </div>
 
-                <!-- 2. Featured Slider Section (يظهر أسفل الأقسام) -->
-                <div id="featured-section" class="mb-6 hidden">
+                <!-- 2. Featured Slider Section (تظهر بالأسفل وتدعم البطاقة الواحدة) -->
+                <div id="featured-section" class="mb-8 hidden">
                     <div class="flex justify-center mb-3">
-                        <div class="bg-white dark:bg-slate-800 text-slate-800 dark:text-emerald-400 border border-slate-200 dark:border-slate-700 shadow-sm px-8 py-1.5 rounded-full text-[11px] font-black tracking-widest select-none">
+                        <div class="bg-white dark:bg-slate-800 text-slate-800 dark:text-emerald-400 border border-emerald-100 dark:border-slate-700 shadow-sm px-8 py-1.5 rounded-full text-[11px] font-black tracking-widest select-none">
                             العروض المميزة
                         </div>
                     </div>
@@ -206,22 +206,22 @@
                         <div id="featured-slider" class="flex gap-4 overflow-x-auto snap-x snap-mandatory no-scrollbar pb-3 pt-1 px-1 -mx-1">
                             <!-- Items Populated via JS -->
                         </div>
-                        <button onclick="scrollFeatured(-1)" class="absolute right-0 top-1/2 -translate-y-1/2 bg-white/90 dark:bg-slate-800/90 text-slate-800 dark:text-white border border-slate-200 dark:border-slate-700 p-2 rounded-l-xl z-10 shadow-md hover:text-emerald-600 transition"><i data-lucide="chevron-right" class="w-4 h-4"></i></button>
-                        <button onclick="scrollFeatured(1)" class="absolute left-0 top-1/2 -translate-y-1/2 bg-white/90 dark:bg-slate-800/90 text-slate-800 dark:text-white border border-slate-200 dark:border-slate-700 p-2 rounded-r-xl z-10 shadow-md hover:text-emerald-600 transition"><i data-lucide="chevron-left" class="w-4 h-4"></i></button>
+                        <button onclick="scrollFeatured(-1)" class="absolute right-0 top-1/2 -translate-y-1/2 bg-white/95 dark:bg-slate-800/95 text-slate-800 dark:text-white border border-slate-200 dark:border-slate-700 p-2 rounded-l-xl z-10 shadow-md hover:text-emerald-600 transition"><i data-lucide="chevron-right" class="w-4 h-4"></i></button>
+                        <button onclick="scrollFeatured(1)" class="absolute left-0 top-1/2 -translate-y-1/2 bg-white/95 dark:bg-slate-800/95 text-slate-800 dark:text-white border border-slate-200 dark:border-slate-700 p-2 rounded-r-xl z-10 shadow-md hover:text-emerald-600 transition"><i data-lucide="chevron-left" class="w-4 h-4"></i></button>
                     </div>
                 </div>
 
-                <!-- 3. Footer Section (عاد لشكله ولونه السابقين في أسفل الصفحة) -->
-                <div class="mt-6 mb-4 border border-slate-200 dark:border-slate-700 pt-6 px-4 pb-6 bg-slate-100 dark:bg-slate-800/50 rounded-2xl shadow-inner text-center">
+                <!-- 3. Footer Section (ألوان واضحة ومميزة عن الخلفية) -->
+                <div class="mt-6 mb-4 border border-emerald-100 dark:border-slate-800 pt-6 px-4 pb-6 bg-white dark:bg-slate-900 rounded-2xl shadow-sm text-center">
                     <h3 class="text-sm font-black text-slate-800 dark:text-white mb-4">السوق وياك <span class="text-emerald-500">للعقارات</span></h3>
-                    <div class="space-y-2.5 text-[11px] font-bold text-slate-600 dark:text-slate-300">
+                    <div class="space-y-2.5 text-[11px] font-bold text-slate-600 dark:text-slate-400">
                         <p class="flex items-center justify-center gap-1.5"><i data-lucide="headphones" class="w-3.5 h-3.5 text-emerald-500"></i> رقم الدعم الفني: <a href="tel:01206244875" class="text-emerald-600 dark:text-emerald-400 hover:underline" dir="ltr">01206244875</a></p>
                         <p class="flex items-center justify-center gap-1.5"><i data-lucide="map-pin" class="w-3.5 h-3.5 text-emerald-500"></i> العنوان: شوبك بسطه، مركز الزقازيق، الشرقية</p>
                         <p class="flex items-center justify-center gap-1.5"><i data-lucide="calendar" class="w-3.5 h-3.5 text-emerald-500"></i> تاريخ التأسيس: 2026</p>
                     </div>
                     <div class="flex justify-center gap-3 mt-5">
-                        <a href="#" target="_blank" class="bg-blue-100 dark:bg-blue-900/40 p-2.5 rounded-full text-blue-600 dark:text-blue-400 hover:bg-blue-200 dark:hover:bg-blue-800 transition"><i data-lucide="facebook" class="w-4 h-4"></i></a>
-                        <a href="#" target="_blank" class="bg-pink-100 dark:bg-pink-900/40 p-2.5 rounded-full text-pink-600 dark:text-pink-400 hover:bg-pink-200 dark:hover:bg-pink-800 transition"><i data-lucide="instagram" class="w-4 h-4"></i></a>
+                        <a href="#" target="_blank" class="bg-slate-50 dark:bg-slate-800 p-2.5 rounded-full text-blue-600 dark:text-blue-400 hover:bg-slate-100 dark:hover:bg-slate-700 transition shadow-sm"><i data-lucide="facebook" class="w-4 h-4"></i></a>
+                        <a href="#" target="_blank" class="bg-slate-50 dark:bg-slate-800 p-2.5 rounded-full text-pink-600 dark:text-pink-400 hover:bg-slate-100 dark:hover:bg-slate-700 transition shadow-sm"><i data-lucide="instagram" class="w-4 h-4"></i></a>
                     </div>
                 </div>
             </div>
@@ -260,10 +260,10 @@
             </div>
         </main>
 
-        <!-- Floating Dock -->
-        <nav id="bottom-nav" class="fixed bottom-4 left-1/2 -translate-x-1/2 bg-white/95 dark:bg-slate-800/95 backdrop-blur-sm border border-slate-200 dark:border-slate-600 px-6 py-2.5 rounded-full flex items-center gap-8 shadow-xl transition-all hover:scale-105">
+        <!-- Floating Dock (بدون Blur لتسريع الأداء) -->
+        <nav id="bottom-nav" class="fixed bottom-4 left-1/2 -translate-x-1/2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 px-6 py-2.5 rounded-full flex items-center gap-8 shadow-2xl transition-all hover:scale-105 z-50">
             <button onclick="openHome()" class="flex flex-col items-center justify-center text-slate-500 dark:text-slate-400 hover:text-emerald-600 dark:hover:text-emerald-400 transition group"><i data-lucide="home" class="w-5 h-5 group-hover:-translate-y-1 transition-transform"></i><span class="text-[8px] font-bold mt-0.5">الرئيسية</span></button>
-            <button onclick="openAddModal()" class="w-12 h-12 bg-emerald-600 dark:bg-emerald-500 text-white border-4 border-slate-50 dark:border-slate-800 rounded-full flex items-center justify-center shadow-lg transform -translate-y-5 hover:scale-110 transition-all duration-300 active:scale-90"><i data-lucide="plus" class="w-6 h-6"></i></button>
+            <button onclick="openAddModal()" class="w-12 h-12 bg-emerald-600 dark:bg-emerald-500 text-white border-4 border-slate-50 dark:border-slate-900 rounded-full flex items-center justify-center shadow-lg transform -translate-y-5 hover:scale-110 transition-all duration-300 active:scale-90"><i data-lucide="plus" class="w-6 h-6"></i></button>
             <button onclick="toggleChat()" class="flex flex-col items-center justify-center text-slate-500 dark:text-slate-400 hover:text-emerald-600 dark:hover:text-emerald-400 transition group relative"><div id="chat-badge" class="hidden absolute top-0 right-1 w-2.5 h-2.5 bg-red-500 rounded-full border-2 border-slate-50 dark:border-slate-800"></div><i data-lucide="message-circle" class="w-5 h-5 group-hover:-translate-y-1 transition-transform"></i><span class="text-[8px] font-bold mt-0.5">الدعم</span></button>
         </nav>
 
@@ -301,7 +301,6 @@
         const CAT_MAP = { 'apartment': 'شقق', 'villa': 'فلل', 'chalet': 'شاليهات', 'office': 'مكاتب', 'shop': 'محلات', 'land': 'أراضي', 'building': 'عماير', 'warehouse': 'مخازن' };
         const CAT_KEYWORDS = { 'شقة': 'apartment', 'شقق': 'apartment', 'فيلا': 'villa', 'فلل': 'villa', 'شالية': 'chalet', 'شاليهات': 'chalet', 'مكتب': 'office', 'مكاتب': 'office', 'محل': 'shop', 'محلات': 'shop', 'ارض': 'land', 'اراضي': 'land', 'عمارة': 'building', 'عماير': 'building', 'مخزن': 'warehouse', 'مخازن': 'warehouse' };
         
-        // بيانات الأقسام
         const CATEGORIES_DATA =[
             { id: 'apartment', name: 'شقق', img: 'https://images.pexels.com/photos/439227/pexels-photo-439227.jpeg?auto=compress&cs=tinysrgb&w=400' },
             { id: 'villa', name: 'فلل', img: 'https://images.pexels.com/photos/106399/pexels-photo-106399.jpeg?auto=compress&cs=tinysrgb&w=400' },
@@ -395,9 +394,15 @@
                 section.classList.add('hidden');
             } else {
                 section.classList.remove('hidden');
-                if(featuredList.length === 1) { container.classList.add('justify-center'); } else { container.classList.remove('justify-center'); }
+                const isSingle = featuredList.length === 1;
+                
+                if(isSingle) { container.classList.add('justify-center'); } 
+                else { container.classList.remove('justify-center'); }
+                
                 container.innerHTML = featuredList.map(item => {
-                    return `<div class="w-64 snap-center shrink-0 shadow-sm rounded-xl">${createCard(item, 'feat')}</div>`;
+                    // تكبير البطاقة لو كانت بطاقة وحيدة
+                    const widthClass = isSingle ? 'w-[95%] max-w-md' : 'w-64';
+                    return `<div class="${widthClass} snap-center shrink-0 shadow-sm rounded-xl">${createCard(item, 'feat')}</div>`;
                 }).join('');
                 lucide.createIcons({ root: container });
             }
@@ -435,13 +440,13 @@
 
         function updateHeader() {
             const welcomeSection = document.getElementById('header-welcome-section'); const logoutBtn = document.getElementById('btn-logout'); const loginBtn = document.getElementById('btn-header-login');
-            if(state.userProfile) { const optimizedProfile = getOptimizedUrl(state.userProfile.photoURL).replace('w_512,h_512', 'w_100,h_100,r_max'); welcomeSection.innerHTML = `<div class="profile-btn-header" onclick="handleProfileClick()"><img src="${optimizedProfile}" class="profile-img-header"><div class="profile-name-header"><span>${state.userProfile.displayName}</span><span class="profile-welcome-sub">أهلاً بك</span></div></div>`; logoutBtn.classList.remove('hidden'); loginBtn.classList.add('hidden'); } 
+            if(state.userProfile) { const optimizedProfile = getOptimizedUrl(state.userProfile.photoURL, false, 100).replace('c_fill', 'c_fill,r_max'); welcomeSection.innerHTML = `<div class="profile-btn-header" onclick="handleProfileClick()"><img src="${optimizedProfile}" class="profile-img-header"><div class="profile-name-header"><span>${state.userProfile.displayName}</span><span class="profile-welcome-sub">أهلاً بك</span></div></div>`; logoutBtn.classList.remove('hidden'); loginBtn.classList.add('hidden'); } 
             else { welcomeSection.innerHTML = `<span class="text-[9px] font-bold text-slate-500 dark:text-slate-400 leading-none">مرحبا بكم في</span><span class="text-[10px] font-black text-slate-800 dark:text-white leading-tight">السوق <span class="text-emerald-600 dark:text-emerald-400">وياك</span></span>`; logoutBtn.classList.add('hidden'); loginBtn.classList.remove('hidden'); }
             if(document.querySelector('.sticky-header')) lucide.createIcons({root: document.querySelector('.sticky-header')});
         }
 
         window.openPublisherProfile = async () => {
-            if(!state.currentPublisher) return; document.getElementById('pub-img').src = getOptimizedUrl(state.currentPublisher.photoURL).replace('w_512,h_512', 'w_200,h_200,r_max'); document.getElementById('pub-name').innerText = state.currentPublisher.displayName; document.getElementById('pub-phone').innerText = state.currentPublisher.phoneNumber;
+            if(!state.currentPublisher) return; document.getElementById('pub-img').src = getOptimizedUrl(state.currentPublisher.photoURL, false, 200).replace('c_fill', 'c_fill,r_max'); document.getElementById('pub-name').innerText = state.currentPublisher.displayName; document.getElementById('pub-phone').innerText = state.currentPublisher.phoneNumber;
             const pubBdg = document.getElementById('pub-badge-status'); if(state.currentPublisher.verified) { pubBdg.innerHTML = '<p class="text-blue-800 dark:text-blue-200 font-bold text-xs flex items-center justify-center gap-1"><i data-lucide="check-circle" class="w-4 h-4"></i> حساب موثق</p>'; pubBdg.className = 'bg-blue-50 dark:bg-blue-900/20 p-3 rounded-xl border border-blue-100 dark:border-blue-800 mt-2'; pubBdg.classList.remove('hidden'); } else { pubBdg.classList.add('hidden'); }
             toggleModal('publisher-modal'); lucide.createIcons({root: document.getElementById('publisher-modal')});
         };
@@ -524,24 +529,31 @@
         window.loadMore = () => { state.visibleLimit += 8; performSearch(false); };
         let searchTimeout; document.getElementById('search-input').addEventListener('input', () => { clearTimeout(searchTimeout); searchTimeout = setTimeout(() => performSearch(false), 200); }); document.getElementById('search-input').addEventListener('keydown', (e) => { if(e.key === 'Enter') { e.preventDefault(); performSearch(false); document.getElementById('search-input').blur(); } });
 
-        const getOptimizedUrl = (url, isVideo = false) => {
-            if (!url || !url.includes('cloudinary.com')) return url;
-            const parts = url.split('/upload/'); if (parts.length < 2) return url; let params = 'w_512,h_512,c_fill,q_auto,f_auto';
-            if (isVideo) { let cleanUrl = parts[1]; const lastDot = cleanUrl.lastIndexOf('.'); if (lastDot !== -1) cleanUrl = cleanUrl.substring(0, lastDot) + '.jpg'; return `${parts[0]}/upload/${params},so_0/${cleanUrl}`; } return `${parts[0]}/upload/${params}/${parts[1]}`;
+        // تعديل الدالة لتستقبل مقاس وتضغط الصورة جيداً لتسريع الرئيسية
+        const getOptimizedUrl = (url, isVideo = false, width = 400) => {
+            if (!url || !url.includes('cloudinary.com')) return url || 'https://via.placeholder.com/400?text=No+Image';
+            const parts = url.split('/upload/'); if (parts.length < 2) return url; 
+            // استخدام جودة اقتصادية لتسريع التحميل
+            let params = `w_${width},h_${width},c_fill,q_auto:eco,f_auto`;
+            if (isVideo) { let cleanUrl = parts[1]; const lastDot = cleanUrl.lastIndexOf('.'); if (lastDot !== -1) cleanUrl = cleanUrl.substring(0, lastDot) + '.jpg'; return `${parts[0]}/upload/${params},so_0/${cleanUrl}`; } 
+            return `${parts[0]}/upload/${params}/${parts[1]}`;
         };
 
         function createCard(item, prefix = 'grid') {
-            const imgs = Array.isArray(item.images) ? item.images :[item.image]; const firstMedia = imgs[0]; const isVideo = firstMedia.includes('.mp4') || firstMedia.includes('.mov'); const thumbUrl = getOptimizedUrl(firstMedia, isVideo);
+            const imgs = Array.isArray(item.images) ? item.images : (item.image ? [item.image] :[]); 
+            const firstMedia = imgs[0]; const isVideo = firstMedia && (firstMedia.includes('.mp4') || firstMedia.includes('.mov')); 
+            const thumbUrl = getOptimizedUrl(firstMedia, isVideo, 400); // تحميل مصغرات فقط للبطاقات
+            
             let statusOverlay = ''; if(item.status && item.status !== 'available') { const txt = item.status==='sold'?'تم البيع':'تم التأجير'; const clr = item.status==='sold'?'bg-red-600':'bg-blue-600'; statusOverlay=`<div class="absolute inset-0 sold-overlay flex items-center justify-center z-30 pointer-events-none bg-black/50 backdrop-blur-sm"><span class="${clr} text-white font-black px-6 py-2 rounded-xl shadow-2xl transform -rotate-12 text-sm border-2 border-white/20">${txt}</span></div>`; }
 
             let iconsHtml = ''; const pillClass = "flex-1 bg-slate-50 dark:bg-slate-700/50 border border-slate-200 dark:border-slate-600 rounded py-1 flex justify-center items-center gap-1 shadow-sm";
             if(item.category === 'land') { if(item.feddan || item.qirat) iconsHtml += `<span class="${pillClass}"><i data-lucide="maximize" class="w-3 h-3 text-emerald-500"></i> ${item.feddan?item.feddan+' ف':''} ${item.qirat?item.qirat+' ق':''}</span>`; } else if (item.category === 'building') { if(item.floors) iconsHtml += `<span class="${pillClass}"><i data-lucide="layers" class="w-3 h-3 text-blue-500"></i> ${item.floors} أدوار</span>`; } else { if(item.rooms) iconsHtml += `<span class="${pillClass}"><i data-lucide="bed-double" class="w-3 h-3 text-indigo-500"></i> ${item.rooms} غرف</span>`; if(item.baths) iconsHtml += `<span class="${pillClass}"><i data-lucide="bath" class="w-3 h-3 text-cyan-500"></i> ${item.baths} حمام</span>`; }
             if(item.area) iconsHtml += `<span class="${pillClass}"><i data-lucide="ruler" class="w-3 h-3 text-orange-500"></i> ${item.area}م</span>`;
 
-            const locDisplay = item.gov ? `${item.city}، ${item.gov}` : item.location; const code = item.shortCode || item.id.substring(0,3).toUpperCase(); const shareUrl = window.location.origin + window.location.pathname + '?id=' + item.id; const waMsg = `مهتم بهذا العقار: ${item.title} (${Number(item.price).toLocaleString()} ج)\nكود الإعلان: ${code}\nالرابط: ${shareUrl}`; const waLink = `https://wa.me/20${item.phone}?text=${encodeURIComponent(waMsg)}`;
+            const locDisplay = item.gov ? `${item.city}، ${item.gov}` : (item.location || ''); const code = item.shortCode || (item.id ? item.id.substring(0,3).toUpperCase() : ''); const shareUrl = window.location.origin + window.location.pathname + '?id=' + item.id; const waMsg = `مهتم بهذا العقار: ${item.title || ''} (${Number(item.price || 0).toLocaleString()} ج)\nكود الإعلان: ${code}\nالرابط: ${shareUrl}`; const waLink = `https://wa.me/20${item.phone}?text=${encodeURIComponent(waMsg)}`;
 
             return `<div id="card-${prefix}-${item.id}" class="listing-card bg-white dark:bg-slate-800 rounded-xl overflow-hidden shadow-sm border border-slate-200 dark:border-slate-700 flex flex-col h-full cursor-pointer active:scale-95 transition-transform group relative" onclick="openDetails('${item.id}')">
-                <div class="relative w-full h-36 shrink-0 bg-slate-200 dark:bg-slate-700">
+                <div class="relative w-full h-40 shrink-0 bg-slate-200 dark:bg-slate-700">
                     ${statusOverlay}
                     <span class="absolute top-2 right-2 ${item.type === 'sale' ? 'bg-emerald-600' : 'bg-blue-600'} text-white px-2 py-0.5 rounded text-[10px] font-bold shadow-md z-20">${item.type === 'sale' ? 'بيع' : 'إيجار'}</span>
                     ${item.isPinned ? `<span class="absolute top-2 left-2 bg-yellow-500 text-slate-900 px-2.5 py-0.5 rounded text-[10px] font-black shadow-md z-20 border border-yellow-300">⭐ مميز</span>` : ''}
@@ -552,8 +564,8 @@
                 <div class="p-2 flex-1 flex flex-col">
                     <div class="flex-1">
                         <div class="flex justify-between items-start mb-1">
-                            <h3 class="font-bold text-slate-900 dark:text-white text-[12px] line-clamp-1 leading-tight">${item.title}</h3>
-                            <span class="font-black text-emerald-600 dark:text-emerald-400 text-[12px] whitespace-nowrap mr-2 bg-emerald-50 dark:bg-emerald-900/30 px-1.5 rounded">${Number(item.price).toLocaleString()} ج</span>
+                            <h3 class="font-bold text-slate-900 dark:text-white text-[12px] line-clamp-1 leading-tight">${item.title || 'بدون عنوان'}</h3>
+                            <span class="font-black text-emerald-600 dark:text-emerald-400 text-[12px] whitespace-nowrap mr-2 bg-emerald-50 dark:bg-emerald-900/30 px-1.5 rounded">${Number(item.price || 0).toLocaleString()} ج</span>
                         </div>
                         <div class="flex justify-between items-center text-[9px] text-slate-500 dark:text-slate-400 mb-2 px-0.5"><span>كود: <span class="font-bold text-slate-700 dark:text-slate-300">${code}</span></span><span>${timeAgo(item.createdAt)}</span></div>
                         ${item.address ? `<div class="flex items-center gap-1 text-[9px] mb-1"><i data-lucide="map" class="w-3.5 h-3.5 text-slate-400 shrink-0"></i><span class="truncate leading-tight font-bold text-slate-600 dark:text-slate-400">${item.address}</span></div>` : ''}
@@ -580,29 +592,30 @@
                     const item = state.listings.find(i => i.id === id); if(!item) return;
                     state.activeDetailsId = id; state.currentItem = item; state.currentDetailIndex = 0; 
 
-                    const renderPublisher = (pubData) => { let nameHtml = pubData.displayName; if(pubData.verified) { nameHtml += ' <i data-lucide="check-circle" class="inline w-3 h-3 text-blue-500 mb-0.5"></i>'; } document.getElementById('d-pub-name').innerHTML = nameHtml; const img = document.getElementById('d-pub-img'); img.src = getOptimizedUrl(pubData.photoURL).replace('w_512,h_512', 'w_100,h_100,r_max'); img.classList.remove('hidden'); lucide.createIcons({root: document.getElementById('publisher-bar')}); };
+                    const renderPublisher = (pubData) => { let nameHtml = pubData.displayName || 'غير معروف'; if(pubData.verified) { nameHtml += ' <i data-lucide="check-circle" class="inline w-3 h-3 text-blue-500 mb-0.5"></i>'; } document.getElementById('d-pub-name').innerHTML = nameHtml; const img = document.getElementById('d-pub-img'); img.src = getOptimizedUrl(pubData.photoURL, false, 100).replace('c_fill', 'c_fill,r_max'); img.classList.remove('hidden'); lucide.createIcons({root: document.getElementById('publisher-bar')}); };
 
                     state.currentPublisher = null;
-                    if(item.authorId) { if(state.publisherCache[item.authorId]) { state.currentPublisher = state.publisherCache[item.authorId]; renderPublisher(state.currentPublisher); } else { document.getElementById('d-pub-name').innerText = '...'; getDoc(doc(db, "users", item.authorId)).then(pubDoc => { if(pubDoc.exists()) { state.currentPublisher = pubDoc.data(); state.publisherCache[item.authorId] = state.currentPublisher; renderPublisher(state.currentPublisher); } else { state.currentPublisher = DUMMY_PUBLISHER; renderPublisher(DUMMY_PUBLISHER); } }); } } else { state.currentPublisher = DUMMY_PUBLISHER; renderPublisher(DUMMY_PUBLISHER); }
+                    if(item.authorId) { if(state.publisherCache[item.authorId]) { state.currentPublisher = state.publisherCache[item.authorId]; renderPublisher(state.currentPublisher); } else { document.getElementById('d-pub-name').innerText = '...'; getDoc(doc(db, "users", item.authorId)).then(pubDoc => { if(pubDoc.exists()) { state.currentPublisher = pubDoc.data(); state.publisherCache[item.authorId] = state.currentPublisher; renderPublisher(state.currentPublisher); } else { state.currentPublisher = DUMMY_PUBLISHER; renderPublisher(DUMMY_PUBLISHER); } }).catch(() => renderPublisher(DUMMY_PUBLISHER)); } } else { state.currentPublisher = DUMMY_PUBLISHER; renderPublisher(DUMMY_PUBLISHER); }
 
-                    const code = item.shortCode || item.id.substring(0,3).toUpperCase();
-                    document.getElementById('d-title').innerText = item.title; document.getElementById('d-price').innerText = Number(item.price).toLocaleString() + ' جنيه'; document.getElementById('d-desc').innerText = item.desc; document.getElementById('d-time-badge').innerHTML = `${timeAgo(item.createdAt)} &nbsp;|&nbsp; كود: <span class="text-slate-700 dark:text-white font-bold">${code}</span>`;
+                    const code = item.shortCode || (item.id ? item.id.substring(0,3).toUpperCase() : '');
+                    document.getElementById('d-title').innerText = item.title || ''; document.getElementById('d-price').innerText = Number(item.price || 0).toLocaleString() + ' جنيه'; document.getElementById('d-desc').innerText = item.desc || 'لا يوجد وصف'; document.getElementById('d-time-badge').innerHTML = `${timeAgo(item.createdAt)} &nbsp;|&nbsp; كود: <span class="text-slate-700 dark:text-white font-bold">${code}</span>`;
 
                     const amCont = document.getElementById('d-amenities'); amCont.innerHTML=''; 
                     if(item.amenities && Array.isArray(item.amenities) && item.amenities.length > 0) { item.amenities.forEach(a => { amCont.innerHTML += `<div class="p-1.5 text-center text-[10px] font-bold text-slate-700 dark:text-slate-300 border-r border-b border-slate-200 dark:border-slate-700 last:border-r-0">${a}</div>`; }); } else { amCont.innerHTML = `<div class="col-span-3 p-2 text-center text-[9px] text-slate-400">لا توجد مميزات إضافية</div>`; }
                     const mapBtn = document.getElementById('d-map'); if(item.mapLink) { mapBtn.classList.remove('hidden'); mapBtn.classList.add('flex'); mapBtn.href = item.mapLink; } else { mapBtn.classList.add('hidden'); mapBtn.classList.remove('flex'); }
 
                     const typeEl = document.getElementById('d-type-badge');
-                    if(item.status !== 'available') { typeEl.innerText = item.status === 'sold' ? 'مباع' : 'مؤجر'; typeEl.className = `absolute bottom-2 right-2 text-white px-2.5 py-1 rounded-lg text-[10px] font-bold shadow backdrop-blur-sm ${item.status==='sold'?'bg-red-600/90':'bg-blue-600/90'}`; } else { typeEl.innerText = item.type === 'sale' ? 'للبيع' : 'للإيجار'; typeEl.className = `absolute bottom-2 right-2 text-white px-2.5 py-1 rounded-lg text-[10px] font-bold shadow backdrop-blur-sm ${item.type === 'sale' ? 'bg-emerald-600/90' : 'bg-blue-600/90'}`; }
+                    if(item.status && item.status !== 'available') { typeEl.innerText = item.status === 'sold' ? 'مباع' : 'مؤجر'; typeEl.className = `absolute bottom-2 right-2 text-white px-2.5 py-1 rounded-lg text-[10px] font-bold shadow backdrop-blur-sm ${item.status==='sold'?'bg-red-600/90':'bg-blue-600/90'}`; } else { typeEl.innerText = item.type === 'sale' ? 'للبيع' : 'للإيجار'; typeEl.className = `absolute bottom-2 right-2 text-white px-2.5 py-1 rounded-lg text-[10px] font-bold shadow backdrop-blur-sm ${item.type === 'sale' ? 'bg-emerald-600/90' : 'bg-blue-600/90'}`; }
 
-                    const imgs = Array.isArray(item.images) ? item.images : [item.image]; 
-                    const updateWaLink = () => { const shareUrl = window.location.origin + window.location.pathname + '?id=' + item.id; const waMsg = `مهتم بهذا العقار: ${item.title} (${Number(item.price).toLocaleString()} ج)\nكود الإعلان: ${code}\nالرابط: ${shareUrl}`; document.getElementById('d-wa').href = `https://wa.me/20${item.phone}?text=${encodeURIComponent(waMsg)}`; }; updateWaLink(); document.getElementById('d-call').href = `tel:${item.phone}`;
+                    // حماية برمجية للصور
+                    const imgs = (Array.isArray(item.images) && item.images.length > 0) ? item.images : (item.image ? [item.image] :['https://via.placeholder.com/600?text=No+Image']); 
+                    const updateWaLink = () => { const shareUrl = window.location.origin + window.location.pathname + '?id=' + item.id; const waMsg = `مهتم بهذا العقار: ${item.title || ''} (${Number(item.price || 0).toLocaleString()} ج)\nكود الإعلان: ${code}\nالرابط: ${shareUrl}`; document.getElementById('d-wa').href = `https://wa.me/20${item.phone}?text=${encodeURIComponent(waMsg)}`; }; updateWaLink(); document.getElementById('d-call').href = `tel:${item.phone}`;
 
                     const slider = document.getElementById('details-slider'); 
-                    slider.innerHTML = imgs.map((src, idx) => { const isVid = src.includes('.mp4') || src.includes('.mov'); let thumb = ""; if(idx === 0) { thumb = getOptimizedUrl(src, isVid); } else { thumb = getOptimizedUrl(src, isVid).replace('w_512', 'w_700'); } return isVid ? `<video src="${src}" controls class="w-full h-full object-contain snap-center shrink-0 bg-black"></video>` : `<img src="${thumb}" ${idx > 0 ? 'loading="lazy"' : ''} decoding="async" class="w-full h-full object-cover snap-center shrink-0 cursor-pointer" onclick="openLightbox('${src}', ${idx})">` }).join('');
+                    slider.innerHTML = imgs.map((src, idx) => { if(!src) return ''; const isVid = src.includes('.mp4') || src.includes('.mov'); let thumb = getOptimizedUrl(src, isVid, 600); return isVid ? `<video src="${src}" controls class="w-full h-full object-contain snap-center shrink-0 bg-black"></video>` : `<img src="${thumb}" ${idx > 0 ? 'loading="lazy"' : ''} decoding="async" class="w-full h-full object-cover snap-center shrink-0 cursor-pointer" onclick="openLightbox('${src}', ${idx})">` }).join('');
                     setTimeout(() => { if(slider && slider.firstElementChild) { slider.firstElementChild.scrollIntoView({ behavior: 'instant', block: 'nearest', inline: 'center' }); } }, 10); document.getElementById('details-arrows').style.display = imgs.length > 1 ? 'block' : 'none';
 
-                    const locDisplay = item.gov ? `${item.city}، ${item.gov}` : item.location;
+                    const locDisplay = item.gov ? `${item.city}، ${item.gov}` : (item.location || '');
                     let tableHtml = `<tr><th class="w-1/3 text-slate-500 dark:text-slate-400 font-normal text-[10px] flex items-center gap-1.5"><i data-lucide="home" class="w-3.5 h-3.5"></i> نوع العقار</th><td class="font-bold text-slate-800 dark:text-slate-200">${CAT_MAP[item.category] || 'عقار'}</td></tr>`;
                     if(item.address) tableHtml += `<tr><th class="text-slate-500 dark:text-slate-400 font-normal text-[10px] flex items-center gap-1.5"><i data-lucide="map" class="w-3.5 h-3.5"></i> العنوان التفصيلي</th><td class="font-bold text-slate-800 dark:text-slate-200">${item.address}</td></tr>`;
                     tableHtml += `<tr><th class="text-slate-500 dark:text-slate-400 font-normal text-[10px] flex items-center gap-1.5"><i data-lucide="map-pin" class="w-3.5 h-3.5"></i> المحافظة/المركز</th><td class="font-bold text-slate-800 dark:text-slate-200">${locDisplay}</td></tr>`;
@@ -625,7 +638,7 @@
                         controlsDiv.innerHTML = controlsHtml;
                     } else { controlsDiv.classList.add('hidden'); }
                     lucide.createIcons({root: document.getElementById('details-modal')});
-                } catch(e) { console.error(e); showToast('حدث خطأ في عرض التفاصيل', 'e'); }
+                } catch(e) { console.error('Details Error:', e); showToast('حدث خطأ في عرض التفاصيل، جرب التحديث', 'e'); }
             }
         }
 
@@ -636,7 +649,7 @@
         window.openLightbox = (src, idx = 0) => { state.lightboxIndex = idx; updateLightboxImage(); document.getElementById('lightbox').classList.remove('hidden'); }
         window.closeLightbox = () => { document.getElementById('lightbox').classList.add('hidden'); document.getElementById('lightbox-img').src=''; }
         window.changeLightboxImage = (dir) => { if (!state.currentItem || !state.currentItem.images) return; const len = state.currentItem.images.length; state.lightboxIndex = (state.lightboxIndex + dir + len) % len; updateLightboxImage(); };
-        function updateLightboxImage() { const imgEl = document.getElementById('lightbox-img'); const src = state.currentItem.images[state.lightboxIndex]; if (src.includes('.mp4') || src.includes('.mov')) { showToast("فيديو: يرجى المشاهدة في التفاصيل"); return; } const optimizedSrc = getOptimizedUrl(src, false).replace('w_512', 'w_700'); if(!imgEl.src) { imgEl.src = optimizedSrc; } else { imgEl.style.opacity = '0.5'; const tempImg = new Image(); tempImg.onload = () => { imgEl.src = optimizedSrc; imgEl.style.opacity = '1'; }; tempImg.src = optimizedSrc; } }
+        function updateLightboxImage() { const imgEl = document.getElementById('lightbox-img'); const src = state.currentItem.images[state.lightboxIndex]; if (!src || src.includes('.mp4') || src.includes('.mov')) { showToast("فيديو: يرجى المشاهدة في التفاصيل"); return; } const optimizedSrc = getOptimizedUrl(src, false, 800); if(!imgEl.src) { imgEl.src = optimizedSrc; } else { imgEl.style.opacity = '0.5'; const tempImg = new Image(); tempImg.onload = () => { imgEl.src = optimizedSrc; imgEl.style.opacity = '1'; }; tempImg.src = optimizedSrc; } }
         window.toggleModal = function(id) { const m = document.getElementById(id); m.classList.toggle('hidden'); if(document.querySelectorAll('.modal-overlay:not(.hidden)').length > 0) { document.body.style.overflow = 'hidden'; } else { document.body.style.overflow = ''; } return !m.classList.contains('hidden'); }
 
         function resetAddForm() { state.filesToUpload =[]; state.editingId = null; state.existingImages =[]; document.getElementById('preview-area').innerHTML = ''; document.getElementById('file-upload-input').value = ''; document.getElementById('in-title').value = ''; document.getElementById('in-price').value = ''; document.getElementById('in-area').value = ''; document.getElementById('in-desc').value = ''; document.getElementById('in-map').value = ''; document.getElementById('in-address').value = ''; document.getElementById('in-phone').value = state.userProfile ? state.userProfile.phoneNumber.replace('+20', '') : ''; document.querySelectorAll('.amenity-check').forEach(c => c.checked = false); document.getElementById('furn-no').checked = true; document.getElementById('add-modal-title').innerText = 'إضافة عقار'; document.getElementById('btn-publish').innerText = 'نشر الإعلان'; }
