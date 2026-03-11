@@ -6,7 +6,7 @@
 
     <!-- PWA Settings -->
     <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#f8fafc">
+    <meta name="theme-color" content="#ffffff">
     <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/609/609803.png">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -41,16 +41,14 @@
     <script src="https://unpkg.com/lucide@latest"></script>
 
     <style>
-        /* Solid Comfortable Background */
-        html { background-color: #f8fafc; }
-        .dark html { background-color: #0f172a; }
+        /* Solid Comfortable Background & Header Separation */
+        html { background-color: #f1f5f9; } /* Slate 100 - لون رصاصي فاتح مريح */
+        .dark html { background-color: #020617; } /* Slate 950 - لون داكن جدا لتمييز الهيدر */
         body { 
             font-family: 'Cairo', sans-serif; 
             -webkit-tap-highlight-color: transparent;
-            overscroll-behavior-y: none;
-            background-color: #f8fafc;
+            background-color: transparent;
         }
-        .dark body { background-color: #0f172a; }
         
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .select-none { user-select: none; }
@@ -83,36 +81,46 @@
             .mobile-full-modal { height: 100dvh; max-height: 100dvh; border-radius: 0; }
             .modal-overlay { padding: 0; }
         }
-        .dark .mobile-full-modal { background-color: #1e293b; }
+        .dark .mobile-full-modal { background-color: #0f172a; }
 
-        /* Header & Nav */
+        /* Header & Nav (Performance Optimized - No Backdrop Blur) */
         .sticky-header { 
-            z-index: 40; transform: translateZ(0); 
-            background-color: rgba(255, 255, 255, 0.95);
+            z-index: 40; 
+            background-color: #ffffff;
             border-bottom-left-radius: 1.5rem; border-bottom-right-radius: 1.5rem;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-            backdrop-filter: blur(8px);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
         }
-        .dark .sticky-header { background-color: rgba(15, 23, 42, 0.95); border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .dark .sticky-header { 
+            background-color: #0f172a; 
+            border-bottom: 1px solid #1e293b;
+            box-shadow: none;
+        }
 
         .sticky-search-bar {
             position: sticky; top: 3.5rem; z-index: 30; margin: 0 0 0.5rem 0;
             padding: 0.25rem; border-radius: 0.75rem; 
-            background: rgba(255, 255, 255, 0.95);
-            border: 1px solid rgba(0,0,0,0.08); box-shadow: 0 2px 5px rgba(0,0,0,0.05); transition: transform 0.2s;
-            backdrop-filter: blur(8px);
+            background: #ffffff;
+            border: 1px solid #e2e8f0; 
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05); 
+            transition: transform 0.2s;
         }
-        .dark .sticky-search-bar { background: rgba(30, 41, 59, 0.9); border-color: rgba(255,255,255,0.1); }
+        .dark .sticky-search-bar { background: #0f172a; border-color: #1e293b; }
 
         #bottom-nav { z-index: 40; }
 
-        /* Splash */
+        /* Splash Screen (Original Recovered) */
         #splash-screen { 
             position: fixed; inset: 0; z-index: 9999; background-color: #0f172a;
+            background-image: linear-gradient(rgba(15, 23, 42, 0.40), rgba(15, 23, 42, 0.60)), url('https://images.pexels.com/photos/19213018/pexels-photo-19213018.jpeg?auto=compress&cs=tinysrgb&w=800&h=600&dpr=1');
+            background-size: cover; background-position: center;
             display: flex; flex-direction: column; justify-content: center; align-items: center; 
             transition: opacity 0.3s ease-out, visibility 0.3s; 
         }
         .hidden-splash { opacity: 0; visibility: hidden; pointer-events: none; }
+        @keyframes ring-pulse { 0% { transform: scale(0.8); opacity: 0.5; } 100% { transform: scale(1.5); opacity: 0; } }
+        .splash-icon-container { position: relative; display: flex; align-items: center; justify-content: center; width: 70px; height: 70px; background: rgba(255, 255, 255, 0.1); border-radius: 50%; backdrop-filter: blur(4px); border: 1px solid rgba(255, 255, 255, 0.2); }
+        .splash-ring { position: absolute; inset: 0; border-radius: 50%; border: 2px solid #10b981; animation: ring-pulse 1.5s infinite ease-out; }
+        .splash-logo { color: #ffffff; z-index: 2; }
 
         /* UI Elements */
         .input-box { width: 100%; background: #f1f5f9; border: 1px solid #cbd5e1; border-radius: 0.5rem; padding: 0.6rem 0.8rem; font-size: 0.85rem; font-weight: 700; outline: none; color: #0f172a; transition: all 0.2s; }
@@ -134,7 +142,6 @@
 
         #filter-panel { display: none; opacity: 0; transform: scaleY(0.95); transform-origin: top; transition: opacity 0.15s ease, transform 0.15s ease; }
         #filter-panel.open { display: block; opacity: 1; transform: scaleY(1); }
-        body.keyboard-open #bottom-nav { display: none; }
 
         .profile-btn-header { display: flex; align-items: center; gap: 8px; cursor: pointer; }
         .profile-img-header { width: 36px; height: 36px; border-radius: 50%; object-fit: cover; border: 2px solid #10b981; }
@@ -143,17 +150,17 @@
         .profile-welcome-sub { font-size: 0.6rem; color: #64748b; font-weight: 600; }
         .dark .profile-welcome-sub { color: #94a3b8; }
 
-        /* Toast */
         .toast { animation: slideInDown 0.2s ease-out forwards; }
         .toast.hiding { animation: fadeOut 0.2s ease-in forwards; }
     </style>
 </head>
 <body class="text-slate-800 dark:text-slate-100 select-none">
 
-    <!-- Splash Screen (بدون انيميشن يستهلك معالج وبحجم صغير) -->
+    <!-- Splash Screen (Original Reverted) -->
     <div id="splash-screen">
         <div class="splash-icon-container mb-3">
-            <svg class="text-emerald-500" xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+            <div class="splash-ring"></div>
+            <svg class="splash-logo" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline><circle cx="12" cy="7" r="2" fill="#10b981" stroke="none"></circle></svg>
         </div>
         <div class="text-white font-bold text-lg tracking-wide">السوق <span class="text-emerald-500">وياك</span></div>
     </div>
@@ -163,7 +170,7 @@
         <div id="toast-container" class="fixed top-4 left-0 right-0 z-[110] flex flex-col items-center gap-2 pointer-events-none px-4"></div>
 
         <!-- Header -->
-        <header class="fixed top-0 w-full sticky-header flex items-center justify-between px-4 h-12 shadow-sm">
+        <header class="fixed top-0 w-full sticky-header flex items-center justify-between px-4 h-12">
             <div class="flex flex-col justify-center" id="header-welcome-section">
                 <span class="text-[9px] font-bold text-slate-500 dark:text-slate-400 leading-none">مرحبا بكم في</span>
                 <span class="text-[10px] font-black text-slate-800 dark:text-white leading-tight">السوق <span class="text-emerald-600 dark:text-emerald-400">وياك</span></span>
@@ -181,15 +188,21 @@
             <!-- ====== HOME VIEW ====== -->
             <div id="home-view" class="block w-full animate-fade-in mt-2">
                 
-                <!-- Featured Slider Section (بتصميم مريح ومستقر للبطاقة الواحدة) -->
-                <div id="featured-section" class="mb-8 hidden">
-                    <div class="flex justify-center mb-4">
+                <!-- 1. Categories Grid (يظهر أولاً وبدون نص تعريفي) -->
+                <div class="mb-6">
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-3" id="categories-grid">
+                        <!-- Populated via JS -->
+                    </div>
+                </div>
+
+                <!-- 2. Featured Slider Section (يظهر أسفل الأقسام) -->
+                <div id="featured-section" class="mb-6 hidden">
+                    <div class="flex justify-center mb-3">
                         <div class="bg-white dark:bg-slate-800 text-slate-800 dark:text-emerald-400 border border-slate-200 dark:border-slate-700 shadow-sm px-8 py-1.5 rounded-full text-[11px] font-black tracking-widest select-none">
                             العروض المميزة
                         </div>
                     </div>
                     <div class="relative w-full group">
-                        <!-- هنا يتم وضع justify-center ديناميكياً لتوسيط السلايدر لو كان في بطاقة واحدة -->
                         <div id="featured-slider" class="flex gap-4 overflow-x-auto snap-x snap-mandatory no-scrollbar pb-3 pt-1 px-1 -mx-1">
                             <!-- Items Populated via JS -->
                         </div>
@@ -198,16 +211,8 @@
                     </div>
                 </div>
 
-                <!-- Categories Grid -->
-                <div class="mb-8">
-                    <h2 class="text-sm font-black text-slate-800 dark:text-white mb-3 flex items-center gap-1.5"><i data-lucide="layout-grid" class="w-4 h-4 text-emerald-500"></i> تصفح الأقسام</h2>
-                    <div class="grid grid-cols-2 md:grid-cols-4 gap-3" id="categories-grid">
-                        <!-- Populated via JS -->
-                    </div>
-                </div>
-
-                <!-- Footer Section -->
-                <div class="mt-8 mb-4 border border-slate-200 dark:border-slate-700 pt-6 px-4 pb-6 bg-white dark:bg-slate-800 rounded-2xl shadow-sm text-center">
+                <!-- 3. Footer Section (عاد لشكله ولونه السابقين في أسفل الصفحة) -->
+                <div class="mt-6 mb-4 border border-slate-200 dark:border-slate-700 pt-6 px-4 pb-6 bg-slate-100 dark:bg-slate-800/50 rounded-2xl shadow-inner text-center">
                     <h3 class="text-sm font-black text-slate-800 dark:text-white mb-4">السوق وياك <span class="text-emerald-500">للعقارات</span></h3>
                     <div class="space-y-2.5 text-[11px] font-bold text-slate-600 dark:text-slate-300">
                         <p class="flex items-center justify-center gap-1.5"><i data-lucide="headphones" class="w-3.5 h-3.5 text-emerald-500"></i> رقم الدعم الفني: <a href="tel:01206244875" class="text-emerald-600 dark:text-emerald-400 hover:underline" dir="ltr">01206244875</a></p>
@@ -215,14 +220,14 @@
                         <p class="flex items-center justify-center gap-1.5"><i data-lucide="calendar" class="w-3.5 h-3.5 text-emerald-500"></i> تاريخ التأسيس: 2026</p>
                     </div>
                     <div class="flex justify-center gap-3 mt-5">
-                        <a href="#" target="_blank" class="bg-blue-50 dark:bg-blue-900/40 p-2.5 rounded-full text-blue-600 dark:text-blue-400 hover:bg-blue-100 dark:hover:bg-blue-800 transition shadow-sm"><i data-lucide="facebook" class="w-4 h-4"></i></a>
-                        <a href="#" target="_blank" class="bg-pink-50 dark:bg-pink-900/40 p-2.5 rounded-full text-pink-600 dark:text-pink-400 hover:bg-pink-100 dark:hover:bg-pink-800 transition shadow-sm"><i data-lucide="instagram" class="w-4 h-4"></i></a>
+                        <a href="#" target="_blank" class="bg-blue-100 dark:bg-blue-900/40 p-2.5 rounded-full text-blue-600 dark:text-blue-400 hover:bg-blue-200 dark:hover:bg-blue-800 transition"><i data-lucide="facebook" class="w-4 h-4"></i></a>
+                        <a href="#" target="_blank" class="bg-pink-100 dark:bg-pink-900/40 p-2.5 rounded-full text-pink-600 dark:text-pink-400 hover:bg-pink-200 dark:hover:bg-pink-800 transition"><i data-lucide="instagram" class="w-4 h-4"></i></a>
                     </div>
                 </div>
             </div>
 
             <!-- ====== LISTINGS VIEW ====== -->
-            <div id="listings-view" class="hidden w-full animate-fade-in flex-col min-h-screen">
+            <div id="listings-view" class="hidden w-full animate-fade-in flex-col min-h-screen mt-2">
                 <div class="flex items-center gap-2 mb-3 bg-white dark:bg-slate-800 p-2 rounded-xl shadow-sm border border-slate-200 dark:border-slate-700">
                     <button onclick="openHome()" class="bg-slate-50 dark:bg-slate-700 text-slate-700 dark:text-white p-1.5 rounded-full shadow-sm border border-slate-200 dark:border-slate-600 hover:bg-slate-100 transition"><i data-lucide="arrow-right" class="w-4 h-4"></i></button>
                     <h2 id="listings-view-title" class="text-xs font-black text-emerald-600 dark:text-emerald-400"></h2>
@@ -240,10 +245,7 @@
                                 <h3 class="text-[10px] font-bold text-slate-700 dark:text-white flex items-center gap-1"><i data-lucide="filter" class="w-3 h-3"></i> تصفية متقدمة</h3>
                                 <button onclick="resetFilters()" class="text-[9px] text-red-500 font-bold underline cursor-pointer">إعادة تعيين</button>
                             </div>
-                            
-                            <!-- Category Filter Hidden logically inside Section view -->
                             <div id="cat-filter-wrapper" class="custom-select-wrapper hidden"><select id="filter-cat" class="custom-select py-1 text-[10px]"><option value="">كل الأقسام</option><option value="apartment">شقق</option><option value="villa">فلل</option><option value="chalet">شاليهات</option><option value="office">مكاتب</option><option value="shop">محلات</option><option value="land">أراضي</option><option value="building">عماير</option><option value="warehouse">مخازن</option></select><i data-lucide="chevron-down" class="custom-select-icon w-3 h-3"></i></div>
-                            
                             <div class="custom-select-wrapper"><select id="filter-type" class="custom-select py-1 text-[10px]"><option value="">كل الأنواع (بيع/إيجار)</option><option value="sale">بيع</option><option value="rent">إيجار</option></select><i data-lucide="chevron-down" class="custom-select-icon w-3 h-3"></i></div>
                             <div class="grid grid-cols-2 gap-1.5"><div class="custom-select-wrapper"><select id="filter-gov" onchange="populateCities('filter-gov', 'filter-city')" class="custom-select py-1 text-[10px]"><option value="">كل المحافظات</option></select><i data-lucide="chevron-down" class="custom-select-icon w-3 h-3"></i></div><div class="custom-select-wrapper"><select id="filter-city" class="custom-select py-1 text-[10px]"><option value="">كل المراكز</option></select><i data-lucide="chevron-down" class="custom-select-icon w-3 h-3"></i></div></div>
                             <div class="grid grid-cols-2 gap-1.5"><input type="number" id="filter-min-price" placeholder="أقل سعر" class="input-box text-[10px] py-1"><input type="number" id="filter-max-price" placeholder="أعلى سعر" class="input-box text-[10px] py-1"></div>
@@ -259,103 +261,21 @@
         </main>
 
         <!-- Floating Dock -->
-        <nav id="bottom-nav" class="fixed bottom-4 left-1/2 -translate-x-1/2 bg-white/95 dark:bg-slate-800/90 backdrop-blur-md border border-slate-200 dark:border-slate-600 px-6 py-2.5 rounded-full flex items-center gap-8 shadow-xl transform transition-all hover:scale-105 transform-gpu">
+        <nav id="bottom-nav" class="fixed bottom-4 left-1/2 -translate-x-1/2 bg-white/95 dark:bg-slate-800/95 backdrop-blur-sm border border-slate-200 dark:border-slate-600 px-6 py-2.5 rounded-full flex items-center gap-8 shadow-xl transition-all hover:scale-105">
             <button onclick="openHome()" class="flex flex-col items-center justify-center text-slate-500 dark:text-slate-400 hover:text-emerald-600 dark:hover:text-emerald-400 transition group"><i data-lucide="home" class="w-5 h-5 group-hover:-translate-y-1 transition-transform"></i><span class="text-[8px] font-bold mt-0.5">الرئيسية</span></button>
-            <button onclick="openAddModal()" class="w-12 h-12 bg-emerald-600 dark:bg-emerald-500 text-white border-4 border-slate-50 dark:border-slate-800 rounded-full flex items-center justify-center shadow-lg transform -translate-y-5 hover:scale-110 hover:rotate-90 transition-all duration-300 active:scale-90"><i data-lucide="plus" class="w-6 h-6"></i></button>
+            <button onclick="openAddModal()" class="w-12 h-12 bg-emerald-600 dark:bg-emerald-500 text-white border-4 border-slate-50 dark:border-slate-800 rounded-full flex items-center justify-center shadow-lg transform -translate-y-5 hover:scale-110 transition-all duration-300 active:scale-90"><i data-lucide="plus" class="w-6 h-6"></i></button>
             <button onclick="toggleChat()" class="flex flex-col items-center justify-center text-slate-500 dark:text-slate-400 hover:text-emerald-600 dark:hover:text-emerald-400 transition group relative"><div id="chat-badge" class="hidden absolute top-0 right-1 w-2.5 h-2.5 bg-red-500 rounded-full border-2 border-slate-50 dark:border-slate-800"></div><i data-lucide="message-circle" class="w-5 h-5 group-hover:-translate-y-1 transition-transform"></i><span class="text-[8px] font-bold mt-0.5">الدعم</span></button>
         </nav>
 
-        <!-- All Modals Included Safely -->
-        <!-- Logout Modal -->
-        <div id="logout-modal" class="hidden modal-overlay" style="z-index: 150;">
-            <div class="relative w-full max-w-xs bg-white dark:bg-slate-800 rounded-2xl shadow-2xl p-6 text-center animate-pop border border-slate-200 dark:border-slate-700">
-                <div class="w-16 h-16 bg-red-50 dark:bg-red-900/20 text-red-500 rounded-full flex items-center justify-center mx-auto mb-4 border-2 border-red-100 dark:border-red-800/50"><i data-lucide="log-out" class="w-8 h-8"></i></div>
-                <h3 class="text-lg font-black text-slate-800 dark:text-white mb-2">تسجيل الخروج</h3>
-                <p class="text-xs text-slate-500 dark:text-slate-400 mb-6">هل أنت متأكد أنك تريد تسجيل الخروج من حسابك الحالي؟</p>
-                <div class="flex gap-2"><button onclick="confirmLogout()" class="flex-1 bg-red-500 text-white py-2.5 rounded-xl font-bold text-sm shadow hover:bg-red-600 transition active:scale-95">نعم، خروج</button><button onclick="toggleModal('logout-modal')" class="flex-1 bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-white py-2.5 rounded-xl font-bold text-sm shadow-sm hover:bg-slate-200 dark:hover:bg-slate-600 transition active:scale-95">إلغاء</button></div>
-            </div>
-        </div>
+        <!-- Modals -->
+        <div id="logout-modal" class="hidden modal-overlay" style="z-index: 150;"><div class="relative w-full max-w-xs bg-white dark:bg-slate-800 rounded-2xl shadow-2xl p-6 text-center animate-pop border border-slate-200 dark:border-slate-700"><div class="w-16 h-16 bg-red-50 dark:bg-red-900/20 text-red-500 rounded-full flex items-center justify-center mx-auto mb-4 border-2 border-red-100 dark:border-red-800/50"><i data-lucide="log-out" class="w-8 h-8"></i></div><h3 class="text-lg font-black text-slate-800 dark:text-white mb-2">تسجيل الخروج</h3><p class="text-xs text-slate-500 dark:text-slate-400 mb-6">هل أنت متأكد أنك تريد تسجيل الخروج من حسابك الحالي؟</p><div class="flex gap-2"><button onclick="confirmLogout()" class="flex-1 bg-red-500 text-white py-2.5 rounded-xl font-bold text-sm shadow hover:bg-red-600 transition active:scale-95">نعم، خروج</button><button onclick="toggleModal('logout-modal')" class="flex-1 bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-white py-2.5 rounded-xl font-bold text-sm shadow-sm hover:bg-slate-200 dark:hover:bg-slate-600 transition active:scale-95">إلغاء</button></div></div></div>
 
-        <!-- Auth Modal -->
-        <div id="auth-modal" class="hidden modal-overlay">
-            <div class="relative w-full max-w-sm bg-white dark:bg-slate-800 rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-700 p-6 overflow-hidden animate-pop z-50">
-                <button onclick="toggleModal('auth-modal')" class="absolute top-3 left-3 text-slate-400 hover:text-red-500 transition z-10"><i data-lucide="x" class="w-5 h-5"></i></button>
-                <div class="flex justify-center mb-6"><div class="w-16 h-16 bg-slate-50 dark:bg-slate-700 rounded-full flex items-center justify-center border-2 border-emerald-500 shadow-lg"><i data-lucide="building-2" class="w-8 h-8 text-emerald-600 dark:text-emerald-400"></i></div></div>
-                <div class="flex justify-center mb-6"><div class="bg-slate-100 dark:bg-slate-900 p-1 rounded-xl flex w-full"><button onclick="switchAuthMode('login')" id="tab-login" class="flex-1 py-2 rounded-lg text-xs font-bold transition bg-white dark:bg-slate-700 shadow text-emerald-600 dark:text-white">دخول</button><button onclick="switchAuthMode('register')" id="tab-register" class="flex-1 py-2 rounded-lg text-xs font-bold transition text-slate-500 dark:text-slate-400">إنشاء حساب</button></div></div>
-                
-                <div id="form-login" class="space-y-4">
-                    <div class="space-y-1"><label class="text-[10px] font-bold text-slate-500">رقم الهاتف</label><div class="relative"><span class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 font-bold text-xs bg-slate-200 dark:bg-slate-700 px-1.5 rounded">+20</span><input id="login-phone" type="tel" class="input-box pl-12 text-left" placeholder="1xxxxxxxxx" oninput="formatPhone(this)"></div></div>
-                    <div class="space-y-1"><label class="text-[10px] font-bold text-slate-500">كلمة المرور</label><input id="login-pass" type="password" class="input-box" placeholder="••••••••"></div>
-                    <button id="btn-login" onclick="loginUser()" class="w-full bg-emerald-600 text-white py-3 rounded-xl font-bold text-sm shadow-md hover:bg-emerald-700 transition transform active:scale-95">تسجيل الدخول</button>
-                </div>
+        <div id="auth-modal" class="hidden modal-overlay"><div class="relative w-full max-w-sm bg-white dark:bg-slate-800 rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-700 p-6 overflow-hidden animate-pop z-50"><button onclick="toggleModal('auth-modal')" class="absolute top-3 left-3 text-slate-400 hover:text-red-500 transition z-10"><i data-lucide="x" class="w-5 h-5"></i></button><div class="flex justify-center mb-6"><div class="w-16 h-16 bg-slate-50 dark:bg-slate-700 rounded-full flex items-center justify-center border-2 border-emerald-500 shadow-lg"><i data-lucide="building-2" class="w-8 h-8 text-emerald-600 dark:text-emerald-400"></i></div></div><div class="flex justify-center mb-6"><div class="bg-slate-100 dark:bg-slate-900 p-1 rounded-xl flex w-full"><button onclick="switchAuthMode('login')" id="tab-login" class="flex-1 py-2 rounded-lg text-xs font-bold transition bg-white dark:bg-slate-700 shadow text-emerald-600 dark:text-white">دخول</button><button onclick="switchAuthMode('register')" id="tab-register" class="flex-1 py-2 rounded-lg text-xs font-bold transition text-slate-500 dark:text-slate-400">إنشاء حساب</button></div></div><div id="form-login" class="space-y-4"><div class="space-y-1"><label class="text-[10px] font-bold text-slate-500">رقم الهاتف</label><div class="relative"><span class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 font-bold text-xs bg-slate-200 dark:bg-slate-700 px-1.5 rounded">+20</span><input id="login-phone" type="tel" class="input-box pl-12 text-left" placeholder="1xxxxxxxxx" oninput="formatPhone(this)"></div></div><div class="space-y-1"><label class="text-[10px] font-bold text-slate-500">كلمة المرور</label><input id="login-pass" type="password" class="input-box" placeholder="••••••••"></div><button id="btn-login" onclick="loginUser()" class="w-full bg-emerald-600 text-white py-3 rounded-xl font-bold text-sm shadow-md hover:bg-emerald-700 transition transform active:scale-95">تسجيل الدخول</button></div><div id="form-register" class="hidden space-y-4"><div class="flex justify-center"><label class="relative w-20 h-20 rounded-full border-2 border-dashed border-emerald-500 flex items-center justify-center cursor-pointer overflow-hidden bg-slate-50 dark:bg-slate-900 group hover:bg-emerald-50 transition"><input type="file" accept="image/*" class="hidden" onchange="previewProfileImage(this)"><img id="reg-img-preview" class="absolute inset-0 w-full h-full object-cover hidden"><div id="reg-img-placeholder" class="flex flex-col items-center text-emerald-500"><i data-lucide="camera" class="w-6 h-6 mb-1"></i><span class="text-[8px] font-bold">صورة</span></div></label></div><div class="space-y-1"><input id="reg-name" type="text" class="input-box text-center" placeholder="الاسم بالكامل"></div><div class="relative"><span class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 font-bold text-xs bg-slate-200 dark:bg-slate-700 px-1.5 rounded">+20</span><input id="reg-phone" type="tel" class="input-box pl-12 text-left" placeholder="رقم الهاتف" oninput="formatPhone(this)"></div><input id="reg-pass" type="password" class="input-box" placeholder="كلمة المرور (6 أحرف أو أكثر)"><button onclick="registerUser()" id="btn-register" class="w-full bg-slate-900 dark:bg-emerald-600 text-white py-3 rounded-xl font-bold text-sm shadow-md hover:opacity-90 transition transform active:scale-95">إنشاء حساب جديد</button></div></div></div>
 
-                <div id="form-register" class="hidden space-y-4">
-                    <div class="flex justify-center"><label class="relative w-20 h-20 rounded-full border-2 border-dashed border-emerald-500 flex items-center justify-center cursor-pointer overflow-hidden bg-slate-50 dark:bg-slate-900 group hover:bg-emerald-50 transition"><input type="file" accept="image/*" class="hidden" onchange="previewProfileImage(this)"><img id="reg-img-preview" class="absolute inset-0 w-full h-full object-cover hidden"><div id="reg-img-placeholder" class="flex flex-col items-center text-emerald-500"><i data-lucide="camera" class="w-6 h-6 mb-1"></i><span class="text-[8px] font-bold">صورة</span></div></label></div>
-                    <div class="space-y-1"><input id="reg-name" type="text" class="input-box text-center" placeholder="الاسم بالكامل"></div>
-                    <div class="relative"><span class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 font-bold text-xs bg-slate-200 dark:bg-slate-700 px-1.5 rounded">+20</span><input id="reg-phone" type="tel" class="input-box pl-12 text-left" placeholder="رقم الهاتف" oninput="formatPhone(this)"></div>
-                    <input id="reg-pass" type="password" class="input-box" placeholder="كلمة المرور (6 أحرف أو أكثر)">
-                    <button onclick="registerUser()" id="btn-register" class="w-full bg-slate-900 dark:bg-emerald-600 text-white py-3 rounded-xl font-bold text-sm shadow-md hover:opacity-90 transition transform active:scale-95">إنشاء حساب جديد</button>
-                </div>
-            </div>
-        </div>
+        <div id="publisher-modal" class="hidden modal-overlay" style="z-index: 105;"><div class="relative w-full max-w-sm bg-white dark:bg-slate-800 rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-700 p-6 overflow-hidden animate-pop text-center z-50"><button onclick="toggleModal('publisher-modal')" class="absolute top-3 left-3 text-slate-400 hover:text-red-500 transition z-10"><i data-lucide="x" class="w-5 h-5"></i></button><div class="w-24 h-24 rounded-full border-4 border-emerald-500 p-1 mx-auto mb-4"><img id="pub-img" src="" class="w-full h-full rounded-full object-cover bg-slate-200"></div><h2 id="pub-name" class="text-xl font-black text-slate-800 dark:text-white mb-1"></h2><p id="pub-phone" class="text-sm font-bold text-slate-500 dark:text-slate-400 mb-2" dir="ltr"></p><div id="pub-badge-status" class="hidden"></div></div></div>
 
-        <!-- Publisher Profile Modal -->
-        <div id="publisher-modal" class="hidden modal-overlay" style="z-index: 105;">
-            <div class="relative w-full max-w-sm bg-white dark:bg-slate-800 rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-700 p-6 overflow-hidden animate-pop text-center z-50">
-                <button onclick="toggleModal('publisher-modal')" class="absolute top-3 left-3 text-slate-400 hover:text-red-500 transition z-10"><i data-lucide="x" class="w-5 h-5"></i></button>
-                <div class="w-24 h-24 rounded-full border-4 border-emerald-500 p-1 mx-auto mb-4"><img id="pub-img" src="" class="w-full h-full rounded-full object-cover bg-slate-200"></div>
-                <h2 id="pub-name" class="text-xl font-black text-slate-800 dark:text-white mb-1"></h2>
-                <p id="pub-phone" class="text-sm font-bold text-slate-500 dark:text-slate-400 mb-2" dir="ltr"></p>
-                <div id="pub-badge-status" class="hidden"></div>
-            </div>
-        </div>
+        <div id="details-modal" class="hidden modal-overlay"><div class="mobile-full-modal animate-pop"><div class="relative h-44 bg-slate-200 dark:bg-slate-800 shrink-0 group"><button onclick="closeDetails()" class="absolute top-2 left-2 bg-red-500 text-white p-2 rounded-full z-20 shadow-sm hover:bg-red-600 transition"><i data-lucide="x" class="w-5 h-5"></i></button><div class="absolute top-2 right-2 flex gap-2 z-20"><button onclick="downloadImages()" class="bg-black/50 text-white p-1.5 rounded-full shadow-sm hover:bg-black/70 transition"><i data-lucide="download" class="w-4 h-4"></i></button><button onclick="shareListing()" class="bg-black/50 text-white p-1.5 rounded-full shadow-sm hover:bg-black/70 transition"><i data-lucide="share-2" class="w-4 h-4"></i></button></div><div id="details-slider" class="flex w-full h-full overflow-x-auto no-scrollbar snap-x scroll-smooth"></div><div id="details-arrows"><button onclick="scrollDetails(-1)" class="absolute right-2 top-1/2 -translate-y-1/2 bg-black/50 text-white p-2 rounded-full z-10 hover:bg-black/70"><i data-lucide="chevron-right" class="w-5 h-5"></i></button><button onclick="scrollDetails(1)" class="absolute left-2 top-1/2 -translate-y-1/2 bg-black/50 text-white p-2 rounded-full z-10 hover:bg-black/70"><i data-lucide="chevron-left" class="w-5 h-5"></i></button></div><span id="d-type-badge" class="absolute bottom-2 right-2 text-white px-2.5 py-1 rounded-lg text-[10px] font-bold shadow backdrop-blur-sm"></span></div><div class="flex-1 overflow-y-auto bg-slate-50 dark:bg-darkbg"><div id="publisher-bar" class="flex items-center gap-2 p-2 bg-white dark:bg-slate-800/50 border-b border-slate-200 dark:border-slate-700 cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-800 transition" onclick="openPublisherProfile()"><div id="d-pub-img-container" class="w-9 h-9 rounded-full border border-slate-300 overflow-hidden bg-slate-200 shrink-0"><img id="d-pub-img" src="" class="w-full h-full object-cover hidden"></div><div class="flex-1 truncate"><h4 id="d-pub-name" class="text-xs font-bold text-slate-800 dark:text-white leading-tight flex items-center gap-1"></h4><span class="text-[9px] text-emerald-600 dark:text-emerald-400 font-bold">عرض البروفايل</span></div><i data-lucide="chevron-left" class="w-4 h-4 text-slate-400"></i></div><div id="d-controls" class="hidden p-2 bg-slate-50 dark:bg-darkbg border-b border-slate-200 dark:border-slate-700 w-full"></div><div class="p-2 space-y-2.5"><div class="space-y-1"><div><span class="text-[9px] font-bold text-slate-400 block mb-0">العنوان العقاري</span><h2 id="d-title" class="text-sm font-bold text-slate-900 dark:text-white leading-tight"></h2></div><div class="flex items-center justify-between border-b border-slate-200 dark:border-slate-700 pb-1.5 pt-1"><div><span class="text-[9px] font-bold text-slate-400 block mb-0">السعر المطلوب</span><span id="d-price" class="text-emerald-600 dark:text-emerald-400 font-black text-lg"></span></div><span id="d-time-badge" class="text-[9px] text-slate-500 font-bold bg-white dark:bg-slate-800 px-2 py-1 rounded border border-slate-200 dark:border-slate-700 shadow-sm"></span></div></div><div class="border border-slate-200 dark:border-slate-700 rounded-xl overflow-hidden bg-white dark:bg-slate-800/50 shadow-sm"><table class="w-full text-[10px] modern-table"><tbody id="d-table-body"></tbody></table></div><div><h3 class="text-[11px] font-bold text-slate-800 dark:text-white mb-2 flex items-center gap-1"><i data-lucide="sparkles" class="w-3.5 h-3.5 text-yellow-500"></i> المميزات</h3><div id="d-amenities" class="grid grid-cols-3 gap-0 border border-slate-200 dark:border-slate-700 rounded-xl overflow-hidden bg-white dark:bg-slate-800/50 shadow-sm"></div></div><div class="bg-white dark:bg-slate-800/50 p-2.5 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm"><h3 class="text-[10px] font-bold text-emerald-600 dark:text-emerald-400 uppercase mb-1 flex items-center gap-1"><i data-lucide="info" class="w-3 h-3"></i> التفاصيل الكاملة</h3><p id="d-desc" class="text-[11px] text-slate-700 dark:text-slate-300 leading-snug whitespace-pre-wrap font-medium"></p></div></div></div><div class="p-2 border-t border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 flex flex-col gap-2 shrink-0 pb-6 md:pb-2"><a id="d-map" href="#" target="_blank" class="hidden w-full bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 py-2 rounded-lg flex justify-center items-center gap-2 font-bold text-[10px] border border-blue-200 dark:border-blue-800 hover:bg-blue-100 transition shadow-sm"><i data-lucide="map" class="w-3.5 h-3.5"></i> الموقع على الخريطة</a><div class="flex gap-2"><a id="d-wa" href="#" target="_blank" class="flex-1 bg-[#25D366] text-white py-2.5 rounded-lg flex justify-center items-center gap-1.5 font-bold shadow-md hover:bg-green-600 transition text-[11px]"><i data-lucide="message-circle" class="w-4 h-4"></i> واتساب</a><a id="d-call" href="#" class="flex-1 bg-slate-800 dark:bg-slate-700 text-white py-2.5 rounded-lg flex justify-center items-center gap-1.5 font-bold shadow-md hover:bg-slate-900 transition text-[11px]"><i data-lucide="phone" class="w-4 h-4"></i> اتصال مباشر</a></div></div></div></div>
 
-        <!-- Details Modal -->
-        <div id="details-modal" class="hidden modal-overlay">
-            <div class="mobile-full-modal animate-pop">
-                <div class="relative h-44 bg-slate-200 dark:bg-slate-800 shrink-0 group">
-                    <button onclick="closeDetails()" class="absolute top-2 left-2 bg-red-500 text-white p-2 rounded-full z-20 shadow-sm hover:bg-red-600 transition"><i data-lucide="x" class="w-5 h-5"></i></button>
-                    <div class="absolute top-2 right-2 flex gap-2 z-20"><button onclick="downloadImages()" class="bg-black/50 text-white p-1.5 rounded-full shadow-sm hover:bg-black/70 transition"><i data-lucide="download" class="w-4 h-4"></i></button><button onclick="shareListing()" class="bg-black/50 text-white p-1.5 rounded-full shadow-sm hover:bg-black/70 transition"><i data-lucide="share-2" class="w-4 h-4"></i></button></div>
-                    <div id="details-slider" class="flex w-full h-full overflow-x-auto no-scrollbar snap-x scroll-smooth"></div>
-                    <div id="details-arrows"><button onclick="scrollDetails(-1)" class="absolute right-2 top-1/2 -translate-y-1/2 bg-black/50 text-white p-2 rounded-full z-10 hover:bg-black/70"><i data-lucide="chevron-right" class="w-5 h-5"></i></button><button onclick="scrollDetails(1)" class="absolute left-2 top-1/2 -translate-y-1/2 bg-black/50 text-white p-2 rounded-full z-10 hover:bg-black/70"><i data-lucide="chevron-left" class="w-5 h-5"></i></button></div>
-                    <span id="d-type-badge" class="absolute bottom-2 right-2 text-white px-2.5 py-1 rounded-lg text-[10px] font-bold shadow backdrop-blur-sm"></span>
-                </div>
-
-                <div class="flex-1 overflow-y-auto bg-slate-50 dark:bg-darkbg">
-                    <div id="publisher-bar" class="flex items-center gap-2 p-2 bg-white dark:bg-slate-800/50 border-b border-slate-200 dark:border-slate-700 cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-800 transition" onclick="openPublisherProfile()">
-                        <div id="d-pub-img-container" class="w-9 h-9 rounded-full border border-slate-300 overflow-hidden bg-slate-200 shrink-0"><img id="d-pub-img" src="" class="w-full h-full object-cover hidden"></div>
-                        <div class="flex-1 truncate"><h4 id="d-pub-name" class="text-xs font-bold text-slate-800 dark:text-white leading-tight flex items-center gap-1"></h4><span class="text-[9px] text-emerald-600 dark:text-emerald-400 font-bold">عرض البروفايل</span></div>
-                        <i data-lucide="chevron-left" class="w-4 h-4 text-slate-400"></i>
-                    </div>
-
-                    <div id="d-controls" class="hidden p-2 bg-slate-50 dark:bg-darkbg border-b border-slate-200 dark:border-slate-700 w-full"></div>
-                    
-                    <div class="p-2 space-y-2.5">
-                        <div class="space-y-1">
-                            <div><span class="text-[9px] font-bold text-slate-400 block mb-0">العنوان العقاري</span><h2 id="d-title" class="text-sm font-bold text-slate-900 dark:text-white leading-tight"></h2></div>
-                            <div class="flex items-center justify-between border-b border-slate-200 dark:border-slate-700 pb-1.5 pt-1">
-                                <div><span class="text-[9px] font-bold text-slate-400 block mb-0">السعر المطلوب</span><span id="d-price" class="text-emerald-600 dark:text-emerald-400 font-black text-lg"></span></div>
-                                <span id="d-time-badge" class="text-[9px] text-slate-500 font-bold bg-white dark:bg-slate-800 px-2 py-1 rounded border border-slate-200 dark:border-slate-700 shadow-sm"></span>
-                            </div>
-                        </div>
-                        <div class="border border-slate-200 dark:border-slate-700 rounded-xl overflow-hidden bg-white dark:bg-slate-800/50 shadow-sm">
-                            <table class="w-full text-[10px] modern-table"><tbody id="d-table-body"></tbody></table>
-                        </div>
-                        <div>
-                            <h3 class="text-[11px] font-bold text-slate-800 dark:text-white mb-2 flex items-center gap-1"><i data-lucide="sparkles" class="w-3.5 h-3.5 text-yellow-500"></i> المميزات</h3>
-                            <div id="d-amenities" class="grid grid-cols-3 gap-0 border border-slate-200 dark:border-slate-700 rounded-xl overflow-hidden bg-white dark:bg-slate-800/50 shadow-sm"></div>
-                        </div>
-                        <div class="bg-white dark:bg-slate-800/50 p-2.5 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm"><h3 class="text-[10px] font-bold text-emerald-600 dark:text-emerald-400 uppercase mb-1 flex items-center gap-1"><i data-lucide="info" class="w-3 h-3"></i> التفاصيل الكاملة</h3><p id="d-desc" class="text-[11px] text-slate-700 dark:text-slate-300 leading-snug whitespace-pre-wrap font-medium"></p></div>
-                    </div>
-                </div>
-                <div class="p-2 border-t border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 flex flex-col gap-2 shrink-0 pb-6 md:pb-2">
-                    <a id="d-map" href="#" target="_blank" class="hidden w-full bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 py-2 rounded-lg flex justify-center items-center gap-2 font-bold text-[10px] border border-blue-200 dark:border-blue-800 hover:bg-blue-100 transition shadow-sm"><i data-lucide="map" class="w-3.5 h-3.5"></i> الموقع على الخريطة</a>
-                    <div class="flex gap-2"><a id="d-wa" href="#" target="_blank" class="flex-1 bg-[#25D366] text-white py-2.5 rounded-lg flex justify-center items-center gap-1.5 font-bold shadow-md hover:bg-green-600 transition text-[11px]"><i data-lucide="message-circle" class="w-4 h-4"></i> واتساب</a><a id="d-call" href="#" class="flex-1 bg-slate-800 dark:bg-slate-700 text-white py-2.5 rounded-lg flex justify-center items-center gap-1.5 font-bold shadow-md hover:bg-slate-900 transition text-[11px]"><i data-lucide="phone" class="w-4 h-4"></i> اتصال مباشر</a></div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Add Modal, Chat Modal, Lightbox, Admin Panel remain the same structure -->
         <div id="add-modal" class="hidden modal-overlay"><div class="mobile-full-modal animate-pop"><div class="p-2.5 border-b border-slate-200 dark:border-slate-700 flex justify-between items-center bg-white dark:bg-darkbg shrink-0"><h3 id="add-modal-title" class="font-bold text-slate-800 dark:text-white text-sm">إضافة عقار</h3><button onclick="toggleModal('add-modal')" class="bg-red-500 text-white p-2 rounded-full hover:bg-red-600 transition shadow-sm"><i data-lucide="x" class="w-4 h-4"></i></button></div><div class="flex-1 overflow-y-auto p-2.5 bg-slate-50 dark:bg-darkbg"><div class="space-y-2.5"><div class="bg-white dark:bg-slate-800 p-2.5 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm"><label class="block text-[10px] font-bold text-slate-700 dark:text-slate-300 mb-1.5">صور وفيديوهات العقار (بحد أقصى 10)</label><div class="grid grid-cols-4 gap-1.5"><label class="aspect-square border-2 border-dashed border-emerald-300 dark:border-emerald-700 bg-emerald-50 dark:bg-emerald-900/20 rounded-lg flex flex-col items-center justify-center cursor-pointer hover:bg-emerald-100 transition text-emerald-600 dark:text-emerald-400 relative overflow-hidden"><input type="file" id="file-upload-input" multiple accept="image/*,video/*" onchange="handleUpload(this)" class="absolute inset-0 opacity-0 z-10"><i data-lucide="camera" class="w-4 h-4 mb-0.5"></i><span class="text-[8px] font-bold">إضافة</span></label><div id="preview-area" class="col-span-3 flex gap-1.5 overflow-x-auto no-scrollbar py-0.5"></div></div></div><div class="bg-white dark:bg-slate-800 p-2.5 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm space-y-1.5"><h4 class="text-[9px] font-bold text-slate-400 uppercase tracking-wider border-b border-slate-100 dark:border-slate-700 pb-0.5 mb-0.5">بيانات أساسية</h4><div class="flex gap-1.5"><div class="custom-select-wrapper flex-1"><select id="in-category" onchange="updateFormFields()" class="custom-select"><option value="apartment">شقة</option><option value="villa">فيلا</option><option value="chalet">شاليهات</option><option value="office">مكتب</option><option value="shop">محلات</option><option value="land">أراضي</option><option value="building">عماير</option><option value="warehouse">مخازن</option></select><i data-lucide="chevron-down" class="custom-select-icon w-3 h-3"></i></div><div class="custom-select-wrapper w-20 shrink-0"><select id="in-type" class="custom-select"><option value="sale">بيع</option><option value="rent">إيجار</option></select><i data-lucide="chevron-down" class="custom-select-icon w-3 h-3"></i></div></div><input id="in-title" class="input-box" placeholder="عنوان الإعلان"><input id="in-price" type="number" class="input-box" placeholder="السعر (جنيه)"><div class="grid grid-cols-2 gap-1.5"><input id="in-area" type="number" class="input-box" placeholder="المساحة (م²)"><input id="in-level" type="text" class="input-box" placeholder="الدور"><input id="in-floors-alt" type="number" class="input-box hidden" placeholder="عدد الأدوار"><div id="land-type-wrapper" class="hidden custom-select-wrapper"><select id="in-land-type" class="custom-select"><option value="building">مباني</option><option value="agriculture">زراعية</option></select><i data-lucide="chevron-down" class="custom-select-icon w-3 h-3"></i></div></div><div id="land-fields" class="hidden grid grid-cols-2 gap-1.5"><input id="in-feddan" type="number" class="input-box" placeholder="فدان (اختياري)"><input id="in-qirat" type="number" class="input-box" placeholder="قيراط (اختياري)"></div><div id="building-fields" class="hidden grid grid-cols-2 gap-1.5"><input id="in-apartments" type="number" class="input-box" placeholder="عدد الشقق"></div><div id="room-fields" class="grid grid-cols-2 gap-1.5"><input id="in-rooms" type="number" class="input-box" placeholder="عدد الغرف"><input id="in-baths" type="number" class="input-box" placeholder="عدد الحمامات"></div><div id="extra-fields" class="grid grid-cols-2 gap-1.5"><input id="in-balconies" type="number" class="input-box" placeholder="عدد البلكونات"><div class="custom-select-wrapper"><select id="in-finishing" class="custom-select"><option value="" disabled selected>نوع التشطيب</option><option value="red">طوب أحمر</option><option value="semi">نصف تشطيب</option><option value="full">تشطيب كامل</option><option value="super">سوبر لوكس</option><option value="ultra">الترا سوبر لوكس</option></select><i data-lucide="chevron-down" class="custom-select-icon w-3 h-3"></i></div></div><div id="furnished-field" class="flex items-center justify-between bg-slate-50 dark:bg-slate-700/50 p-1.5 rounded-lg border border-slate-200 dark:border-slate-600"><span class="text-[10px] font-bold text-slate-600 dark:text-slate-300">مفروش؟</span><div class="flex gap-1.5"><label class="cursor-pointer"><input type="radio" name="furnished" id="furn-yes" value="yes" class="peer hidden"><span class="px-3 py-1 rounded text-[9px] font-bold bg-white dark:bg-slate-600 border border-slate-200 dark:border-slate-500 text-slate-500 peer-checked:bg-emerald-500 peer-checked:text-white peer-checked:border-emerald-500 transition shadow-sm">نعم</span></label><label class="cursor-pointer"><input type="radio" name="furnished" id="furn-no" value="no" checked class="peer hidden"><span class="px-3 py-1 rounded text-[9px] font-bold bg-white dark:bg-slate-600 border border-slate-200 dark:border-slate-500 text-slate-500 peer-checked:bg-slate-800 peer-checked:text-white peer-checked:border-slate-800 transition shadow-sm">لا</span></label></div></div></div><div class="bg-white dark:bg-slate-800 p-2.5 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm space-y-1.5"><h4 class="text-[9px] font-bold text-slate-400 uppercase tracking-wider border-b border-slate-100 dark:border-slate-700 pb-0.5 mb-0.5">المميزات</h4><div class="grid grid-cols-4 gap-1.5" id="amenities-grid"></div><textarea id="in-desc" rows="2" class="input-box resize-none" placeholder="وصف تفصيلي..."></textarea></div><div class="bg-white dark:bg-slate-800 p-2.5 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm space-y-1.5"><h4 class="text-[9px] font-bold text-slate-400 uppercase tracking-wider border-b border-slate-100 dark:border-slate-700 pb-0.5 mb-0.5">الموقع والتواصل</h4><input id="in-address" class="input-box mb-1.5" placeholder="العنوان بالتفصيل (اسم الشارع، علامة مميزة)..."><div class="grid grid-cols-2 gap-1.5"><div class="custom-select-wrapper"><select id="in-gov" onchange="populateCities('in-gov', 'in-city')" class="custom-select"><option value="" disabled selected>المحافظة</option></select><i data-lucide="chevron-down" class="custom-select-icon w-3 h-3"></i></div><div class="custom-select-wrapper"><select id="in-city" class="custom-select"><option value="" disabled selected>المركز/المدينة</option></select><i data-lucide="chevron-down" class="custom-select-icon w-3 h-3"></i></div></div><input id="in-map" class="input-box" placeholder="رابط جوجل ماب (اختياري)"><input id="in-phone" type="tel" class="input-box" placeholder="رقم الهاتف"></div></div></div><div class="p-2.5 border-t border-slate-200 dark:border-slate-700 bg-white dark:bg-darkbg shrink-0 pb-6 md:pb-3"><button onclick="submitListing()" id="btn-publish" class="w-full bg-slate-900 dark:bg-emerald-600 text-white py-3 rounded-xl font-bold text-xs shadow-lg hover:opacity-90 transition transform active:scale-95">نشر الإعلان</button></div></div></div>
         <div id="chat-modal" class="hidden modal-overlay"><div class="mobile-full-modal animate-pop border border-navy/10"><div class="bg-slate-900 dark:bg-emerald-600 p-3 text-white flex justify-between items-center shrink-0"><div class="flex items-center gap-2"><div class="bg-white/10 p-1.5 rounded-full"><i data-lucide="bot" class="w-5 h-5 text-yellow-400"></i></div><div><h4 class="font-bold text-xs">الدعم الفني</h4><span class="text-[9px] opacity-80">متصل الآن</span></div></div><button onclick="toggleChat()" class="bg-red-500 text-white p-1.5 rounded-full hover:bg-red-600 transition shadow-sm"><i data-lucide="x" class="w-4 h-4"></i></button></div><div id="chat-box" class="flex-1 bg-slate-50 dark:bg-slate-900 p-3 overflow-y-auto space-y-2 text-xs"></div><div class="p-3 bg-white dark:bg-slate-800 border-t border-slate-200 dark:border-slate-700 flex items-center gap-2 shrink-0 pb-safe"><input id="chat-msg" type="text" class="flex-1 bg-slate-100 dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-full px-4 py-2.5 text-sm outline-none dark:text-white font-bold" placeholder="اكتب رسالتك..."><button onclick="sendMsg()" class="w-10 h-10 bg-slate-900 dark:bg-emerald-600 rounded-full text-white flex items-center justify-center shadow-lg hover:opacity-90 transition"><i data-lucide="send" class="w-4 h-4 ml-1"></i></button></div></div></div>
         <div id="lightbox" class="hidden fixed inset-0 bg-black/95 backdrop-blur-sm z-[120] flex flex-col items-center justify-center select-none"><button onclick="closeLightbox()" class="absolute top-4 left-4 bg-white/20 text-white p-2.5 rounded-full z-20 hover:bg-white/30 transition"><i data-lucide="x" class="w-6 h-6"></i></button><button onclick="changeLightboxImage(-1)" class="absolute right-4 top-1/2 -translate-y-1/2 bg-white/10 text-white p-3 rounded-full z-20 hover:bg-white/20 transition"><i data-lucide="chevron-right" class="w-6 h-6"></i></button><button onclick="changeLightboxImage(1)" class="absolute left-4 top-1/2 -translate-y-1/2 bg-white/10 text-white p-3 rounded-full z-20 hover:bg-white/20 transition"><i data-lucide="chevron-left" class="w-6 h-6"></i></button><div class="relative w-full h-full flex items-center justify-center"><img id="lightbox-img" src="" class="max-w-full max-h-[85vh] object-contain transition-opacity duration-200"></div></div>
@@ -393,16 +313,16 @@
             { id: 'warehouse', name: 'مخازن', img: 'https://images.pexels.com/photos/221047/pexels-photo-221047.jpeg?auto=compress&cs=tinysrgb&w=400' }
         ];
 
-        const EGYPT_LOCATIONS = { "الشرقية":["الزقازيق", "العاشر من رمضان", "منيا القمح", "بلبيس", "مشتول السوق", "القنايات", "أبو حماد", "القرين", "ههيا", "أبو كبير", "فاقوس", "الصالحية الجديدة", "الإبراهيمية", "ديرب نجم", "كفر صقر", "أولاد صقر", "الحسينية", "صان الحجر", "منشأة أبو عمر"], "القاهرة":["مدينة نصر", "مصر الجديدة", "المعادي", "التجمع الخامس", "الرحاب", "مدينتي", "الشروق", "العبور", "المقطم", "الزيتون", "حدائق القبة", "شبرا", "وسط البلد", "المنيل", "الزمالك", "المهندسين", "الدقي", "العجوزة"], "الجيزة":["6 أكتوبر", "الشيخ زايد", "الهرم", "فيصل", "المهندسين", "الدقي", "العجوزة", "إمبابة", "الوراق", "بولاق الدكرور", "العمرانية", "المنيب"] /* الخ */ };
+        const EGYPT_LOCATIONS = { "الشرقية":["الزقازيق", "العاشر من رمضان", "منيا القمح", "بلبيس", "مشتول السوق", "القنايات", "أبو حماد", "القرين", "ههيا", "أبو كبير", "فاقوس", "الصالحية الجديدة", "الإبراهيمية", "ديرب نجم", "كفر صقر", "أولاد صقر", "الحسينية", "صان الحجر", "منشأة أبو عمر"], "القاهرة":["مدينة نصر", "مصر الجديدة", "المعادي", "التجمع الخامس", "الرحاب", "مدينتي", "الشروق", "العبور", "المقطم", "الزيتون", "حدائق القبة", "شبرا", "وسط البلد", "المنيل", "الزمالك", "المهندسين", "الدقي", "العجوزة"], "الجيزة":["6 أكتوبر", "الشيخ زايد", "الهرم", "فيصل", "المهندسين", "الدقي", "العجوزة", "إمبابة", "الوراق", "بولاق الدكرور", "العمرانية", "المنيب"] };
 
         function renderCategories() {
             const grid = document.getElementById('categories-grid');
             grid.innerHTML = CATEGORIES_DATA.map(c => `
-                <div onclick="openCategory('${c.id}', '${c.name}')" class="relative h-28 md:h-32 rounded-xl overflow-hidden shadow-md cursor-pointer group active:scale-95 transition-transform">
+                <div onclick="openCategory('${c.id}', '${c.name}')" class="relative h-28 md:h-32 rounded-xl overflow-hidden shadow-sm border border-slate-200 dark:border-slate-700 cursor-pointer group active:scale-95 transition-transform">
                     <img src="${c.img}" loading="lazy" class="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
                     <div class="absolute inset-0 bg-black/40 group-hover:bg-black/20 transition-colors"></div>
                     <div class="absolute inset-0 flex items-center justify-center">
-                        <span class="text-white font-black text-sm tracking-wider drop-shadow-lg px-4 py-1.5 border border-white/40 rounded-lg backdrop-blur-sm bg-black/30 shadow-lg">${c.name}</span>
+                        <span class="text-white font-black text-sm tracking-wider drop-shadow-lg px-4 py-1.5 border border-white/30 rounded-lg backdrop-blur-sm bg-black/40 shadow-lg">${c.name}</span>
                     </div>
                 </div>
             `).join('');
@@ -475,25 +395,15 @@
                 section.classList.add('hidden');
             } else {
                 section.classList.remove('hidden');
-                // معالجة إذا كان هناك عنصر واحد لتوسيطه برمجياً
-                if(featuredList.length === 1) {
-                    container.classList.add('justify-center');
-                } else {
-                    container.classList.remove('justify-center');
-                }
-                
-                // تمرير Prefix 'feat' لحل مشكلة التداخل في الـ DOM
+                if(featuredList.length === 1) { container.classList.add('justify-center'); } else { container.classList.remove('justify-center'); }
                 container.innerHTML = featuredList.map(item => {
-                    return `<div class="w-64 snap-center shrink-0 shadow-lg rounded-xl">${createCard(item, 'feat')}</div>`;
+                    return `<div class="w-64 snap-center shrink-0 shadow-sm rounded-xl">${createCard(item, 'feat')}</div>`;
                 }).join('');
                 lucide.createIcons({ root: container });
             }
         }
 
-        window.scrollFeatured = (dir) => {
-            const slider = document.getElementById('featured-slider');
-            slider.scrollBy({ left: dir * 260, behavior: 'smooth' }); 
-        }
+        window.scrollFeatured = (dir) => { const slider = document.getElementById('featured-slider'); slider.scrollBy({ left: dir * 260, behavior: 'smooth' }); }
 
         loadCachedData();
         renderCategories();
@@ -517,7 +427,6 @@
         window.handleProfileClick = () => { if(!state.user || state.user.isAnonymous) toggleModal('auth-modal'); };
         window.switchAuthMode = (mode) => {['login','register'].forEach(m => { document.getElementById(`form-${m}`).classList.add('hidden'); document.getElementById(`tab-${m}`).className = 'flex-1 py-2 rounded-lg text-xs font-bold transition text-slate-500 dark:text-slate-400'; }); document.getElementById(`form-${mode}`).classList.remove('hidden'); document.getElementById(`tab-${mode}`).className = 'flex-1 py-2 rounded-lg text-xs font-bold transition bg-white dark:bg-slate-700 shadow text-emerald-600 dark:text-white'; };
         window.formatPhone = (input) => { let val = input.value.replace(/\D/g, ''); if(val.startsWith('0')) val = val.substring(1); input.value = val; };
-        
         window.previewProfileImage = async (input) => { if(input.files && input.files[0]) { const file = await compressImage(input.files[0]); state.regImage = file; const url = URL.createObjectURL(file); const img = document.getElementById('reg-img-preview'); img.src = url; img.classList.remove('hidden'); document.getElementById('reg-img-placeholder').classList.add('hidden'); } };
         window.registerUser = async () => { const n=document.getElementById('reg-name').value, p=document.getElementById('reg-phone').value, w=document.getElementById('reg-pass').value; if(!n||!p||!w||!state.regImage)return showToast('البيانات ناقصة','e'); const btn=document.getElementById('btn-register'); btn.innerText='جاري الإنشاء...'; btn.disabled=true; try{ const photoURL=await uploadToCloudinary(state.regImage); const cred=await createUserWithEmailAndPassword(auth, `0${p}@souq.com`, w); const ud={uid:cred.user.uid,displayName:n,phoneNumber:`+20${p}`,photoURL:photoURL,createdAt:serverTimestamp()}; await setDoc(doc(db,"users",cred.user.uid),ud); state.userProfile=ud; updateHeader(); toggleModal('auth-modal'); showToast(`مرحباً ${n}`); }catch(e){ showToast('الرقم مسجل أو كلمة المرور ضعيفة','e'); } finally{ btn.innerText='إنشاء حساب جديد'; btn.disabled=false; } };
         window.loginUser = async () => { const p=document.getElementById('login-phone').value, w=document.getElementById('login-pass').value; if(!p||!w)return showToast('بيانات ناقصة','e'); const btn=document.getElementById('btn-login'); btn.innerText='جاري التحميل...'; btn.disabled=true; try{ await signInWithEmailAndPassword(auth, `0${p}@souq.com`, w); toggleModal('auth-modal'); showToast('تم تسجيل الدخول'); }catch(e){ showToast('البيانات غير صحيحة','e'); } finally{ btn.innerText='تسجيل الدخول'; btn.disabled=false; } };
@@ -538,11 +447,7 @@
         };
 
         function renderAmenities(list) { document.getElementById('amenities-grid').innerHTML = list.map(a => `<label class="amenity-tile cursor-pointer"><input type="checkbox" class="amenity-check hidden" value="${a}"><div class="text-center py-1.5 border border-slate-300 dark:border-slate-600 rounded-lg text-[9px] font-bold text-slate-600 dark:text-slate-300 transition shadow-sm hover:bg-slate-100 dark:hover:bg-slate-700 truncate">${a}</div></label>`).join(''); }
-
-        function initLocations() {
-            const govSelects =['in-gov', 'filter-gov'];
-            govSelects.forEach(id => { const sel = document.getElementById(id); if(sel) { sel.innerHTML = `<option value="" ${id==='in-gov'?'disabled selected':'selected'}>${id==='in-gov'?'المحافظة':'كل المحافظات'}</option>`; Object.keys(EGYPT_LOCATIONS).forEach(gov => { sel.innerHTML += `<option value="${gov}">${gov}</option>`; }); } });
-        }
+        function initLocations() { const govSelects =['in-gov', 'filter-gov']; govSelects.forEach(id => { const sel = document.getElementById(id); if(sel) { sel.innerHTML = `<option value="" ${id==='in-gov'?'disabled selected':'selected'}>${id==='in-gov'?'المحافظة':'كل المحافظات'}</option>`; Object.keys(EGYPT_LOCATIONS).forEach(gov => { sel.innerHTML += `<option value="${gov}">${gov}</option>`; }); } }); }
         window.populateCities = (govId, cityId) => { const gov = document.getElementById(govId).value; const citySel = document.getElementById(cityId); citySel.innerHTML = `<option value="" ${govId==='in-gov'?'disabled selected':'selected'}>${govId==='in-gov'?'المركز/المدينة':'كل المراكز'}</option>`; if(gov && EGYPT_LOCATIONS[gov]) { EGYPT_LOCATIONS[gov].forEach(city => { citySel.innerHTML += `<option value="${city}">${city}</option>`; }); } };
         window.toggleFilterPanel = () => { document.getElementById('filter-panel').classList.toggle('open'); };
         window.updateFormFields = () => { const cat = document.getElementById('in-category').value; const rF=document.getElementById('room-fields'), fF=document.getElementById('furnished-field'), lI=document.getElementById('in-level'), fA=document.getElementById('in-floors-alt'), lTW=document.getElementById('land-type-wrapper'), lF=document.getElementById('land-fields'), bF=document.getElementById('building-fields'), eF=document.getElementById('extra-fields'); rF.classList.remove('hidden'); fF.classList.remove('hidden'); lI.classList.remove('hidden'); fA.classList.add('hidden'); lTW.classList.add('hidden'); lF.classList.add('hidden'); bF.classList.add('hidden'); eF.classList.remove('hidden'); if(cat==='land') { renderAmenities(LAND_AMENITIES); rF.classList.add('hidden'); fF.classList.add('hidden'); lI.classList.add('hidden'); eF.classList.add('hidden'); lTW.classList.remove('hidden'); lF.classList.remove('hidden'); } else { renderAmenities(ALL_AMENITIES); if (cat === 'building') { rF.classList.add('hidden'); fF.classList.add('hidden'); lI.classList.add('hidden'); fA.classList.remove('hidden'); bF.classList.remove('hidden'); eF.classList.add('hidden'); } else if (['shop','office','warehouse'].includes(cat)) { rF.classList.add('hidden'); eF.classList.add('hidden'); } } };
@@ -568,7 +473,6 @@
             }); 
         }
 
-        // تم تحديث نظام العرض لضمان دقة الفلترة
         window.performSearch = (forceRender = false) => { 
             const q = normalizeText(document.getElementById('search-input').value); 
             const filterGov = document.getElementById('filter-gov').value;
@@ -603,7 +507,6 @@
 
                 const isMatch = matchType && matchText && matchCat && matchGov && matchCity && matchPrice; 
 
-                // تم استخدام Prefix 'grid' لتجنب التداخل مع بطاقات العروض المميزة في الخلفية
                 const cardEl = document.getElementById(`card-grid-${item.id}`);
                 if (cardEl) { 
                     if (isMatch) { 
@@ -627,7 +530,6 @@
             if (isVideo) { let cleanUrl = parts[1]; const lastDot = cleanUrl.lastIndexOf('.'); if (lastDot !== -1) cleanUrl = cleanUrl.substring(0, lastDot) + '.jpg'; return `${parts[0]}/upload/${params},so_0/${cleanUrl}`; } return `${parts[0]}/upload/${params}/${parts[1]}`;
         };
 
-        // تم إضافة المعامل prefix لضمان عدم حدوث تضارب في المعرفات (ID)
         function createCard(item, prefix = 'grid') {
             const imgs = Array.isArray(item.images) ? item.images :[item.image]; const firstMedia = imgs[0]; const isVideo = firstMedia.includes('.mp4') || firstMedia.includes('.mov'); const thumbUrl = getOptimizedUrl(firstMedia, isVideo);
             let statusOverlay = ''; if(item.status && item.status !== 'available') { const txt = item.status==='sold'?'تم البيع':'تم التأجير'; const clr = item.status==='sold'?'bg-red-600':'bg-blue-600'; statusOverlay=`<div class="absolute inset-0 sold-overlay flex items-center justify-center z-30 pointer-events-none bg-black/50 backdrop-blur-sm"><span class="${clr} text-white font-black px-6 py-2 rounded-xl shadow-2xl transform -rotate-12 text-sm border-2 border-white/20">${txt}</span></div>`; }
@@ -638,11 +540,11 @@
 
             const locDisplay = item.gov ? `${item.city}، ${item.gov}` : item.location; const code = item.shortCode || item.id.substring(0,3).toUpperCase(); const shareUrl = window.location.origin + window.location.pathname + '?id=' + item.id; const waMsg = `مهتم بهذا العقار: ${item.title} (${Number(item.price).toLocaleString()} ج)\nكود الإعلان: ${code}\nالرابط: ${shareUrl}`; const waLink = `https://wa.me/20${item.phone}?text=${encodeURIComponent(waMsg)}`;
 
-            return `<div id="card-${prefix}-${item.id}" class="listing-card bg-white dark:bg-slate-800 rounded-xl overflow-hidden shadow-sm border border-slate-200 dark:border-slate-700 flex flex-col h-full cursor-pointer active:scale-95 transition-transform group relative transform-gpu" onclick="openDetails('${item.id}')">
-                <div class="relative w-full h-36 shrink-0">
+            return `<div id="card-${prefix}-${item.id}" class="listing-card bg-white dark:bg-slate-800 rounded-xl overflow-hidden shadow-sm border border-slate-200 dark:border-slate-700 flex flex-col h-full cursor-pointer active:scale-95 transition-transform group relative" onclick="openDetails('${item.id}')">
+                <div class="relative w-full h-36 shrink-0 bg-slate-200 dark:bg-slate-700">
                     ${statusOverlay}
                     <span class="absolute top-2 right-2 ${item.type === 'sale' ? 'bg-emerald-600' : 'bg-blue-600'} text-white px-2 py-0.5 rounded text-[10px] font-bold shadow-md z-20">${item.type === 'sale' ? 'بيع' : 'إيجار'}</span>
-                    ${item.isPinned ? `<span class="absolute top-2 left-2 bg-yellow-500 text-slate-900 px-2.5 py-0.5 rounded text-[10px] font-black shadow-md z-20 animate-pulse border border-yellow-300">⭐ مميز</span>` : ''}
+                    ${item.isPinned ? `<span class="absolute top-2 left-2 bg-yellow-500 text-slate-900 px-2.5 py-0.5 rounded text-[10px] font-black shadow-md z-20 border border-yellow-300">⭐ مميز</span>` : ''}
                     <img src="${thumbUrl}" loading="lazy" decoding="async" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 ${statusOverlay?'grayscale':''}">
                     ${imgs.length > 1 ? `<div class="absolute bottom-1.5 left-1.5 bg-black/60 text-white text-[10px] font-bold px-2 py-0.5 rounded flex items-center gap-1 backdrop-blur-sm"><i data-lucide="images" class="w-3 h-3"></i> +${imgs.length-1}</div>` : ''}
                     ${isVideo ? `<div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-black/40 rounded-full p-2 backdrop-blur-sm"><i data-lucide="play-circle" class="w-8 h-8 text-white/90"></i></div>` : ''}
@@ -678,11 +580,7 @@
                     const item = state.listings.find(i => i.id === id); if(!item) return;
                     state.activeDetailsId = id; state.currentItem = item; state.currentDetailIndex = 0; 
 
-                    const renderPublisher = (pubData) => {
-                        let nameHtml = pubData.displayName; if(pubData.verified) { nameHtml += ' <i data-lucide="check-circle" class="inline w-3 h-3 text-blue-500 mb-0.5"></i>'; }
-                        document.getElementById('d-pub-name').innerHTML = nameHtml;
-                        const img = document.getElementById('d-pub-img'); img.src = getOptimizedUrl(pubData.photoURL).replace('w_512,h_512', 'w_100,h_100,r_max'); img.classList.remove('hidden'); lucide.createIcons({root: document.getElementById('publisher-bar')});
-                    };
+                    const renderPublisher = (pubData) => { let nameHtml = pubData.displayName; if(pubData.verified) { nameHtml += ' <i data-lucide="check-circle" class="inline w-3 h-3 text-blue-500 mb-0.5"></i>'; } document.getElementById('d-pub-name').innerHTML = nameHtml; const img = document.getElementById('d-pub-img'); img.src = getOptimizedUrl(pubData.photoURL).replace('w_512,h_512', 'w_100,h_100,r_max'); img.classList.remove('hidden'); lucide.createIcons({root: document.getElementById('publisher-bar')}); };
 
                     state.currentPublisher = null;
                     if(item.authorId) { if(state.publisherCache[item.authorId]) { state.currentPublisher = state.publisherCache[item.authorId]; renderPublisher(state.currentPublisher); } else { document.getElementById('d-pub-name').innerText = '...'; getDoc(doc(db, "users", item.authorId)).then(pubDoc => { if(pubDoc.exists()) { state.currentPublisher = pubDoc.data(); state.publisherCache[item.authorId] = state.currentPublisher; renderPublisher(state.currentPublisher); } else { state.currentPublisher = DUMMY_PUBLISHER; renderPublisher(DUMMY_PUBLISHER); } }); } } else { state.currentPublisher = DUMMY_PUBLISHER; renderPublisher(DUMMY_PUBLISHER); }
