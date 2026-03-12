@@ -1,7 +1,7 @@
 exports.handler = async (event, context) => {
     // استخراج رقم العقار من الرابط
     const id = event.queryStringParameters.id || event.path.split('/').pop();
-    
+
     if (!id) {
         return { statusCode: 404, body: 'Not Found' };
     }
@@ -16,26 +16,38 @@ exports.handler = async (event, context) => {
         const response = await fetch(firestoreUrl);
         if (!response.ok) throw new Error('Document not found');
         const data = await response.json();
-        
+
         // استخراج البيانات من شكل استجابة REST API الخاص بفايربيز
         const fields = data.fields || {};
         const title = fields.title?.stringValue || 'عقار مميز في السوق وياك';
         const desc = fields.desc?.stringValue || 'اضغط هنا لمشاهدة تفاصيل وصور العقار بالكامل على السوق وياك.';
-        
-        // استخراج أول صورة من المصفوفة
-        let imageUrl = 'https://images.pexels.com/photos/439227/pexels-photo-439227.jpeg'; // صورة افتراضية
+
+        // استخراج أول صورة من المصفوفة (أو أيقونة الموقع الجديدة كافتراضي)
+        let imageUrl = 'https://cdn-icons-png.flaticon.com/512/9128/9128710.png'; 
         if (fields.images && fields.images.arrayValue && fields.images.arrayValue.values && fields.images.arrayValue.values.length > 0) {
             imageUrl = fields.images.arrayValue.values[0].stringValue;
         } else if (fields.image?.stringValue) {
             imageUrl = fields.image.stringValue;
         }
 
-        // تحسين مقاس الصورة لفيسبوك وواتساب إذا كانت مرفوعة على Cloudinary
-        if (imageUrl.includes('cloudinary.com') && !imageUrl.includes('.mp4')) {
+        // تحسين مقاس الصورة / أو استخراج صورة من الفيديو لفيسبوك وواتساب
+        if (imageUrl.includes('cloudinary.com')) {
             const parts = imageUrl.split('/upload/');
             if (parts.length === 2) {
-                // قص الصورة لمقاس متناسق للـ Social Media
-                imageUrl = `${parts[0]}/upload/w_800,h_418,c_fill,q_auto:eco,f_auto/${parts[1]}`;
+                let cleanUrl = parts[1];
+                // التحقق مما إذا كان الملف فيديو
+                const isVideo = cleanUrl.includes('.mp4') || cleanUrl.includes('.mov') || parts[0].includes('/video');
+                
+                if (isVideo) {
+                    // إذا كان فيديو: نقوم بتغيير الامتداد إلى .jpg ونستخدم so_0 لالتقاط أول لقطة منه
+                    const lastDot = cleanUrl.lastIndexOf('.');
+                    if (lastDot !== -1) cleanUrl = cleanUrl.substring(0, lastDot) + '.jpg';
+                    // قص الصورة لمقاس متناسق للـ Social Media مع التقاط الثانية صفر (so_0)
+                    imageUrl = `${parts[0]}/upload/w_800,h_418,c_fill,q_auto:eco,f_auto,so_0/${cleanUrl}`;
+                } else {
+                    // إذا كان صورة عادية
+                    imageUrl = `${parts[0]}/upload/w_800,h_418,c_fill,q_auto:eco,f_auto/${cleanUrl}`;
+                }
             }
         }
 
