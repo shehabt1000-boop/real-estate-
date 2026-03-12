@@ -847,7 +847,59 @@
 
         window.closeDetails = (isHistoryBack = false) => { const slider = document.getElementById('details-slider'); if(slider && slider.firstElementChild) { slider.firstElementChild.scrollIntoView({ behavior: 'instant', block: 'nearest', inline: 'start' }); } toggleModal('details-modal', isHistoryBack); const newUrl = new URL(window.location); newUrl.searchParams.delete('id'); window.history.pushState({}, '', newUrl); state.activeDetailsId = null; }
         window.shareListing = async () => { if(!state.currentItem) return; const d = { title: 'السوق وياك', text: `شاهد عقار: ${state.currentItem.title}`, url: window.location.origin + '/property/' + state.currentItem.id }; try { await navigator.share(d); showToast('تمت المشاركة'); } catch(e) { navigator.clipboard.writeText(d.url); showToast('تم النسخ'); } };
-        window.downloadImages = async () => { if(!state.currentItem || !state.currentItem.images) return; const slider = document.getElementById('details-slider'); let currentIndex = 0; if (slider && slider.children.length > 0) { const scrollLeft = Math.abs(slider.scrollLeft); const itemWidth = slider.clientWidth; currentIndex = Math.round(scrollLeft / itemWidth); } const url = state.currentItem.images[currentIndex]; if (!url) return; showToast('جاري التنزيل...'); let downloadUrl = url; if(url.includes('cloudinary.com')) { const parts = url.split('/upload/'); if(parts.length === 2) { downloadUrl = `${parts[0]}/upload/fl_attachment/${parts[1]}`; } } const a = document.createElement('a'); a.href = downloadUrl; a.target = '_blank'; a.download = `souq_${state.currentItem.id}_${currentIndex+1}`; document.body.appendChild(a); a.click(); document.body.removeChild(a); };
+        window.downloadImages = async () => { 
+            if(!state.currentItem || !state.currentItem.images) return; 
+            const slider = document.getElementById('details-slider'); 
+            let currentIndex = 0; 
+            if (slider && slider.children.length > 0) { 
+                const scrollLeft = Math.abs(slider.scrollLeft); 
+                const itemWidth = slider.clientWidth; 
+                currentIndex = Math.round(scrollLeft / itemWidth); 
+            } 
+            const url = state.currentItem.images[currentIndex]; 
+            if (!url) return; 
+            
+            showToast('جاري التنزيل في الخلفية...'); 
+            
+            try {
+                // جلب الصورة في الخلفية لمنع فتح أي صفحات جديدة
+                const response = await fetch(url);
+                const blob = await response.blob();
+                const blobUrl = URL.createObjectURL(blob);
+                
+                const a = document.createElement('a');
+                a.style.display = 'none';
+                a.href = blobUrl;
+                // تحديد امتداد الملف (فيديو أو صورة)
+                const ext = (url.includes('.mp4') || url.includes('.mov')) ? 'mp4' : 'jpg';
+                a.download = `souq_wayak_${state.currentItem.id}_${currentIndex+1}.${ext}`;
+                
+                document.body.appendChild(a);
+                a.click();
+                
+                // تنظيف المتصفح بعد التحميل
+                setTimeout(() => {
+                    document.body.removeChild(a);
+                    URL.revokeObjectURL(blobUrl);
+                }, 1000);
+            } catch (error) {
+                // خطة بديلة في حال فشل الجلب المباشر (بدون فتح نافذة جديدة أيضاً)
+                let fallbackUrl = url; 
+                if(url.includes('cloudinary.com')) { 
+                    const parts = url.split('/upload/'); 
+                    if(parts.length === 2) { 
+                        fallbackUrl = `${parts[0]}/upload/fl_attachment/${parts[1]}`; 
+                    } 
+                } 
+                const a = document.createElement('a'); 
+                a.style.display = 'none';
+                a.href = fallbackUrl; 
+                a.download = `souq_wayak_${state.currentItem.id}_${currentIndex+1}`; 
+                document.body.appendChild(a); 
+                a.click(); 
+                document.body.removeChild(a);
+            }
+        };
         window.scrollDetails = (dir) => { const slider = document.getElementById('details-slider'); const count = slider.children.length; if(count === 0) return; let newIndex = state.currentDetailIndex + dir; if (newIndex >= count) newIndex = 0; if (newIndex < 0) newIndex = count - 1; state.currentDetailIndex = newIndex; const target = slider.children[newIndex]; target.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'start' }); }
         window.openLightbox = (src, idx = 0) => { state.lightboxIndex = idx; updateLightboxImage(); document.getElementById('lightbox').classList.remove('hidden'); history.pushState({modal: 'lightbox'}, '', window.location.href); }
         window.closeLightbox = () => { document.getElementById('lightbox').classList.add('hidden'); document.getElementById('lightbox-img').src=''; }
