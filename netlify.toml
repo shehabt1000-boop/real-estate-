@@ -1,0 +1,9 @@
+[build]
+  publish = "." # مجلد الموقع (إذا كان index.html في المجلد الرئيسي اتركه هكذا)
+  functions = "netlify/functions"
+
+[[redirects]]
+  from = "/property/:id"
+  to = "/.netlify/functions/property?id=:id"
+  status = 200
+  force = true
