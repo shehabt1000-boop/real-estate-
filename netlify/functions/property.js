@@ -6,7 +6,7 @@ exports.handler = async (event, context) => {
         return { statusCode: 404, body: 'Not Found' };
     }
 
-    // معرف مشروعك في فايربيز من الكود الخاص بك
+    // معرف مشروعك في فايربيز 
     const projectId = 'sharqia-81030';
     const collection = 'listings_v2';
     const firestoreUrl = `https://firestore.googleapis.com/v1/projects/${projectId}/databases/(default)/documents/${collection}/${id}`;
@@ -17,12 +17,12 @@ exports.handler = async (event, context) => {
         if (!response.ok) throw new Error('Document not found');
         const data = await response.json();
 
-        // استخراج البيانات من شكل استجابة REST API الخاص بفايربيز
+        // استخراج البيانات
         const fields = data.fields || {};
         const title = fields.title?.stringValue || 'عقار مميز في السوق وياك';
         const desc = fields.desc?.stringValue || 'اضغط هنا لمشاهدة تفاصيل وصور العقار بالكامل على السوق وياك.';
 
-        // استخراج أول صورة من المصفوفة (أو أيقونة الموقع الجديدة كافتراضي)
+        // الصورة الافتراضية
         let imageUrl = 'https://cdn-icons-png.flaticon.com/512/9128/9128710.png'; 
         if (fields.images && fields.images.arrayValue && fields.images.arrayValue.values && fields.images.arrayValue.values.length > 0) {
             imageUrl = fields.images.arrayValue.values[0].stringValue;
@@ -30,28 +30,25 @@ exports.handler = async (event, context) => {
             imageUrl = fields.image.stringValue;
         }
 
-        // تحسين مقاس الصورة / أو استخراج صورة من الفيديو لفيسبوك وواتساب
+        // تسريع صاروخي لعملية جلب الصورة لواتساب
         if (imageUrl.includes('cloudinary.com')) {
             const parts = imageUrl.split('/upload/');
             if (parts.length === 2) {
                 let cleanUrl = parts[1];
-                // التحقق مما إذا كان الملف فيديو
                 const isVideo = cleanUrl.includes('.mp4') || cleanUrl.includes('.mov') || parts[0].includes('/video');
                 
                 if (isVideo) {
-                    // إذا كان فيديو: نقوم بتغيير الامتداد إلى .jpg ونستخدم so_0 لالتقاط أول لقطة منه
                     const lastDot = cleanUrl.lastIndexOf('.');
                     if (lastDot !== -1) cleanUrl = cleanUrl.substring(0, lastDot) + '.jpg';
-                    // قص الصورة لمقاس متناسق للـ Social Media مع التقاط الثانية صفر (so_0)
-                    imageUrl = `${parts[0]}/upload/w_800,h_418,c_fill,q_auto:eco,f_auto,so_0/${cleanUrl}`;
+                    // استخدام f_jpg و q_auto:eco ومقاس 600x315 لضمان سرعة فائقة وحجم أقل من 300KB
+                    imageUrl = `${parts[0]}/upload/w_600,h_315,c_fill,q_auto:eco,f_jpg,so_0/${cleanUrl}`;
                 } else {
-                    // إذا كان صورة عادية
-                    imageUrl = `${parts[0]}/upload/w_800,h_418,c_fill,q_auto:eco,f_auto/${cleanUrl}`;
+                    imageUrl = `${parts[0]}/upload/w_600,h_315,c_fill,q_auto:eco,f_jpg/${cleanUrl}`;
                 }
             }
         }
 
-        // الصفحة الوهمية التي سيقرأها واتساب وفيسبوك
+        // الصفحة الوهمية المدعمة بكل ما يطلبه واتساب
         const html = `
             <!DOCTYPE html>
             <html lang="ar" dir="rtl">
@@ -63,9 +60,14 @@ exports.handler = async (event, context) => {
                 <meta property="og:type" content="website" />
                 <meta property="og:title" content="${title}" />
                 <meta property="og:description" content="${desc}" />
+                
+                <!-- أهم 4 تاجات لضمان ظهور الصورة في واتساب -->
                 <meta property="og:image" content="${imageUrl}" />
-                <meta property="og:image:width" content="800" />
-                <meta property="og:image:height" content="418" />
+                <meta property="og:image:secure_url" content="${imageUrl}" />
+                <meta property="og:image:type" content="image/jpeg" />
+                <meta property="og:image:width" content="600" />
+                <meta property="og:image:height" content="315" />
+                
                 <meta property="og:site_name" content="السوق وياك" />
                 
                 <!-- Twitter -->
@@ -74,17 +76,14 @@ exports.handler = async (event, context) => {
                 <meta name="twitter:description" content="${desc}" />
                 <meta name="twitter:image" content="${imageUrl}" />
 
-                <!-- تحويل المستخدم الحقيقي للموقع الأصلي -->
+                <!-- تحويل المستخدم -->
                 <meta http-equiv="refresh" content="0;url=/?id=${id}" />
                 <script>
                     window.location.replace("/?id=${id}");
                 </script>
-                <style>
-                    body { font-family: system-ui, sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; background: #0f172a; color: #10b981; }
-                </style>
             </head>
             <body>
-                <h2>جاري تحويلك لتفاصيل العقار...</h2>
+                <p>جاري التحويل...</p>
             </body>
             </html>
         `;
@@ -95,7 +94,6 @@ exports.handler = async (event, context) => {
             body: html
         };
     } catch (error) {
-        // في حال تم حذف العقار أو وجود خطأ
         return {
             statusCode: 200, 
             headers: { 'Content-Type': 'text/html; charset=utf-8' },
