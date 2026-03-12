@@ -846,8 +846,69 @@
         }
 
         window.closeDetails = (isHistoryBack = false) => { const slider = document.getElementById('details-slider'); if(slider && slider.firstElementChild) { slider.firstElementChild.scrollIntoView({ behavior: 'instant', block: 'nearest', inline: 'start' }); } toggleModal('details-modal', isHistoryBack); const newUrl = new URL(window.location); newUrl.searchParams.delete('id'); window.history.pushState({}, '', newUrl); state.activeDetailsId = null; }
-        window.shareListing = async () => { if(!state.currentItem) return; const d = { title: 'السوق وياك', text: `شاهد عقار: ${state.currentItem.title}`, url: window.location.origin + '/property/' + state.currentItem.id }; try { await navigator.share(d); showToast('تمت المشاركة'); } catch(e) { navigator.clipboard.writeText(d.url); showToast('تم النسخ'); } };
-        window.downloadImages = async () => { if(!state.currentItem || !state.currentItem.images) return; showToast('جاري تحضير الصور...'); for(let i=0; i<state.currentItem.images.length; i++) { const url = state.currentItem.images[i]; const a = document.createElement('a'); a.href = url; a.target = '_blank'; a.download = `souq_${state.currentItem.id}_${i+1}`; document.body.appendChild(a); a.click(); document.body.removeChild(a); await new Promise(r => setTimeout(r, 500)); } };
+
+        window.shareListing = async () => { 
+            if(!state.currentItem) return; 
+
+            const shareUrl = window.location.origin + '/property/' + state.currentItem.id; 
+            const textMsg = `شاهد عقار: ${state.currentItem.title}\nالسعر: ${Number(state.currentItem.price || 0).toLocaleString()} ج\n`; 
+
+            const shareData = { 
+                title: 'السوق وياك', 
+                text: textMsg,
+                url: shareUrl
+            }; 
+
+            try { 
+                await navigator.share(shareData); 
+                showToast('تمت المشاركة');
+            } catch(e) { 
+                if (e.name !== 'AbortError') { 
+                    navigator.clipboard.writeText(textMsg + shareUrl); 
+                    showToast('تم نسخ الرابط'); 
+                } 
+            } 
+        };
+
+        window.downloadImages = async () => { 
+            if(!state.currentItem || !state.currentItem.images) return; 
+
+            const currentIndex = state.currentDetailIndex || 0;
+            let url = state.currentItem.images[currentIndex];
+
+            if (!url) return;
+
+            showToast('جاري تنزيل الصورة...'); 
+
+            try {
+                const isVid = url.includes('.mp4') || url.includes('.mov');
+                let downloadUrl = url;
+
+                if (!isVid && url.includes('cloudinary.com')) {
+                    const parts = url.split('/upload/');
+                    if (parts.length === 2) {
+                        downloadUrl = `${parts[0]}/upload/q_auto:best,f_auto/${parts[1]}`;
+                    }
+                }
+
+                const response = await fetch(downloadUrl);
+                const blob = await response.blob();
+                const blobUrl = window.URL.createObjectURL(blob);
+
+                const a = document.createElement('a');
+                a.href = blobUrl;
+                a.download = `souq_${state.currentItem.id}_${currentIndex + 1}${isVid ? '.mp4' : '.jpg'}`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                window.URL.revokeObjectURL(blobUrl);
+
+            } catch (error) {
+                console.error("خطأ في التنزيل:", error);
+                window.open(url, '_blank');
+            }
+        };
+
         window.scrollDetails = (dir) => { const slider = document.getElementById('details-slider'); const count = slider.children.length; if(count === 0) return; let newIndex = state.currentDetailIndex + dir; if (newIndex >= count) newIndex = 0; if (newIndex < 0) newIndex = count - 1; state.currentDetailIndex = newIndex; const target = slider.children[newIndex]; target.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'start' }); }
         window.openLightbox = (src, idx = 0) => { state.lightboxIndex = idx; updateLightboxImage(); document.getElementById('lightbox').classList.remove('hidden'); history.pushState({modal: 'lightbox'}, '', window.location.href); }
         window.closeLightbox = () => { document.getElementById('lightbox').classList.add('hidden'); document.getElementById('lightbox-img').src=''; }
