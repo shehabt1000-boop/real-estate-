@@ -342,19 +342,16 @@
             performSearch(false);
         };
 
-        function loadCachedData() {
-            const cached = localStorage.getItem('souq_listings');
-            if(cached) {
-                try {
-                    state.listings = JSON.parse(cached);
-                    state.listings.sort((a,b) => (a.isPinned ? -1 : 1));
-                    updateFeaturedSlider();
-                    performSearch(true);
-                    document.body.classList.add('app-loaded');
-                    document.getElementById('splash-screen').classList.add('hidden-splash');
-                } catch(e) { console.log('Cache error', e); }
+        function checkAndOpenUrlProperty() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const openId = urlParams.get('id');
+            if (openId && state.activeDetailsId !== openId) {
+                const exists = state.listings.find(i => i.id === openId);
+                if(exists) { setTimeout(() => { openDetails(openId); }, 200); }
             }
         }
+
+        function loadCachedData() { const cached = localStorage.getItem('souq_listings'); if(cached) { try { state.listings = JSON.parse(cached); state.listings.sort((a,b) => (a.isPinned ? -1 : 1)); updateFeaturedSlider(); performSearch(true); document.body.classList.add('app-loaded'); document.getElementById('splash-screen').classList.add('hidden-splash'); checkAndOpenUrlProperty(); } catch(e) { console.log('Cache error', e); } } }
 
         setTimeout(() => { document.getElementById('splash-screen').classList.add('hidden-splash'); document.body.classList.add('app-loaded'); renderCategories(); }, 5000);
 
@@ -395,11 +392,11 @@
         window.scrollFeatured = (dir, resetTimer = true) => { 
             const slider = document.getElementById('featured-slider'); 
             if (!slider || slider.children.length <= 1) return;
-            
+
             const cardWidth = slider.firstElementChild.offsetWidth;
             const maxScroll = slider.scrollWidth - slider.clientWidth;
             const currentScroll = Math.abs(slider.scrollLeft);
-            
+
             if (dir === -1) { 
                 if (currentScroll >= maxScroll - 5) {
                     slider.appendChild(slider.firstElementChild);
@@ -596,18 +593,7 @@
 
         function showSkeletons() { const c=document.getElementById('grid-container'); if(state.listings.length === 0) { c.innerHTML=''; for(let i=0;i<8;i++) c.innerHTML+=`<div class="bg-slate-100 dark:bg-slate-800 rounded-xl overflow-hidden shadow-sm border border-slate-200 dark:border-slate-700 h-full"><div class="h-36 skeleton rounded-t-xl"></div><div class="p-2 space-y-2"><div class="h-3 rounded skeleton w-3/4"></div><div class="h-2 rounded skeleton w-1/2"></div></div></div>`; } }
 
-        function loadListings() { 
-            if (state.listings.length === 0) { showSkeletons(); }
-            onSnapshot(query(collection(db, COLLECTION_NAME)), (snap) => { 
-                state.listings =[]; snap.forEach(d => state.listings.push({id:d.id, ...d.data()})); 
-                localStorage.setItem('souq_listings', JSON.stringify(state.listings));
-                state.listings.sort((a,b) => (a.isPinned === b.isPinned) ? (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0) : (a.isPinned ? -1 : 1));
-                updateFeaturedSlider();
-                performSearch(true); 
-                document.body.classList.add('app-loaded');
-                setTimeout(() => { document.getElementById('splash-screen').classList.add('hidden-splash'); }, 100);
-            }); 
-        }
+        function loadListings() { if (state.listings.length === 0) { showSkeletons(); } onSnapshot(query(collection(db, COLLECTION_NAME)), (snap) => { state.listings =[]; snap.forEach(d => state.listings.push({id:d.id, ...d.data()})); localStorage.setItem('souq_listings', JSON.stringify(state.listings)); state.listings.sort((a,b) => (a.isPinned === b.isPinned) ? (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0) : (a.isPinned ? -1 : 1)); updateFeaturedSlider(); performSearch(true); document.body.classList.add('app-loaded'); setTimeout(() => { document.getElementById('splash-screen').classList.add('hidden-splash'); }, 100); checkAndOpenUrlProperty(); }); }
 
         window.performSearch = (forceRender = false) => { 
             const q = normalizeText(document.getElementById('search-input').value); 
@@ -675,7 +661,7 @@
         };
 
         function createCard(item, prefix = 'grid') {
-            const imgs = Array.isArray(item.images) ? item.images : (item.image ? [item.image] :[]); 
+            const imgs = Array.isArray(item.images) ? item.images : (item.image ?[item.image] :[]); 
             const firstMedia = imgs[0]; const isVideo = firstMedia && (firstMedia.includes('.mp4') || firstMedia.includes('.mov')); 
             const thumbUrl = getOptimizedUrl(firstMedia, isVideo, 500); 
 
@@ -686,7 +672,7 @@
             if(item.category === 'land') { if(item.feddan || item.qirat) iconsHtml += `<span class="${pillClass}"><i data-lucide="maximize" class="w-3 h-3 text-emerald-500"></i> ${item.feddan?item.feddan+' ف':''} ${item.qirat?item.qirat+' ق':''}</span>`; } else if (item.category === 'building') { if(item.floors) iconsHtml += `<span class="${pillClass}"><i data-lucide="layers" class="w-3 h-3 text-blue-500"></i> ${item.floors} أدوار</span>`; } else { if(item.rooms) iconsHtml += `<span class="${pillClass}"><i data-lucide="bed-double" class="w-3 h-3 text-indigo-500"></i> ${item.rooms} غرف</span>`; if(item.baths) iconsHtml += `<span class="${pillClass}"><i data-lucide="bath" class="w-3 h-3 text-cyan-500"></i> ${item.baths} حمام</span>`; }
             if(item.area) iconsHtml += `<span class="${pillClass}"><i data-lucide="ruler" class="w-3 h-3 text-orange-500"></i> ${item.area}م</span>`;
 
-            const locDisplay = item.gov ? `${item.city}، ${item.gov}` : (item.location || ''); const code = item.shortCode || (item.id ? item.id.substring(0,3).toUpperCase() : ''); const shareUrl = window.location.origin + window.location.pathname + '?id=' + item.id; const waMsg = `مهتم بهذا العقار: ${item.title || ''} (${Number(item.price || 0).toLocaleString()} ج)\nكود الإعلان: ${code}\nالرابط: ${shareUrl}`; const waLink = `https://wa.me/20${item.phone}?text=${encodeURIComponent(waMsg)}`;
+            const locDisplay = item.gov ? `${item.city}، ${item.gov}` : (item.location || ''); const code = item.shortCode || (item.id ? item.id.substring(0,3).toUpperCase() : ''); const shareUrl = window.location.origin + '/property/' + item.id; const waMsg = `مهتم بهذا العقار: ${item.title || ''} (${Number(item.price || 0).toLocaleString()} ج)\nكود الإعلان: ${code}\nالرابط: ${shareUrl}`; const waLink = `https://wa.me/20${item.phone}?text=${encodeURIComponent(waMsg)}`;
 
             return `<div id="card-${prefix}-${item.id}" class="listing-card bg-slate-100 dark:bg-slate-800 rounded-xl overflow-hidden shadow-sm border border-emerald-800 dark:border-emerald-600 flex flex-col h-full cursor-pointer active:scale-95 transition-transform relative" onclick="openDetails('${item.id}')">
                 <div class="relative w-full h-40 shrink-0 bg-slate-200 dark:bg-slate-900">
@@ -744,7 +730,7 @@
                     if(item.status && item.status !== 'available') { typeEl.innerText = item.status === 'sold' ? 'مباع' : 'مؤجر'; typeEl.className = `absolute bottom-2 right-2 text-white px-2.5 py-1 rounded-lg text-[10px] font-bold shadow bg-red-600/90`; } else { typeEl.innerText = item.type === 'sale' ? 'للبيع' : 'للإيجار'; typeEl.className = `absolute bottom-2 right-2 text-white px-2.5 py-1 rounded-lg text-[10px] font-bold shadow bg-emerald-600/90`; }
 
                     const imgs = (Array.isArray(item.images) && item.images.length > 0) ? item.images : (item.image ?[item.image] :['https://via.placeholder.com/600?text=No+Image']); 
-                    const updateWaLink = () => { const shareUrl = window.location.origin + window.location.pathname + '?id=' + item.id; const waMsg = `مهتم بهذا العقار: ${item.title || ''} (${Number(item.price || 0).toLocaleString()} ج)\nكود الإعلان: ${code}\nالرابط: ${shareUrl}`; document.getElementById('d-wa').href = `https://wa.me/20${item.phone}?text=${encodeURIComponent(waMsg)}`; }; updateWaLink(); document.getElementById('d-call').href = `tel:${item.phone}`;
+                    const updateWaLink = () => { const shareUrl = window.location.origin + '/property/' + item.id; const waMsg = `مهتم بهذا العقار: ${item.title || ''} (${Number(item.price || 0).toLocaleString()} ج)\nكود الإعلان: ${code}\nالرابط: ${shareUrl}`; document.getElementById('d-wa').href = `https://wa.me/20${item.phone}?text=${encodeURIComponent(waMsg)}`; }; updateWaLink(); document.getElementById('d-call').href = `tel:${item.phone}`;
 
                     const slider = document.getElementById('details-slider'); 
                     slider.innerHTML = imgs.map((src, idx) => { 
@@ -760,7 +746,7 @@
                             slider.firstElementChild.scrollIntoView({ behavior: 'instant', block: 'nearest', inline: 'start' }); 
                         } 
                     }, 10); 
-                    
+
                     document.getElementById('details-arrows').style.display = imgs.length > 1 ? 'block' : 'none';
 
                     const locDisplay = item.gov ? `${item.city}، ${item.gov}` : (item.location || '');
@@ -779,13 +765,13 @@
                         controlsDiv.classList.remove('hidden');
                         let controlsHtml = `<div class="grid ${state.isAdmin ? 'grid-cols-2 md:grid-cols-4' : 'grid-cols-2 md:grid-cols-3'} gap-2 w-full bg-white dark:bg-slate-800 p-2 rounded-xl border border-slate-200 dark:border-slate-700 shadow-sm">`;
                         controlsHtml += `<button onclick="del(event,'${item.id}')" class="bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 border border-red-200 dark:border-red-800/50 py-2 rounded-lg text-[10px] font-bold shadow-sm hover:bg-red-100 transition-all flex items-center justify-center gap-1"><i data-lucide="trash-2" class="w-3.5 h-3.5"></i> حذف</button>`;
-                        
+
                         if(isOwner || state.isAdmin) { 
                             controlsHtml += `<button onclick="editListing('${item.id}')" class="bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 border border-blue-200 dark:border-blue-800/50 py-2 rounded-lg text-[10px] font-bold shadow-sm hover:bg-blue-100 transition-all flex items-center justify-center gap-1"><i data-lucide="edit" class="w-3.5 h-3.5"></i> تعديل</button>`; 
                         }
-                        
+
                         controlsHtml += `<div class="relative w-full"><select onchange="updateStatus(event, '${item.id}', this.value)" class="appearance-none w-full bg-emerald-50 dark:bg-slate-900 border border-emerald-200 dark:border-slate-700 rounded-lg py-2 pl-6 pr-2 text-[10px] font-bold shadow-sm text-emerald-700 dark:text-emerald-400 outline-none h-full text-center cursor-pointer"><option value="available" ${item.status==='available'?'selected':''}>🟢 متاح</option><option value="sold" ${item.status==='sold'?'selected':''}>🔴 مباع</option><option value="rented" ${item.status==='rented'?'selected':''}>🔵 مؤجر</option></select><i data-lucide="chevron-down" class="absolute left-2 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400 pointer-events-none"></i></div>`;
-                        
+
                         if(state.isAdmin) { 
                             controlsHtml += `<button onclick="pin(event,'${item.id}',${item.isPinned})" class="${item.isPinned ? 'bg-yellow-100 dark:bg-slate-900 text-yellow-600 dark:text-yellow-400 border-yellow-300 dark:border-yellow-600/50' : 'bg-slate-100 dark:bg-slate-900 text-slate-600 dark:text-slate-300 border-slate-200 dark:border-slate-700'} border py-2 rounded-lg text-[10px] font-bold shadow-sm transition-all flex items-center justify-center gap-1"><i data-lucide="star" class="w-3.5 h-3.5 ${item.isPinned?'fill-current':''}"></i> ${item.isPinned ? 'إلغاء التثبيت' : 'تثبيت'}</button>`; 
                         }
@@ -800,7 +786,7 @@
         }
 
         window.closeDetails = () => { const slider = document.getElementById('details-slider'); if(slider && slider.firstElementChild) { slider.firstElementChild.scrollIntoView({ behavior: 'instant', block: 'nearest', inline: 'start' }); } toggleModal('details-modal'); const newUrl = new URL(window.location); newUrl.searchParams.delete('id'); window.history.pushState({}, '', newUrl); state.activeDetailsId = null; }
-        window.shareListing = async () => { if(!state.currentItem) return; const d = { title: 'السوق وياك', text: `شاهد عقار: ${state.currentItem.title}`, url: window.location.href + '?id=' + state.currentItem.id }; try { await navigator.share(d); showToast('تمت المشاركة'); } catch(e) { navigator.clipboard.writeText(d.url); showToast('تم النسخ'); } };
+        window.shareListing = async () => { if(!state.currentItem) return; const d = { title: 'السوق وياك', text: `شاهد عقار: ${state.currentItem.title}`, url: window.location.origin + '/property/' + state.currentItem.id }; try { await navigator.share(d); showToast('تمت المشاركة'); } catch(e) { navigator.clipboard.writeText(d.url); showToast('تم النسخ'); } };
         window.downloadImages = async () => { if(!state.currentItem || !state.currentItem.images) return; showToast('جاري تحضير الصور...'); for(let i=0; i<state.currentItem.images.length; i++) { const url = state.currentItem.images[i]; const a = document.createElement('a'); a.href = url; a.target = '_blank'; a.download = `souq_${state.currentItem.id}_${i+1}`; document.body.appendChild(a); a.click(); document.body.removeChild(a); await new Promise(r => setTimeout(r, 500)); } };
         window.scrollDetails = (dir) => { const slider = document.getElementById('details-slider'); const count = slider.children.length; if(count === 0) return; let newIndex = state.currentDetailIndex + dir; if (newIndex >= count) newIndex = 0; if (newIndex < 0) newIndex = count - 1; state.currentDetailIndex = newIndex; const target = slider.children[newIndex]; target.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'start' }); }
         window.openLightbox = (src, idx = 0) => { state.lightboxIndex = idx; updateLightboxImage(); document.getElementById('lightbox').classList.remove('hidden'); }
@@ -832,19 +818,19 @@
         function botMsg(t){const d=document.createElement('div');d.className="flex justify-end";d.innerHTML=`<div class="bg-white dark:bg-slate-800 dark:text-white text-slate-800 px-3 py-2 rounded-xl rounded-tl-none shadow-sm text-xs max-w-[85%] border dark:border-slate-700">${t}</div>`;document.getElementById('chat-box').appendChild(d);document.getElementById('chat-box').scrollTop=9999}
 
         window.toggleAdminPanel=()=>{document.getElementById('admin-panel').classList.toggle('hidden');if(!document.getElementById('admin-panel').classList.contains('hidden'))refreshAdmin()};
-        
+
         window.searchAdminUser = async () => {
             let phoneInput = document.getElementById('admin-target-phone').value.trim();
             if(!phoneInput) return showToast('أدخل رقم الهاتف للبحث', 'e');
             let phone = phoneInput.replace(/\D/g, '');
             if(phone.startsWith('0')) phone = phone.substring(1);
             let fullPhone = `+20${phone}`;
-            
+
             const resDiv = document.getElementById('admin-search-result');
             resDiv.innerHTML = 'جاري البحث... <i data-lucide="loader-2" class="w-3 h-3 inline animate-spin"></i>';
             resDiv.classList.remove('hidden');
             lucide.createIcons({root: resDiv});
-            
+
             try {
                 const q = query(collection(db, "users"), where("phoneNumber", "==", fullPhone));
                 const snap = await getDocs(q);
@@ -857,7 +843,7 @@
                     if(u.verified) roles.push('موثق ✅');
                     if(u.isBlocked) roles.push('محظور 🚫');
                     if(roles.length === 0) roles.push('مستخدم عادي 👤');
-                    
+
                     resDiv.innerHTML = `
                         <div class="flex items-center gap-2 mb-1">
                             <img src="${u.photoURL || 'https://cdn-icons-png.flaticon.com/512/609/609803.png'}" class="w-6 h-6 rounded-full border border-white/20 object-cover">
@@ -890,7 +876,7 @@
                 document.getElementById('admin-search-result').classList.add('hidden');
             } catch(e) { console.error(e); showToast('حدث خطأ في النظام', 'e'); } 
         };
-        
+
         window.refreshAdmin=()=>{onSnapshot(query(collection(db,"chats"),where('status','!=','closed')),s=>{const l=document.getElementById('admin-users-list');l.innerHTML='';s.forEach(d=>{const dt=d.data();l.innerHTML+=`<div onclick="loadAdmin('${d.id}','${dt.userName}')" class="p-3 mb-2 bg-white/5 rounded-xl cursor-pointer border border-white/10"><div class="font-bold text-xs text-white flex justify-between"><span>${dt.userName}</span>${dt.status==='waiting'?'<span class="w-2 h-2 bg-red-500 rounded-full animate-pulse"></span>':''}</div><div class="text-[10px] text-gray-400 truncate mt-1">${dt.lastMsg}</div></div>`})})};
         window.loadAdmin=(id,n)=>{state.activeAdminChat=id;document.getElementById('admin-chat-header').innerHTML=`<span class="text-xs font-bold">${n}</span><button onclick="kickUser()" id="btn-end-chat" class="hidden bg-red-600 text-white text-[10px] font-bold px-2 py-1 rounded flex items-center gap-1"><i data-lucide="slash" class="w-3 h-3"></i> إنهاء</button>`;document.getElementById('btn-end-chat').classList.remove('hidden');onSnapshot(doc(db,"chats",id),s=>{const b=document.getElementById('admin-msg-area');b.innerHTML='';if(!s.exists())return;s.data().messages.forEach(m=>{b.innerHTML+=`<div class="${m.s==='support'?'text-left':'text-right'} mb-2"><span class="inline-block px-3 py-2 rounded-lg text-xs ${m.s==='support'?'bg-slate-900 dark:bg-emerald-600 text-white':'bg-white/10'}">${m.t}</span></div>`});b.scrollTop=9999})};
         window.sendAdminMsg=async()=>{const t=document.getElementById('admin-input').value;if(!t||!state.activeAdminChat)return;document.getElementById('admin-input').value='';const s=await getDocs(query(collection(db,"chats"),where('__name__','==',state.activeAdminChat)));const m=s.docs[0].data().messages;m.push({s:'support',t,d:new Date()});await updateDoc(doc(db,"chats",state.activeAdminChat),{messages:m,status:'active'})};
