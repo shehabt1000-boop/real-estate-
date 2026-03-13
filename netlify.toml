@@ -1,9 +1,16 @@
 [build]
-  publish = "." # مجلد الموقع (إذا كان index.html في المجلد الرئيسي اتركه هكذا)
+  publish = "." 
   functions = "netlify/functions"
 
+# 1. توجيه روابط العقارات إلى دالة المعاينة (Netlify Function) لجلب الصورة للواتساب
 [[redirects]]
   from = "/property/:id"
   to = "/.netlify/functions/property?id=:id"
   status = 200
   force = true
+
+# 2. توجيه احتياطي لأي رابط آخر ليعمل الموقع بشكل سليم ولا يظهر صفحة 404
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
