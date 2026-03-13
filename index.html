@@ -712,7 +712,7 @@
             if(item.category === 'land') { if(item.feddan || item.qirat) iconsHtml += `<span class="${pillClass}"><i data-lucide="maximize" class="w-3 h-3 text-emerald-500"></i> ${item.feddan?item.feddan+' ف':''} ${item.qirat?item.qirat+' ق':''}</span>`; } else if (item.category === 'building') { if(item.floors) iconsHtml += `<span class="${pillClass}"><i data-lucide="layers" class="w-3 h-3 text-blue-500"></i> ${item.floors} أدوار</span>`; } else { if(item.rooms) iconsHtml += `<span class="${pillClass}"><i data-lucide="bed-double" class="w-3 h-3 text-indigo-500"></i> ${item.rooms} غرف</span>`; if(item.baths) iconsHtml += `<span class="${pillClass}"><i data-lucide="bath" class="w-3 h-3 text-cyan-500"></i> ${item.baths} حمام</span>`; }
             if(item.area) iconsHtml += `<span class="${pillClass}"><i data-lucide="ruler" class="w-3 h-3 text-orange-500"></i> ${item.area}م</span>`;
 
-            const locDisplay = item.gov ? `${item.city}، ${item.gov}` : (item.location || ''); const code = item.shortCode || (item.id ? item.id.substring(0,3).toUpperCase() : ''); const shareUrl = window.location.origin + '/property/' + item.id; const waMsg = `مهتم بهذا العقار: ${item.title || ''} (${Number(item.price || 0).toLocaleString()} ج)\nكود الإعلان: ${code}\nالرابط: ${shareUrl}`; const waLink = `https://wa.me/20${item.phone}?text=${encodeURIComponent(waMsg)}`;
+            const locDisplay = item.gov ? `${item.city}، ${item.gov}` : (item.location || ''); const code = item.shortCode || (item.id ? item.id.substring(0,3).toUpperCase() : ''); const shareUrl = window.location.origin + '/property/' + item.id; const waMsg = `مهتم بهذا العقار: ${item.title || ''} (${Number(item.price || 0).toLocaleString()} ج)\nكود الإعلان: ${code}\n\n${shareUrl}`; const waLink = `https://wa.me/20${item.phone}?text=${encodeURIComponent(waMsg)}`;
 
             return `<div id="card-${prefix}-${item.id}" class="listing-card bg-slate-100 dark:bg-slate-800 rounded-xl overflow-hidden shadow-sm border border-emerald-800 dark:border-emerald-600 flex flex-col h-full cursor-pointer active:scale-95 transition-transform relative" onclick="openDetails('${item.id}')">
                 <div class="relative w-full h-40 shrink-0 bg-slate-200 dark:bg-slate-900">
@@ -790,7 +790,7 @@
                         }
                     }
 
-                    const updateWaLink = () => { const shareUrl = window.location.origin + '/property/' + item.id; const waMsg = `مهتم بهذا العقار: ${item.title || ''} (${Number(item.price || 0).toLocaleString()} ج)\nكود الإعلان: ${code}\nالرابط: ${shareUrl}`; document.getElementById('d-wa').href = `https://wa.me/20${item.phone}?text=${encodeURIComponent(waMsg)}`; }; updateWaLink(); document.getElementById('d-call').href = `tel:${item.phone}`;
+                    const updateWaLink = () => { const shareUrl = window.location.origin + '/property/' + item.id; const waMsg = `مهتم بهذا العقار: ${item.title || ''} (${Number(item.price || 0).toLocaleString()} ج)\nكود الإعلان: ${code}\n\n${shareUrl}`; document.getElementById('d-wa').href = `https://wa.me/20${item.phone}?text=${encodeURIComponent(waMsg)}`; }; updateWaLink(); document.getElementById('d-call').href = `tel:${item.phone}`;
 
                     const slider = document.getElementById('details-slider'); 
                     slider.innerHTML = imgs.map((src, idx) => { 
