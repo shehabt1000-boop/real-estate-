@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+   <!-- الصفحة الرئيسية -->
+   <url>
+      <loc>https://real-estate-2026.netlify.app/</loc>
+      <changefreq>daily</changefreq>
+      <priority>1.0</priority>
+   </url>
+   <!-- قسم الشقق -->
+   <url>
+      <loc>https://real-estate-2026.netlify.app/?category=apartment</loc>
+      <changefreq>always</changefreq>
+      <priority>0.8</priority>
+   </url>
+   <!-- قسم الفلل -->
+   <url>
+      <loc>https://real-estate-2026.netlify.app/?category=villa</loc>
+      <changefreq>always</changefreq>
+      <priority>0.8</priority>
+   </url>
+   <!-- قسم الشاليهات -->
+   <url>
+      <loc>https://real-estate-2026.netlify.app/?category=chalet</loc>
+      <changefreq>always</changefreq>
+      <priority>0.8</priority>
+   </url>
+   <!-- قسم المكاتب -->
+   <url>
+      <loc>https://real-estate-2026.netlify.app/?category=office</loc>
+      <changefreq>always</changefreq>
+      <priority>0.8</priority>
+   </url>
+   <!-- قسم المحلات -->
+   <url>
+      <loc>https://real-estate-2026.netlify.app/?category=shop</loc>
+      <changefreq>always</changefreq>
+      <priority>0.8</priority>
+   </url>
+   <!-- قسم الأراضي -->
+   <url>
+      <loc>https://real-estate-2026.netlify.app/?category=land</loc>
+      <changefreq>always</changefreq>
+      <priority>0.8</priority>
+   </url>
+</urlset>
