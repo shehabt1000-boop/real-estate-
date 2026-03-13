@@ -77,13 +77,11 @@
         .splash-ring { position: absolute; inset: 0; border-radius: 50%; border: 2px solid #10b981; animation: ring-pulse 1.5s infinite ease-out; }
         .splash-logo { color: #ffffff; z-index: 2; }
 
-        /* تم تصغير حقول الإدخال وتقليل المسافات لتكون أنيقة */
         .input-box { width: 100%; background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 0.5rem; padding: 0.4rem 0.6rem; font-size: 0.75rem; font-weight: 700; outline: none; color: #0f172a; transition: all 0.1s; }
         .dark .input-box { background: #0f172a; border-color: #334155; color: white; }
         .input-box:focus { border-color: #10b981; background: #ffffff; box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1); }
         .dark .input-box:focus { background: #0f172a; }
 
-        /* تم تصغير قوائم الاختيار لتناسب الحقول */
         .custom-select { appearance: none; background-color: #f8fafc; border: 1px solid #cbd5e1; border-radius: 0.4rem; padding: 0.35rem 1.5rem 0.35rem 0.5rem; width: 100%; font-weight: 700; font-size: 0.75rem; color: #334155; cursor: pointer; transition: all 0.1s; }
         .dark .custom-select { background-color: #0f172a; color: white; border-color: #334155; }
         .custom-select-wrapper { position: relative; }
@@ -106,6 +104,9 @@
 
         .toast { animation: slideInDown 0.2s ease-out forwards; }
         .toast.hiding { animation: fadeOut 0.2s ease-in forwards; }
+
+        /* تسريع أداء التمرير للبطاقات */
+        .listing-card { content-visibility: auto; contain-intrinsic-size: 0 300px; }
     </style>
 </head>
 <body class="text-slate-800 dark:text-slate-100 select-none">
@@ -119,7 +120,8 @@
     </div>
 
     <div id="app-content-wrapper">
-        <div id="toast-container" class="fixed top-4 left-0 right-0 z-[110] flex flex-col items-center gap-2 pointer-events-none px-4"></div>
+        <!-- تم تعديل z-index ليظهر التوست فوق كل شيء بما فيها لوحة التحكم -->
+        <div id="toast-container" class="fixed top-4 left-0 right-0 z-[10000] flex flex-col items-center gap-2 pointer-events-none px-4"></div>
 
         <header class="fixed top-0 w-full sticky-header flex items-center justify-between px-4 h-14">
             <div class="flex flex-col justify-center" id="header-welcome-section">
@@ -226,13 +228,28 @@
             </div>
         </main>
 
-        <nav id="bottom-nav" class="fixed bottom-4 left-1/2 -translate-x-1/2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 px-6 py-2.5 rounded-full flex items-center gap-8 shadow-xl transition-all hover:scale-105 z-50">
+        <nav id="bottom-nav" class="fixed bottom-4 left-1/2 -translate-x-1/2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 px-6 py-2.5 rounded-full flex items-center gap-8 shadow-xl transition-transform hover:scale-105 z-50">
             <button onclick="openHome(false)" class="flex flex-col items-center justify-center text-slate-500 dark:text-slate-400 hover:text-emerald-600 dark:hover:text-emerald-400 transition-all group"><i data-lucide="home" class="w-5 h-5 group-hover:-translate-y-1 transition-transform"></i><span class="text-[8px] font-bold mt-0.5">الرئيسية</span></button>
             <button onclick="openAddModal()" class="w-12 h-12 bg-[#064e3b] text-white border-[3px] border-white dark:border-slate-700 rounded-full flex items-center justify-center shadow-lg transform -translate-y-5 hover:scale-110 transition-all duration-300 active:scale-90"><i data-lucide="plus" class="w-6 h-6"></i></button>
             <button onclick="toggleChat()" class="flex flex-col items-center justify-center text-slate-500 dark:text-slate-400 hover:text-emerald-600 dark:hover:text-emerald-400 transition-all group relative"><div id="chat-badge" class="hidden absolute top-0 right-1 w-2.5 h-2.5 bg-red-500 rounded-full border-2 border-white dark:border-slate-800"></div><i data-lucide="message-circle" class="w-5 h-5 group-hover:-translate-y-1 transition-transform"></i><span class="text-[8px] font-bold mt-0.5">الدعم</span></button>
         </nav>
 
         <div id="logout-modal" class="hidden modal-overlay" style="z-index: 150;"><div class="relative w-full max-w-xs bg-white dark:bg-slate-800 rounded-2xl shadow-2xl p-6 text-center animate-pop border border-slate-200 dark:border-slate-700"><div class="w-16 h-16 bg-red-50 dark:bg-red-900/20 text-red-500 rounded-full flex items-center justify-center mx-auto mb-4 border-2 border-red-100 dark:border-red-800/50"><i data-lucide="log-out" class="w-8 h-8"></i></div><h3 class="text-lg font-black text-slate-800 dark:text-white mb-2">تسجيل الخروج</h3><p class="text-xs text-slate-500 dark:text-slate-400 mb-6">هل أنت متأكد أنك تريد تسجيل الخروج من حسابك الحالي؟</p><div class="flex gap-2"><button onclick="confirmLogout()" class="flex-1 bg-red-500 text-white py-2.5 rounded-xl font-bold text-sm shadow hover:bg-red-600 transition-all active:scale-95">نعم، خروج</button><button onclick="toggleModal('logout-modal')" class="flex-1 bg-slate-100 dark:bg-slate-900 text-slate-700 dark:text-white py-2.5 rounded-xl font-bold text-sm shadow-sm transition-all active:scale-95 border dark:border-slate-700">إلغاء</button></div></div></div>
+
+        <!-- مودال تأكيد الحذف العصري -->
+        <div id="delete-modal" class="hidden modal-overlay" style="z-index: 150;">
+            <div class="relative w-full max-w-xs bg-white dark:bg-slate-800 rounded-2xl shadow-2xl p-6 text-center animate-pop border border-slate-200 dark:border-slate-700">
+                <div class="w-16 h-16 bg-red-50 dark:bg-red-900/20 text-red-500 rounded-full flex items-center justify-center mx-auto mb-4 border-2 border-red-100 dark:border-red-800/50">
+                    <i data-lucide="trash-2" class="w-8 h-8"></i>
+                </div>
+                <h3 class="text-lg font-black text-slate-800 dark:text-white mb-2">حذف الإعلان</h3>
+                <p class="text-xs text-slate-500 dark:text-slate-400 mb-6">هل أنت متأكد أنك تريد حذف هذا الإعلان نهائياً؟</p>
+                <div class="flex gap-2">
+                    <button onclick="confirmDelete()" id="btn-confirm-delete" class="flex-1 bg-red-500 text-white py-2.5 rounded-xl font-bold text-sm shadow hover:bg-red-600 transition-all active:scale-95">نعم، حذف</button>
+                    <button onclick="toggleModal('delete-modal')" class="flex-1 bg-slate-100 dark:bg-slate-900 text-slate-700 dark:text-white py-2.5 rounded-xl font-bold text-sm shadow-sm transition-all active:scale-95 border dark:border-slate-700">إلغاء</button>
+                </div>
+            </div>
+        </div>
 
         <div id="auth-modal" class="hidden modal-overlay"><div class="relative w-full max-w-sm bg-white dark:bg-slate-800 rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-700 p-6 overflow-hidden animate-pop z-50"><button onclick="toggleModal('auth-modal')" class="absolute top-3 left-3 text-slate-400 hover:text-red-500 transition-all z-10"><i data-lucide="x" class="w-5 h-5"></i></button><div class="flex justify-center mb-5"><div class="w-14 h-14 bg-slate-50 dark:bg-slate-900 rounded-full flex items-center justify-center border-2 border-emerald-500 shadow-lg"><i data-lucide="building-2" class="w-7 h-7 text-emerald-600 dark:text-emerald-400"></i></div></div><div class="flex justify-center mb-5"><div class="bg-slate-100 dark:bg-slate-900 p-1 rounded-xl flex w-full border dark:border-slate-700"><button onclick="switchAuthMode('login')" id="tab-login" class="flex-1 py-1.5 rounded-lg text-xs font-bold transition-all bg-white dark:bg-slate-800 shadow text-emerald-600 dark:text-white border dark:border-slate-600">دخول</button><button onclick="switchAuthMode('register')" id="tab-register" class="flex-1 py-1.5 rounded-lg text-xs font-bold transition-all text-slate-500 dark:text-slate-400">إنشاء حساب</button></div></div><div id="form-login" class="space-y-3"><div class="space-y-1"><label class="text-[9px] font-bold text-slate-500">رقم الهاتف</label><div class="relative"><span class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 font-bold text-xs bg-slate-200 dark:bg-slate-900 px-1.5 rounded">+20</span><input id="login-phone" type="tel" class="input-box pl-12 text-left" placeholder="1xxxxxxxxx" oninput="formatPhone(this)"></div></div><div class="space-y-1"><label class="text-[9px] font-bold text-slate-500">كلمة المرور</label><input id="login-pass" type="password" class="input-box" placeholder="••••••••"></div><button id="btn-login" onclick="loginUser()" class="w-full bg-emerald-600 text-white py-2.5 rounded-xl font-bold text-xs shadow-md hover:bg-emerald-700 transition-all transform active:scale-95 mt-2">تسجيل الدخول</button></div><div id="form-register" class="hidden space-y-3"><div class="flex justify-center"><label class="relative w-16 h-16 rounded-full border-2 border-dashed border-emerald-500 flex items-center justify-center cursor-pointer overflow-hidden bg-slate-50 dark:bg-slate-900 group transition-all"><input type="file" accept="image/*" class="hidden" onchange="previewProfileImage(this)"><img id="reg-img-preview" class="absolute inset-0 w-full h-full object-cover hidden"><div id="reg-img-placeholder" class="flex flex-col items-center text-emerald-500"><i data-lucide="camera" class="w-5 h-5 mb-0.5"></i><span class="text-[7px] font-bold">صورة</span></div></label></div><div class="space-y-1"><input id="reg-name" type="text" class="input-box text-center" placeholder="الاسم بالكامل"></div><div class="relative"><span class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 font-bold text-xs bg-slate-200 dark:bg-slate-900 px-1.5 rounded">+20</span><input id="reg-phone" type="tel" class="input-box pl-12 text-left" placeholder="رقم الهاتف" oninput="formatPhone(this)"></div><input id="reg-pass" type="password" class="input-box" placeholder="كلمة المرور (6 أحرف أو أكثر)"><button onclick="registerUser()" id="btn-register" class="w-full bg-slate-800 dark:bg-emerald-600 text-white py-2.5 rounded-xl font-bold text-xs shadow-md hover:opacity-90 transition-all transform active:scale-95 mt-2">إنشاء حساب جديد</button></div></div></div>
 
@@ -299,7 +316,6 @@
             `).join('');
         }
 
-        // --- دعم زر الرجوع (Back Button) ---
         window.addEventListener('popstate', (e) => {
             if (!document.getElementById('lightbox').classList.contains('hidden')) {
                 closeLightbox(); return;
@@ -339,7 +355,8 @@
 
             resetFiltersBase(); 
             catSelect.value = catId;
-            performSearch(true);
+            // استخدام الكاش الداخلي للبطاقات بدل إعادة الرسم
+            performSearch(false);
             window.scrollTo({top:0, behavior:'smooth'});
             history.pushState({view: 'category', id: catId}, '', window.location.pathname);
         };
@@ -379,6 +396,7 @@
 
         setTimeout(() => { document.getElementById('splash-screen').classList.add('hidden-splash'); document.body.classList.add('app-loaded'); renderCategories(); }, 5000);
 
+        let featuredDirection = -1;
         let featuredAutoScroll; 
 
         function startAutoScroll() {
@@ -387,7 +405,7 @@
             if (!slider || slider.children.length <= 1) return;
 
             featuredAutoScroll = setInterval(() => {
-                window.scrollFeatured(-1, false);
+                window.scrollFeatured(featuredDirection, false);
             }, 3000); 
         }
 
@@ -400,11 +418,13 @@
                 clearInterval(featuredAutoScroll);
             } else {
                 section.classList.remove('hidden');
+                // رسم البطاقات بدون تكرار
                 container.innerHTML = featuredList.map(item => {
                     return `<div class="w-full flex-[0_0_100%] snap-center shrink-0">${createCard(item, 'feat')}</div>`;
                 }).join('');
                 lucide.createIcons({ root: container });
 
+                featuredDirection = -1; // إعادة تعيين الاتجاه
                 startAutoScroll();
                 container.onmouseenter = () => clearInterval(featuredAutoScroll);
                 container.onmouseleave = startAutoScroll;
@@ -413,31 +433,29 @@
             }
         }
 
+        // السلايدر الآن يعمل بنظام ذهاب وإياب (Ping-Pong)
         window.scrollFeatured = (dir, resetTimer = true) => { 
             const slider = document.getElementById('featured-slider'); 
             if (!slider || slider.children.length <= 1) return;
 
             const cardWidth = slider.firstElementChild.offsetWidth;
             const maxScroll = slider.scrollWidth - slider.clientWidth;
-            const currentScroll = Math.abs(slider.scrollLeft);
 
-            if (dir === -1) { 
-                if (currentScroll >= maxScroll - 5) {
-                    slider.appendChild(slider.firstElementChild);
-                    slider.scrollBy({ left: cardWidth, behavior: 'instant' });
-                }
-                requestAnimationFrame(() => {
-                    slider.scrollBy({ left: -cardWidth, behavior: 'smooth' });
-                });
-            } else { 
-                if (currentScroll <= 5) {
-                    slider.prepend(slider.lastElementChild);
-                    slider.scrollBy({ left: -cardWidth, behavior: 'instant' });
-                }
-                requestAnimationFrame(() => {
-                    slider.scrollBy({ left: cardWidth, behavior: 'smooth' });
-                });
+            if (dir !== undefined && resetTimer) {
+                featuredDirection = dir;
             }
+
+            slider.scrollBy({ left: featuredDirection * cardWidth, behavior: 'smooth' });
+
+            setTimeout(() => {
+                const currentScroll = Math.abs(slider.scrollLeft);
+                if (currentScroll >= maxScroll - 10) {
+                    featuredDirection = 1; // الاتجاه لليمين
+                } else if (currentScroll <= 10) {
+                    featuredDirection = -1; // الاتجاه لليسار
+                }
+            }, 400);
+
             if(resetTimer) startAutoScroll();
         }
 
@@ -587,7 +605,7 @@
             document.getElementById('theme-color-meta').setAttribute('content', '#064e3b');
         }
 
-        window.showToast=(m,t='s')=>{const d=document.createElement('div');d.className=`toast fixed top-4 left-1/2 -translate-x-1/2 bg-white dark:bg-slate-800 shadow-xl px-4 py-2 rounded-lg border border-${t==='e'?'red':'emerald'}-500 flex items-center gap-2 text-xs font-bold z-[100] text-slate-800 dark:text-white`;d.innerHTML=`<i data-lucide="${t==='e'?'alert-circle':'check-circle'}" class="w-4 h-4 text-${t==='e'?'red':'emerald'}-500"></i> ${m}`;document.getElementById('toast-container').appendChild(d);lucide.createIcons({root:d});setTimeout(()=>{d.classList.add('hiding');setTimeout(()=>d.remove(),200)},3000)};
+        window.showToast=(m,t='s')=>{const d=document.createElement('div');d.className=`toast fixed top-4 left-1/2 -translate-x-1/2 bg-white dark:bg-slate-800 shadow-xl px-4 py-2 rounded-lg border border-${t==='e'?'red':'emerald'}-500 flex items-center gap-2 text-xs font-bold z-[10000] text-slate-800 dark:text-white`;d.innerHTML=`<i data-lucide="${t==='e'?'alert-circle':'check-circle'}" class="w-4 h-4 text-${t==='e'?'red':'emerald'}-500"></i> ${m}`;document.getElementById('toast-container').appendChild(d);lucide.createIcons({root:d});setTimeout(()=>{d.classList.add('hiding');setTimeout(()=>d.remove(),200)},3000)};
 
         function normalizeText(t) { return t ? t.toString().toLowerCase().replace(/[أإآ]/g, 'ا').replace(/ة/g, 'ه').replace(/ى/g, 'ي') : ""; }
 
@@ -633,7 +651,7 @@
             let detectedCat = ''; for (const[key, val] of Object.entries(CAT_KEYWORDS)) { if (q.includes(key)) { detectedCat = val; break; } }
             const cont = document.getElementById('grid-container'); 
 
-            if (forceRender || cont.children.length === 0) { 
+            if (forceRender || cont.children.length !== state.listings.length) { 
                 cont.innerHTML = state.listings.map(item => createCard(item, 'grid')).join(''); 
                 lucide.createIcons({ root: cont }); 
             }
@@ -675,7 +693,6 @@
 
         window.loadMore = () => { state.visibleLimit += 8; performSearch(false); };
 
-        // --- دعم زر الإدخال (Enter) ---
         document.addEventListener('keydown', (e) => {
             if(e.key === 'Enter') {
                 const active = document.activeElement;
@@ -705,14 +722,14 @@
             const firstMedia = imgs[0]; const isVideo = firstMedia && (firstMedia.includes('.mp4') || firstMedia.includes('.mov')); 
             const thumbUrl = getOptimizedUrl(firstMedia, isVideo, 500); 
 
-            let statusOverlay = ''; if(item.status && item.status !== 'available') { const txt = item.status==='sold'?'تم البيع':'تم التأجير'; const clr = item.status==='sold'?'bg-red-600':'bg-blue-600'; statusOverlay=`<div class="absolute inset-0 sold-overlay flex items-center justify-center z-30 pointer-events-none bg-black/50 backdrop-blur-sm"><span class="${clr} text-white font-black px-6 py-2 rounded-xl shadow-2xl transform -rotate-12 text-sm border border-white/20">${txt}</span></div>`; }
+            let statusOverlay = ''; if(item.status && item.status !== 'available') { const txt = item.status==='sold'?'تم البيع':'تم التأجير'; const clr = item.status==='sold'?'bg-red-600':'bg-blue-600'; statusOverlay=`<div class="absolute inset-0 sold-overlay flex items-center justify-center z-30 pointer-events-none bg-black/50"><span class="${clr} text-white font-black px-6 py-2 rounded-xl shadow-2xl transform -rotate-12 text-sm border border-white/20">${txt}</span></div>`; }
 
             const pillClass = "flex-1 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded py-1 flex justify-center items-center gap-1 shadow-sm";
             let iconsHtml = ''; 
             if(item.category === 'land') { if(item.feddan || item.qirat) iconsHtml += `<span class="${pillClass}"><i data-lucide="maximize" class="w-3 h-3 text-emerald-500"></i> ${item.feddan?item.feddan+' ف':''} ${item.qirat?item.qirat+' ق':''}</span>`; } else if (item.category === 'building') { if(item.floors) iconsHtml += `<span class="${pillClass}"><i data-lucide="layers" class="w-3 h-3 text-blue-500"></i> ${item.floors} أدوار</span>`; } else { if(item.rooms) iconsHtml += `<span class="${pillClass}"><i data-lucide="bed-double" class="w-3 h-3 text-indigo-500"></i> ${item.rooms} غرف</span>`; if(item.baths) iconsHtml += `<span class="${pillClass}"><i data-lucide="bath" class="w-3 h-3 text-cyan-500"></i> ${item.baths} حمام</span>`; }
             if(item.area) iconsHtml += `<span class="${pillClass}"><i data-lucide="ruler" class="w-3 h-3 text-orange-500"></i> ${item.area}م</span>`;
 
-            const locDisplay = item.gov ? `${item.city}، ${item.gov}` : (item.location || ''); const code = item.shortCode || (item.id ? item.id.substring(0,3).toUpperCase() : ''); const shareUrl = window.location.origin + '/property/' + item.id; const waMsg = `مهتم بهذا العقار: ${item.title || ''} (${Number(item.price || 0).toLocaleString()} ج)\nكود الإعلان: ${code}\n\n${shareUrl}`; const waLink = `https://wa.me/20${item.phone}?text=${encodeURIComponent(waMsg)}`;
+            const locDisplay = item.gov ? `${item.city}، ${item.gov}` : (item.location || ''); const code = item.shortCode || (item.id ? item.id.substring(0,3).toUpperCase() : ''); const shareUrl = window.location.origin + '/property/' + item.id; const waMsg = `مرحبا اريد الاستفسار عن هذا العقار:\n${item.title || ''}\nكود العقار: ${code}\n\n${shareUrl}`; const waLink = `https://wa.me/20${item.phone}?text=${encodeURIComponent(waMsg)}`;
 
             return `<div id="card-${prefix}-${item.id}" class="listing-card bg-slate-100 dark:bg-slate-800 rounded-xl overflow-hidden shadow-sm border border-emerald-800 dark:border-emerald-600 flex flex-col h-full cursor-pointer active:scale-95 transition-transform relative" onclick="openDetails('${item.id}')">
                 <div class="relative w-full h-40 shrink-0 bg-slate-200 dark:bg-slate-900">
@@ -774,7 +791,6 @@
 
                     const imgs = (Array.isArray(item.images) && item.images.length > 0) ? item.images : (item.image ?[item.image] :['https://via.placeholder.com/600?text=No+Image']); 
 
-                    // التجهيز المسبق السريع لصورة المشاركة عبر الواتساب (Pre-warming)
                     if (imgs[0] && imgs[0].includes('cloudinary.com')) {
                         const p = imgs[0].split('/upload/');
                         if (p.length === 2) {
@@ -790,7 +806,7 @@
                         }
                     }
 
-                    const updateWaLink = () => { const shareUrl = window.location.origin + '/property/' + item.id; const waMsg = `مهتم بهذا العقار: ${item.title || ''} (${Number(item.price || 0).toLocaleString()} ج)\nكود الإعلان: ${code}\n\n${shareUrl}`; document.getElementById('d-wa').href = `https://wa.me/20${item.phone}?text=${encodeURIComponent(waMsg)}`; }; updateWaLink(); document.getElementById('d-call').href = `tel:${item.phone}`;
+                    const updateWaLink = () => { const shareUrl = window.location.origin + '/property/' + item.id; const waMsg = `مرحبا اريد الاستفسار عن هذا العقار:\n${item.title || ''}\nكود العقار: ${code}\n\n${shareUrl}`; document.getElementById('d-wa').href = `https://wa.me/20${item.phone}?text=${encodeURIComponent(waMsg)}`; }; updateWaLink(); document.getElementById('d-call').href = `tel:${item.phone}`;
 
                     const slider = document.getElementById('details-slider'); 
                     slider.innerHTML = imgs.map((src, idx) => { 
@@ -846,7 +862,35 @@
         }
 
         window.closeDetails = (isHistoryBack = false) => { const slider = document.getElementById('details-slider'); if(slider && slider.firstElementChild) { slider.firstElementChild.scrollIntoView({ behavior: 'instant', block: 'nearest', inline: 'start' }); } toggleModal('details-modal', isHistoryBack); const newUrl = new URL(window.location); newUrl.searchParams.delete('id'); window.history.pushState({}, '', newUrl); state.activeDetailsId = null; }
-        window.shareListing = async () => { if(!state.currentItem) return; const d = { title: 'السوق وياك', text: `شاهد عقار: ${state.currentItem.title}`, url: window.location.origin + '/property/' + state.currentItem.id }; try { await navigator.share(d); showToast('تمت المشاركة'); } catch(e) { navigator.clipboard.writeText(d.url); showToast('تم النسخ'); } };
+
+        window.shareListing = async () => { 
+            if(!state.currentItem) return; 
+            const shareUrl = window.location.origin + '/property/' + state.currentItem.id;
+            const d = { title: 'السوق وياك', text: `شاهد عقار: ${state.currentItem.title}`, url: shareUrl }; 
+
+            showToast('جاري تجهيز المشاركة...');
+
+            try {
+                if (state.currentItem.images && state.currentItem.images[0]) {
+                    const imgUrl = getOptimizedUrl(state.currentItem.images[0], false, 600);
+                    const res = await fetch(imgUrl);
+                    const blob = await res.blob();
+                    const file = new File([blob], 'property.jpg', { type: blob.type });
+                    if (navigator.canShare && navigator.canShare({ files: [file] })) {
+                        d.files = [file];
+                    }
+                }
+            } catch(e) { console.log("Image share error", e); }
+
+            try { 
+                await navigator.share(d); 
+                showToast('تمت المشاركة'); 
+            } catch(e) { 
+                navigator.clipboard.writeText(d.url); 
+                showToast('تم النسخ'); 
+            } 
+        };
+
         window.downloadImages = async () => { 
             if(!state.currentItem || !state.currentItem.images) return; 
             const slider = document.getElementById('details-slider'); 
@@ -858,32 +902,28 @@
             } 
             const url = state.currentItem.images[currentIndex]; 
             if (!url) return; 
-            
+
             showToast('جاري التنزيل في الخلفية...'); 
-            
+
             try {
-                // جلب الصورة في الخلفية لمنع فتح أي صفحات جديدة
                 const response = await fetch(url);
                 const blob = await response.blob();
                 const blobUrl = URL.createObjectURL(blob);
-                
+
                 const a = document.createElement('a');
                 a.style.display = 'none';
                 a.href = blobUrl;
-                // تحديد امتداد الملف (فيديو أو صورة)
                 const ext = (url.includes('.mp4') || url.includes('.mov')) ? 'mp4' : 'jpg';
                 a.download = `souq_wayak_${state.currentItem.id}_${currentIndex+1}.${ext}`;
-                
+
                 document.body.appendChild(a);
                 a.click();
-                
-                // تنظيف المتصفح بعد التحميل
+
                 setTimeout(() => {
                     document.body.removeChild(a);
                     URL.revokeObjectURL(blobUrl);
                 }, 1000);
             } catch (error) {
-                // خطة بديلة في حال فشل الجلب المباشر (بدون فتح نافذة جديدة أيضاً)
                 let fallbackUrl = url; 
                 if(url.includes('cloudinary.com')) { 
                     const parts = url.split('/upload/'); 
@@ -913,7 +953,6 @@
 
             if(document.querySelectorAll('.modal-overlay:not(.hidden)').length > 0) { 
                 document.body.style.overflow = 'hidden'; 
-                // إضافة مسار وهمي للتاريخ لتفعيل زر الرجوع
                 if(isOpening && !isHistoryBack && id !== 'details-modal') history.pushState({modal: id}, '', window.location.href);
             } else { 
                 document.body.style.overflow = ''; 
@@ -921,7 +960,6 @@
             return isOpening; 
         }
 
-        // --- دعم السحب للإغلاق (Swipe to Dismiss) ---
         function enableSwipeToClose(modalId) {
             const modal = document.getElementById(modalId);
             const content = modal.firstElementChild;
@@ -953,7 +991,34 @@
         }
         setTimeout(() => { enableSwipeToClose('auth-modal'); enableSwipeToClose('publisher-modal'); }, 1000);
 
-        function resetAddForm() { state.filesToUpload =[]; state.editingId = null; state.existingImages =[]; document.getElementById('preview-area').innerHTML = ''; document.getElementById('file-upload-input').value = ''; document.getElementById('in-title').value = ''; document.getElementById('in-price').value = ''; document.getElementById('in-area').value = ''; document.getElementById('in-desc').value = ''; document.getElementById('in-map').value = ''; document.getElementById('in-address').value = ''; document.getElementById('in-phone').value = state.userProfile ? state.userProfile.phoneNumber.replace('+20', '') : ''; document.querySelectorAll('.amenity-check').forEach(c => c.checked = false); document.getElementById('furn-no').checked = true; document.getElementById('add-modal-title').innerText = 'إضافة عقار'; document.getElementById('btn-publish').innerText = 'نشر الإعلان'; }
+        function resetAddForm() { 
+            state.filesToUpload =[]; state.editingId = null; state.existingImages =[]; 
+            document.getElementById('preview-area').innerHTML = ''; 
+            document.getElementById('file-upload-input').value = ''; 
+            document.getElementById('in-title').value = ''; 
+            document.getElementById('in-price').value = ''; 
+            document.getElementById('in-area').value = ''; 
+            document.getElementById('in-desc').value = ''; 
+            document.getElementById('in-map').value = ''; 
+            document.getElementById('in-address').value = ''; 
+            document.getElementById('in-phone').value = state.userProfile ? state.userProfile.phoneNumber.replace('+20', '') : ''; 
+            document.querySelectorAll('.amenity-check').forEach(c => c.checked = false); 
+            document.getElementById('furn-no').checked = true;['in-level', 'in-rooms', 'in-baths', 'in-balconies', 'in-finishing', 'in-floors-alt', 'in-apartments', 'in-feddan', 'in-qirat'].forEach(id => {
+                const el = document.getElementById(id);
+                if(el) el.value = '';
+            });
+            document.getElementById('in-land-type').selectedIndex = 0;
+            document.getElementById('in-category').selectedIndex = 0;
+            document.getElementById('in-type').selectedIndex = 0;
+            document.getElementById('in-gov').selectedIndex = 0;
+            document.getElementById('in-city').innerHTML = '<option value="" disabled selected>المركز/المدينة</option>';
+
+            document.getElementById('add-modal-title').innerText = 'إضافة عقار'; 
+            const btn = document.getElementById('btn-publish');
+            btn.innerText = 'نشر الإعلان';
+            btn.disabled = false;
+        }
+
         window.openAddModal = () => { if(state.user && !state.user.isAnonymous) { resetAddForm(); updateFormFields(); if(toggleModal('add-modal')){ const newUrl = new URL(window.location); newUrl.searchParams.set('mode', 'add'); window.history.pushState({}, '', newUrl); } } else { showToast('يجب تسجيل الدخول أولاً', 'e'); toggleModal('auth-modal'); } };
         window.editListing = (id) => { const item = state.listings.find(i => i.id === id); if(!item) return; state.editingId = id; state.existingImages = item.images; closeDetails(); document.getElementById('add-modal-title').innerText = 'تعديل العقار'; document.getElementById('btn-publish').innerText = 'حفظ التعديلات'; document.getElementById('in-category').value = item.category; updateFormFields(); document.getElementById('in-type').value = item.type; document.getElementById('in-title').value = item.title; document.getElementById('in-price').value = item.price; document.getElementById('in-area').value = item.area || ''; document.getElementById('in-gov').value = item.gov; populateCities('in-gov', 'in-city'); setTimeout(() => { document.getElementById('in-city').value = item.city; }, 100); document.getElementById('in-address').value = item.address || ''; document.getElementById('in-phone').value = item.phone || ''; document.getElementById('in-desc').value = item.desc || ''; document.getElementById('in-map').value = item.mapLink || ''; if(item.level) document.getElementById('in-level').value = item.level; if(item.rooms) document.getElementById('in-rooms').value = item.rooms; if(item.baths) document.getElementById('in-baths').value = item.baths; if(item.balconies) document.getElementById('in-balconies').value = item.balconies; if(item.finishing) document.getElementById('in-finishing').value = item.finishing; if(item.floors) document.getElementById('in-floors-alt').value = item.floors; if(item.apartments) document.getElementById('in-apartments').value = item.apartments; if(item.feddan) document.getElementById('in-feddan').value = item.feddan; if(item.qirat) document.getElementById('in-qirat').value = item.qirat; if(item.landType) document.getElementById('in-land-type').value = item.landType; if(item.furnished === 'yes') document.getElementById('furn-yes').checked = true; else document.getElementById('furn-no').checked = true; setTimeout(() => { if(item.amenities && Array.isArray(item.amenities)) { document.querySelectorAll('.amenity-check').forEach(c => { if(item.amenities.includes(c.value)) c.checked = true; }); } }, 100); document.getElementById('preview-area').innerHTML = `<div class="text-[9px] text-slate-500 font-bold p-2 text-center w-full">الصور محفوظة مسبقاً.</div>`; toggleModal('add-modal'); };
 
@@ -962,9 +1027,83 @@
         window.removeFile = (idx) => { state.filesToUpload.splice(idx, 1); renderPreview(); }
         async function uploadToCloudinary(file) { const formData = new FormData(); formData.append('file', file); formData.append('upload_preset', 'souq_upload'); const res = await fetch('https://api.cloudinary.com/v1_1/db9h7zm1h/auto/upload', { method: 'POST', body: formData }); const data = await res.json(); return data.secure_url; }
 
-        window.submitListing = async () => { try { const gov = document.getElementById('in-gov').value; const city = document.getElementById('in-city').value; if(!gov || !city) return showToast('يرجى اختيار المحافظة والمركز', 'e'); let uploadedUrls =[]; if(state.filesToUpload.length > 0) { const btn = document.getElementById('btn-publish'); btn.innerText='جاري الرفع...'; btn.disabled = true; for(let f of state.filesToUpload) { const url = await uploadToCloudinary(f); uploadedUrls.push(url); } } else if (state.editingId) { uploadedUrls = state.existingImages; } else { return showToast('مطلوب صورة أو فيديو','e'); } document.getElementById('btn-publish').innerText = 'جاري المعالجة...'; document.getElementById('btn-publish').disabled = true; const am =[]; document.querySelectorAll('.amenity-check:checked').forEach(c => am.push(c.value)); const cat = document.getElementById('in-category').value; const furnished = document.querySelector('input[name="furnished"]:checked')?.value; const landType = document.getElementById('in-land-type').value; const listingData = { title: document.getElementById('in-title').value, price: Number(document.getElementById('in-price').value), type: document.getElementById('in-type').value, category: cat, area: Number(document.getElementById('in-area').value) || 0, feddan: Number(document.getElementById('in-feddan').value) || 0, qirat: Number(document.getElementById('in-qirat').value) || 0, landType: landType, floors: Number(cat === 'building' ? document.getElementById('in-floors-alt').value : document.getElementById('in-floors-alt').value) || 0, apartments: Number(document.getElementById('in-apartments').value) || 0, rooms: Number(document.getElementById('in-rooms').value) || 0, baths: Number(document.getElementById('in-baths').value) || 0, balconies: Number(document.getElementById('in-balconies').value) || 0, finishing: document.getElementById('in-finishing').value, level: document.getElementById('in-level').value, furnished: furnished, gov: gov, city: city, address: document.getElementById('in-address').value, phone: document.getElementById('in-phone').value, desc: document.getElementById('in-desc').value, mapLink: document.getElementById('in-map').value, amenities: am, images: uploadedUrls, image: uploadedUrls[0] }; if(state.editingId) { await updateDoc(doc(db, COLLECTION_NAME, state.editingId), listingData); showToast('تم حفظ التعديلات بنجاح'); } else { const generatedCode = Math.floor(100 + Math.random() * 900).toString(); listingData.shortCode = generatedCode; listingData.status = 'available'; listingData.isPinned = false; listingData.createdAt = serverTimestamp(); listingData.authorId = state.user.uid; await addDoc(collection(db, COLLECTION_NAME), listingData); showToast('تم النشر بنجاح'); } toggleModal('add-modal'); resetAddForm(); } catch(e) { console.error(e); showToast('حدث خطأ أثناء العملية', 'e'); document.getElementById('btn-publish').innerText = state.editingId ? 'حفظ التعديلات' : 'نشر الإعلان'; document.getElementById('btn-publish').disabled = false; } };
+        window.submitListing = async () => { 
+            try { 
+                const gov = document.getElementById('in-gov').value; 
+                const city = document.getElementById('in-city').value; 
+                if(!gov || !city) return showToast('يرجى اختيار المحافظة والمركز', 'e'); 
 
-        window.del=async(e,id)=>{if(e)e.stopPropagation();if(confirm('هل أنت متأكد من الحذف؟')){await deleteDoc(doc(db, COLLECTION_NAME, id));showToast('تم الحذف'); closeDetails();}};
+                let uploadedUrls =[]; 
+                if(state.filesToUpload.length > 0) { 
+                    const btn = document.getElementById('btn-publish'); 
+                    btn.innerText='جاري الرفع...'; 
+                    btn.disabled = true; 
+                    for(let f of state.filesToUpload) { 
+                        const url = await uploadToCloudinary(f); 
+                        uploadedUrls.push(url); 
+                    } 
+                } else if (state.editingId) { 
+                    uploadedUrls = state.existingImages; 
+                } else { 
+                    return showToast('مطلوب صورة أو فيديو','e'); 
+                } 
+
+                document.getElementById('btn-publish').innerText = 'جاري المعالجة...'; 
+                document.getElementById('btn-publish').disabled = true; 
+
+                const am =[]; document.querySelectorAll('.amenity-check:checked').forEach(c => am.push(c.value)); 
+                const cat = document.getElementById('in-category').value; 
+                const furnished = document.querySelector('input[name="furnished"]:checked')?.value; 
+                const landType = document.getElementById('in-land-type').value; 
+
+                const listingData = { title: document.getElementById('in-title').value, price: Number(document.getElementById('in-price').value), type: document.getElementById('in-type').value, category: cat, area: Number(document.getElementById('in-area').value) || 0, feddan: Number(document.getElementById('in-feddan').value) || 0, qirat: Number(document.getElementById('in-qirat').value) || 0, landType: landType, floors: Number(cat === 'building' ? document.getElementById('in-floors-alt').value : document.getElementById('in-floors-alt').value) || 0, apartments: Number(document.getElementById('in-apartments').value) || 0, rooms: Number(document.getElementById('in-rooms').value) || 0, baths: Number(document.getElementById('in-baths').value) || 0, balconies: Number(document.getElementById('in-balconies').value) || 0, finishing: document.getElementById('in-finishing').value, level: document.getElementById('in-level').value, furnished: furnished, gov: gov, city: city, address: document.getElementById('in-address').value, phone: document.getElementById('in-phone').value, desc: document.getElementById('in-desc').value, mapLink: document.getElementById('in-map').value, amenities: am, images: uploadedUrls, image: uploadedUrls[0] }; 
+
+                if(state.editingId) { 
+                    await updateDoc(doc(db, COLLECTION_NAME, state.editingId), listingData); 
+                    showToast('تم حفظ التعديلات بنجاح'); 
+                } else { 
+                    const generatedCode = Math.floor(100 + Math.random() * 900).toString(); 
+                    listingData.shortCode = generatedCode; 
+                    listingData.status = 'available'; 
+                    listingData.isPinned = false; 
+                    listingData.createdAt = serverTimestamp(); 
+                    listingData.authorId = state.user.uid; 
+                    await addDoc(collection(db, COLLECTION_NAME), listingData); 
+                    showToast('تم النشر بنجاح'); 
+                } 
+                toggleModal('add-modal'); 
+                resetAddForm(); 
+            } catch(e) { 
+                console.error(e); 
+                showToast('حدث خطأ أثناء العملية', 'e'); 
+                document.getElementById('btn-publish').innerText = state.editingId ? 'حفظ التعديلات' : 'نشر الإعلان'; 
+                document.getElementById('btn-publish').disabled = false; 
+            } 
+        };
+
+        let itemToDelete = null;
+        window.del = (e, id) => {
+            if(e) e.stopPropagation();
+            itemToDelete = id;
+            toggleModal('delete-modal');
+        };
+        window.confirmDelete = async () => {
+            if(!itemToDelete) return;
+            const btn = document.getElementById('btn-confirm-delete');
+            btn.disabled = true; btn.innerText = 'جاري الحذف...';
+            try {
+                await deleteDoc(doc(db, COLLECTION_NAME, itemToDelete));
+                showToast('تم الحذف بنجاح');
+                closeDetails();
+                toggleModal('delete-modal');
+            } catch(e) {
+                showToast('خطأ في الحذف', 'e');
+            } finally {
+                btn.disabled = false; btn.innerText = 'نعم، حذف';
+                itemToDelete = null;
+            }
+        };
+
         window.pin=async(e,id,s)=>{if(e)e.stopPropagation();await updateDoc(doc(db, COLLECTION_NAME, id),{isPinned:!s});showToast(s?'تم إلغاء التثبيت':'تم التثبيت'); closeDetails();};
         window.updateStatus = async (e, id, newStatus) => { if(e) e.stopPropagation(); const item = state.listings.find(i => i.id === id); if(item) { item.status = newStatus; const typeEl = document.getElementById('d-type-badge'); if(typeEl) { if(newStatus !== 'available') { typeEl.innerText = newStatus === 'sold' ? 'مباع' : 'مؤجر'; typeEl.className = `absolute bottom-2 right-2 text-white px-2.5 py-1 rounded-lg text-[10px] font-bold shadow bg-red-600/90`; } else { typeEl.innerText = item.type === 'sale' ? 'للبيع' : 'للإيجار'; typeEl.className = `absolute bottom-2 right-2 text-white px-2.5 py-1 rounded-lg text-[10px] font-bold shadow bg-emerald-600/90`; } } } try { await updateDoc(doc(db, COLLECTION_NAME, id), { status: newStatus }); showToast('تم تحديث الحالة'); } catch(err) { console.error(err); showToast('خطأ في التحديث', 'e'); } };
 
