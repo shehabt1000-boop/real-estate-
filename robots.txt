@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+
+# رابط خريطة الموقع لمساعدة عناكب جوجل
+Sitemap: https://real-estate-2026.netlify.app/sitemap.xml
