@@ -62,6 +62,8 @@
         .dark html { background-color: #0f172a; } 
         body { font-family: 'Cairo', sans-serif; -webkit-tap-highlight-color: transparent; background-color: transparent; }
 
+        body.splash-active { overflow: hidden !important; touch-action: none; }
+
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .select-none { user-select: none; }
 
@@ -123,7 +125,7 @@
         .listing-card { content-visibility: auto; contain-intrinsic-size: 0 300px; }
     </style>
 </head>
-<body class="text-slate-800 dark:text-slate-100 select-none">
+<body class="text-slate-800 dark:text-slate-100 select-none splash-active">
 
     <div id="splash-screen">
         <div class="splash-icon-container mb-3">
@@ -202,8 +204,12 @@
                         <p class="flex items-center justify-center gap-1.5"><i data-lucide="calendar" class="w-3.5 h-3.5 text-yellow-400 dark:text-emerald-400"></i> تاريخ التأسيس: 2026</p>
                     </div>
                     <div class="flex justify-center gap-3 mt-5">
-                        <a href="#" target="_blank" class="bg-white/10 dark:bg-slate-700 p-2.5 rounded-full hover:bg-white/20 transition-all shadow-sm"><i data-lucide="facebook" class="w-4 h-4"></i></a>
-                        <a href="#" target="_blank" class="bg-white/10 dark:bg-slate-700 p-2.5 rounded-full hover:bg-white/20 transition-all shadow-sm"><i data-lucide="instagram" class="w-4 h-4"></i></a>
+                        <a href="#" target="_blank" class="bg-white/10 dark:bg-slate-700 p-2.5 rounded-full hover:bg-white/20 transition-all shadow-sm">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4 text-white"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path></svg>
+                        </a>
+                        <a href="#" target="_blank" class="bg-white/10 dark:bg-slate-700 p-2.5 rounded-full hover:bg-white/20 transition-all shadow-sm">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="w-4 h-4 text-white"><rect width="20" height="20" x="2" y="2" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"></line></svg>
+                        </a>
                     </div>
                 </div>
             </div>
@@ -263,7 +269,25 @@
             </div>
         </div>
 
-        <div id="auth-modal" class="hidden modal-overlay"><div class="relative w-full max-w-sm bg-white dark:bg-slate-800 rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-700 p-6 overflow-hidden animate-pop z-50"><button onclick="toggleModal('auth-modal')" class="absolute top-3 left-3 text-slate-400 hover:text-red-500 transition-all z-10"><i data-lucide="x" class="w-5 h-5"></i></button><div class="flex justify-center mb-5"><div class="w-14 h-14 bg-slate-50 dark:bg-slate-900 rounded-full flex items-center justify-center border-2 border-emerald-500 shadow-lg"><i data-lucide="building-2" class="w-7 h-7 text-emerald-600 dark:text-emerald-400"></i></div></div><div class="flex justify-center mb-5"><div class="bg-slate-100 dark:bg-slate-900 p-1 rounded-xl flex w-full border dark:border-slate-700"><button onclick="switchAuthMode('login')" id="tab-login" class="flex-1 py-1.5 rounded-lg text-xs font-bold transition-all bg-white dark:bg-slate-800 shadow text-emerald-600 dark:text-white border dark:border-slate-600">دخول</button><button onclick="switchAuthMode('register')" id="tab-register" class="flex-1 py-1.5 rounded-lg text-xs font-bold transition-all text-slate-500 dark:text-slate-400">إنشاء حساب</button></div></div><div id="form-login" class="space-y-3"><div class="space-y-1"><label class="text-[9px] font-bold text-slate-500">رقم الهاتف</label><div class="relative"><span class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 font-bold text-xs bg-slate-200 dark:bg-slate-900 px-1.5 rounded">+20</span><input id="login-phone" type="tel" class="input-box pl-12 text-left" placeholder="1xxxxxxxxx" oninput="formatPhone(this)"></div></div><div class="space-y-1"><label class="text-[9px] font-bold text-slate-500">كلمة المرور</label><input id="login-pass" type="password" class="input-box" placeholder="••••••••"></div><button id="btn-login" onclick="loginUser()" class="w-full bg-emerald-600 text-white py-2.5 rounded-xl font-bold text-xs shadow-md hover:bg-emerald-700 transition-all transform active:scale-95 mt-2">تسجيل الدخول</button></div><div id="form-register" class="hidden space-y-3"><div class="flex justify-center"><label class="relative w-16 h-16 rounded-full border-2 border-dashed border-emerald-500 flex items-center justify-center cursor-pointer overflow-hidden bg-slate-50 dark:bg-slate-900 group transition-all"><input type="file" accept="image/*" class="hidden" onchange="previewProfileImage(this)"><img id="reg-img-preview" class="absolute inset-0 w-full h-full object-cover hidden"><div id="reg-img-placeholder" class="flex flex-col items-center text-emerald-500"><i data-lucide="camera" class="w-5 h-5 mb-0.5"></i><span class="text-[7px] font-bold">صورة</span></div></label></div><div class="space-y-1"><input id="reg-name" type="text" class="input-box text-center" placeholder="الاسم بالكامل"></div><div class="relative"><span class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 font-bold text-xs bg-slate-200 dark:bg-slate-900 px-1.5 rounded">+20</span><input id="reg-phone" type="tel" class="input-box pl-12 text-left" placeholder="رقم الهاتف" oninput="formatPhone(this)"></div><input id="reg-pass" type="password" class="input-box" placeholder="كلمة المرور (6 أحرف أو أكثر)"><button onclick="registerUser()" id="btn-register" class="w-full bg-slate-800 dark:bg-emerald-600 text-white py-2.5 rounded-xl font-bold text-xs shadow-md hover:opacity-90 transition-all transform active:scale-95 mt-2">إنشاء حساب جديد</button></div></div></div>
+        <!-- Auth Modal -->
+        <div id="auth-modal" class="hidden modal-overlay !bg-slate-50 dark:!bg-slate-900 !p-0 !items-stretch !flex-col z-[150]">
+            <!-- Header (مصغر) -->
+            <div class="flex-shrink-0 flex items-center py-2 px-3 bg-white dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700 shadow-sm h-12">
+                <button onclick="toggleModal('auth-modal')" class="p-1.5 rounded-full bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-white hover:bg-slate-200 transition-all">
+                    <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                </button>
+                <h2 class="flex-1 text-center text-xs font-black text-slate-800 dark:text-white ml-6">الحساب الشخصي</h2>
+            </div>
+            <!-- Body (مرونة السكرول مع الكيبورد) -->
+            <div class="flex-1 overflow-y-auto p-4 pt-8 pb-[60vh] animate-pop" style="animation-duration: 0.2s;">
+                <div class="w-full max-w-sm mx-auto bg-white dark:bg-slate-800 rounded-2xl shadow-xl border border-slate-200 dark:border-slate-700 p-5">
+                    <div class="flex justify-center mb-5"><div class="w-14 h-14 bg-slate-50 dark:bg-slate-900 rounded-full flex items-center justify-center border-2 border-emerald-500 shadow-lg"><i data-lucide="building-2" class="w-7 h-7 text-emerald-600 dark:text-emerald-400"></i></div></div>
+                    <div class="flex justify-center mb-5"><div class="bg-slate-100 dark:bg-slate-900 p-1 rounded-xl flex w-full border dark:border-slate-700"><button onclick="switchAuthMode('login')" id="tab-login" class="flex-1 py-1.5 rounded-lg text-xs font-bold transition-all bg-white dark:bg-slate-800 shadow text-emerald-600 dark:text-white border dark:border-slate-600">دخول</button><button onclick="switchAuthMode('register')" id="tab-register" class="flex-1 py-1.5 rounded-lg text-xs font-bold transition-all text-slate-500 dark:text-slate-400">إنشاء حساب</button></div></div>
+                    <div id="form-login" class="space-y-3"><div class="space-y-1"><label class="text-[9px] font-bold text-slate-500">رقم الهاتف</label><div class="relative"><span class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 font-bold text-xs bg-slate-200 dark:bg-slate-900 px-1.5 rounded">+20</span><input id="login-phone" type="tel" class="input-box pl-12 text-left" placeholder="1xxxxxxxxx" oninput="formatPhone(this)"></div></div><div class="space-y-1"><label class="text-[9px] font-bold text-slate-500">كلمة المرور</label><input id="login-pass" type="password" class="input-box" placeholder="••••••••"></div><button id="btn-login" onclick="loginUser()" class="w-full bg-emerald-600 text-white py-2.5 rounded-xl font-bold text-xs shadow-md hover:bg-emerald-700 transition-all transform active:scale-95 mt-2">تسجيل الدخول</button></div>
+                    <div id="form-register" class="hidden space-y-3"><div class="flex justify-center"><label class="relative w-16 h-16 rounded-full border-2 border-dashed border-emerald-500 flex items-center justify-center cursor-pointer overflow-hidden bg-slate-50 dark:bg-slate-900 group transition-all"><input type="file" accept="image/*" class="hidden" onchange="previewProfileImage(this)"><img id="reg-img-preview" class="absolute inset-0 w-full h-full object-cover hidden"><div id="reg-img-placeholder" class="flex flex-col items-center text-emerald-500"><i data-lucide="camera" class="w-5 h-5 mb-0.5"></i><span class="text-[7px] font-bold">صورة</span></div></label></div><div class="space-y-1"><input id="reg-name" type="text" class="input-box text-center" placeholder="الاسم بالكامل"></div><div class="relative"><span class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 font-bold text-xs bg-slate-200 dark:bg-slate-900 px-1.5 rounded">+20</span><input id="reg-phone" type="tel" class="input-box pl-12 text-left" placeholder="رقم الهاتف" oninput="formatPhone(this)"></div><input id="reg-pass" type="password" class="input-box" placeholder="كلمة المرور (6 أحرف أو أكثر)"><button onclick="registerUser()" id="btn-register" class="w-full bg-slate-800 dark:bg-emerald-600 text-white py-2.5 rounded-xl font-bold text-xs shadow-md hover:opacity-90 transition-all transform active:scale-95 mt-2">إنشاء حساب جديد</button></div>
+                </div>
+            </div>
+        </div>
 
         <div id="publisher-modal" class="hidden modal-overlay" style="z-index: 105;"><div class="relative w-full max-w-sm bg-white dark:bg-slate-800 rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-700 p-6 overflow-hidden animate-pop text-center z-50"><button onclick="toggleModal('publisher-modal')" class="absolute top-3 left-3 text-slate-400 hover:text-red-500 transition-all z-10"><i data-lucide="x" class="w-5 h-5"></i></button><div class="w-24 h-24 rounded-full border-4 border-emerald-500 p-1 mx-auto mb-4"><img id="pub-img" src="" class="w-full h-full rounded-full object-cover bg-slate-200 dark:bg-slate-900"></div><h2 id="pub-name" class="text-xl font-black text-slate-800 dark:text-white mb-1"></h2><p id="pub-phone" class="text-sm font-bold text-slate-500 dark:text-slate-400 mb-2" dir="ltr"></p><div id="pub-badge-status" class="hidden"></div></div></div>
 
@@ -281,6 +305,13 @@
     </div>
 
     <script type="module">
+        // حل مشكلة (Refresh): منع فتح النوافذ السابقة عند إعادة تحميل الصفحة
+        // نقوم بمسح سجلات الـ History الوهمية، إلا لو كان الرابط به تفاصيل عقار (?id=...)
+        const urlParamsInitial = new URLSearchParams(window.location.search);
+        if (!urlParamsInitial.has('id')) {
+            window.history.replaceState({view: 'home'}, '', window.location.pathname);
+        }
+
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signInAnonymously, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { getFirestore, doc, setDoc, getDoc, addDoc, updateDoc, deleteDoc, onSnapshot, collection, query, where, serverTimestamp, getDocs } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
@@ -296,6 +327,10 @@
         let reviewsData =[];
         let currentReviewPage = 0;
         const REVIEWS_PER_PAGE = 5;
+
+        // Splash screen state variables
+        let isAppLoaded = false;
+        let minSplashTimePassed = false;
 
         const ALL_AMENITIES =["غاز طبيعي", "كهرباء", "مياه", "أسانسير", "واي فاي", "حمام سباحة", "حديقة", "جراج", "أمن وحراسة", "كاميرات مراقبة", "مطبخ أمريكاني", "غرفة خادمة", "مسموح بالحيوانات", "على ناصية"];
         const LAND_AMENITIES =["كهرباء", "مياه", "غاز طبيعي", "على ناصية"];
@@ -332,17 +367,21 @@
             if (!document.getElementById('lightbox').classList.contains('hidden')) {
                 closeLightbox(); return;
             }
+
+            // إغلاق أي نافذة مفتوحة عند الضغط على زر الرجوع
             const openModals = Array.from(document.querySelectorAll('.modal-overlay:not(.hidden)'));
             if (openModals.length > 0) {
-                if(!document.getElementById('details-modal').classList.contains('hidden')) {
-                    closeDetails(true); 
-                } else {
-                    openModals.forEach(m => m.classList.add('hidden'));
-                    document.body.style.overflow = '';
+                openModals.forEach(m => {
+                    m.classList.add('hidden');
+                });
+                document.body.style.overflow = '';
+                if(state.activeDetailsId) {
+                    state.activeDetailsId = null;
                 }
                 return;
             }
-            if (document.getElementById('home-view').classList.contains('hidden')) {
+
+            if (e.state && e.state.view === 'home' || document.getElementById('home-view').classList.contains('hidden')) {
                 openHome(true); 
             }
         });
@@ -403,9 +442,47 @@
             }
         }
 
-        function loadCachedData() { const cached = localStorage.getItem('souq_listings'); if(cached) { try { state.listings = JSON.parse(cached); state.listings.sort((a,b) => (a.isPinned ? -1 : 1)); updateFeaturedSlider(); performSearch(true); document.body.classList.add('app-loaded'); document.getElementById('splash-screen').classList.add('hidden-splash'); checkAndOpenUrlProperty(); } catch(e) { console.log('Cache error', e); } } }
+        // --- Splash Screen Logic ---
+        function checkAndHideSplash() {
+            if (isAppLoaded && minSplashTimePassed) {
+                const splash = document.getElementById('splash-screen');
+                if (splash && !splash.classList.contains('hidden-splash')) {
+                    splash.classList.add('hidden-splash');
+                    document.body.classList.remove('splash-active');
+                    document.body.classList.add('app-loaded');
+                }
+            }
+        }
 
-        setTimeout(() => { document.getElementById('splash-screen').classList.add('hidden-splash'); document.body.classList.add('app-loaded'); renderCategories(); }, 5000);
+        // Limit splash screen to show for at least 2 seconds
+        setTimeout(() => {
+            minSplashTimePassed = true;
+            checkAndHideSplash();
+        }, 2000);
+
+        // Fallback in case loading from Firebase/Cache fails or is too slow
+        setTimeout(() => {
+            isAppLoaded = true;
+            minSplashTimePassed = true;
+            checkAndHideSplash();
+        }, 8000);
+
+        function loadCachedData() { 
+            const cached = localStorage.getItem('souq_listings'); 
+            if(cached) { 
+                try { 
+                    state.listings = JSON.parse(cached); 
+                    state.listings.sort((a,b) => (a.isPinned ? -1 : 1)); 
+                    updateFeaturedSlider(); 
+                    performSearch(true); 
+                    isAppLoaded = true;
+                    checkAndHideSplash(); 
+                    checkAndOpenUrlProperty(); 
+                } catch(e) { console.log('Cache error', e); } 
+            } 
+        }
+
+        renderCategories();
 
         let featuredDirection = -1;
         let featuredAutoScroll; 
@@ -549,7 +626,6 @@
         };
 
         loadCachedData();
-        renderCategories();
 
         onAuthStateChanged(auth, async (u) => { 
             if(u) { 
@@ -644,7 +720,20 @@
 
         function showSkeletons() { const c=document.getElementById('grid-container'); if(state.listings.length === 0) { c.innerHTML=''; for(let i=0;i<8;i++) c.innerHTML+=`<div class="bg-slate-100 dark:bg-slate-800 rounded-xl overflow-hidden shadow-sm border border-slate-200 dark:border-slate-700 h-full"><div class="h-36 skeleton rounded-t-xl"></div><div class="p-2 space-y-2"><div class="h-3 rounded skeleton w-3/4"></div><div class="h-2 rounded skeleton w-1/2"></div></div></div>`; } }
 
-        function loadListings() { if (state.listings.length === 0) { showSkeletons(); } onSnapshot(query(collection(db, COLLECTION_NAME)), (snap) => { state.listings =[]; snap.forEach(d => state.listings.push({id:d.id, ...d.data()})); localStorage.setItem('souq_listings', JSON.stringify(state.listings)); state.listings.sort((a,b) => (a.isPinned === b.isPinned) ? (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0) : (a.isPinned ? -1 : 1)); updateFeaturedSlider(); performSearch(true); document.body.classList.add('app-loaded'); setTimeout(() => { document.getElementById('splash-screen').classList.add('hidden-splash'); }, 100); checkAndOpenUrlProperty(); }); }
+        function loadListings() { 
+            if (state.listings.length === 0) { showSkeletons(); } 
+            onSnapshot(query(collection(db, COLLECTION_NAME)), (snap) => { 
+                state.listings =[]; 
+                snap.forEach(d => state.listings.push({id:d.id, ...d.data()})); 
+                localStorage.setItem('souq_listings', JSON.stringify(state.listings)); 
+                state.listings.sort((a,b) => (a.isPinned === b.isPinned) ? (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0) : (a.isPinned ? -1 : 1)); 
+                updateFeaturedSlider(); 
+                performSearch(true); 
+                isAppLoaded = true;
+                checkAndHideSplash();
+                checkAndOpenUrlProperty(); 
+            }); 
+        }
 
         window.performSearch = (forceRender = false) => { 
             const q = normalizeText(document.getElementById('search-input').value); 
@@ -874,7 +963,7 @@
         }
 
         window.closeDetails = (isHistoryBack = false) => { const slider = document.getElementById('details-slider'); if(slider && slider.firstElementChild) { slider.firstElementChild.scrollIntoView({ behavior: 'instant', block: 'nearest', inline: 'start' }); } toggleModal('details-modal', isHistoryBack); const newUrl = new URL(window.location); newUrl.searchParams.delete('id'); window.history.pushState({}, '', newUrl); state.activeDetailsId = null; }
-        
+
         window.shareListing = async () => { 
             if(!state.currentItem) return; 
             const shareUrl = window.location.origin + '/property/' + state.currentItem.id;
@@ -883,7 +972,7 @@
                 text: `شاهد عقار: ${state.currentItem.title}`, 
                 url: shareUrl 
             }; 
-            
+
             try { 
                 await navigator.share(d); 
                 showToast('تمت المشاركة'); 
@@ -904,23 +993,23 @@
             } 
             const url = state.currentItem.images[currentIndex]; 
             if (!url) return; 
-            
+
             showToast('جاري التنزيل في الخلفية...'); 
-            
+
             try {
                 const response = await fetch(url);
                 const blob = await response.blob();
                 const blobUrl = URL.createObjectURL(blob);
-                
+
                 const a = document.createElement('a');
                 a.style.display = 'none';
                 a.href = blobUrl;
                 const ext = (url.includes('.mp4') || url.includes('.mov')) ? 'mp4' : 'jpg';
                 a.download = `souq_wayak_${state.currentItem.id}_${currentIndex+1}.${ext}`;
-                
+
                 document.body.appendChild(a);
                 a.click();
-                
+
                 setTimeout(() => {
                     document.body.removeChild(a);
                     URL.revokeObjectURL(blobUrl);
@@ -955,7 +1044,10 @@
 
             if(document.querySelectorAll('.modal-overlay:not(.hidden)').length > 0) { 
                 document.body.style.overflow = 'hidden'; 
-                if(isOpening && !isHistoryBack && id !== 'details-modal') history.pushState({modal: id}, '', window.location.href);
+                // نغير History فقط لو كنا نفتح النافذة ولن نغيرها لو كنا نقوم بالإغلاق
+                if(isOpening && !isHistoryBack && id !== 'details-modal') {
+                    history.pushState({modal: id}, '', window.location.href);
+                }
             } else { 
                 document.body.style.overflow = ''; 
             } 
@@ -1034,7 +1126,7 @@
                 const gov = document.getElementById('in-gov').value; 
                 const city = document.getElementById('in-city').value; 
                 if(!gov || !city) return showToast('يرجى اختيار المحافظة والمركز', 'e'); 
-                
+
                 let uploadedUrls =[]; 
                 if(state.filesToUpload.length > 0) { 
                     const btn = document.getElementById('btn-publish'); 
@@ -1049,17 +1141,17 @@
                 } else { 
                     return showToast('مطلوب صورة أو فيديو','e'); 
                 } 
-                
+
                 document.getElementById('btn-publish').innerText = 'جاري المعالجة...'; 
                 document.getElementById('btn-publish').disabled = true; 
-                
+
                 const am =[]; document.querySelectorAll('.amenity-check:checked').forEach(c => am.push(c.value)); 
                 const cat = document.getElementById('in-category').value; 
                 const furnished = document.querySelector('input[name="furnished"]:checked')?.value; 
                 const landType = document.getElementById('in-land-type').value; 
-                
+
                 const listingData = { title: document.getElementById('in-title').value, price: Number(document.getElementById('in-price').value), type: document.getElementById('in-type').value, category: cat, area: Number(document.getElementById('in-area').value) || 0, feddan: Number(document.getElementById('in-feddan').value) || 0, qirat: Number(document.getElementById('in-qirat').value) || 0, landType: landType, floors: Number(cat === 'building' ? document.getElementById('in-floors-alt').value : document.getElementById('in-floors-alt').value) || 0, apartments: Number(document.getElementById('in-apartments').value) || 0, rooms: Number(document.getElementById('in-rooms').value) || 0, baths: Number(document.getElementById('in-baths').value) || 0, balconies: Number(document.getElementById('in-balconies').value) || 0, finishing: document.getElementById('in-finishing').value, level: document.getElementById('in-level').value, furnished: furnished, gov: gov, city: city, address: document.getElementById('in-address').value, phone: document.getElementById('in-phone').value, desc: document.getElementById('in-desc').value, mapLink: document.getElementById('in-map').value, amenities: am, images: uploadedUrls, image: uploadedUrls[0] }; 
-                
+
                 if(state.editingId) { 
                     await updateDoc(doc(db, COLLECTION_NAME, state.editingId), listingData); 
                     showToast('تم حفظ التعديلات بنجاح'); 
