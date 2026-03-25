@@ -4,6 +4,12 @@ const PROPERTIES = {
     desc: "شقة 3 غرف نوم، قريب من الخدمات",
     price: 1250000,
     images: ["https://res.cloudinary.com/db9h7zm1h/image/upload/v1774440353/property1.jpg"]
+  },
+  "2": {
+    title: "فيلا بالشوبك",
+    desc: "فيلا 5 غرف نوم، مسبح وحديقة",
+    price: 3200000,
+    images: ["https://res.cloudinary.com/db9h7zm1h/image/upload/v1774440353/property2.jpg"]
   }
 };
 
@@ -13,13 +19,10 @@ export default function handler(req, res) {
 
   if (!property) return res.redirect("/");
 
-  const title = `${property.title} - ${property.price.toLocaleString('ar-EG')} جنيه`;
   const imageUrl = property.images[0];
+  const title = `${property.title} - ${property.price.toLocaleString('ar-EG')} جنيه`;
 
-  res.setHeader("Content-Type", "text/html; charset=utf-8");
-  res.setHeader("Cache-Control", "public, max-age=86400");
-
-  res.send(`
+  const html = `
     <!DOCTYPE html>
     <html lang="ar" dir="rtl">
     <head>
@@ -35,5 +38,9 @@ export default function handler(req, res) {
       <script>window.location.replace("/?id=${id}")</script>
     </body>
     </html>
-  `);
+  `;
+
+  res.setHeader("Content-Type", "text/html; charset=utf-8");
+  res.setHeader("Cache-Control", "public, max-age=86400");
+  res.status(200).send(html);
 }
