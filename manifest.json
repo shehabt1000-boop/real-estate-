@@ -1,21 +1,32 @@
 {
+  "id": "/",
   "name": "السوق وياك",
   "short_name": "السوق وياك",
   "description": "أفضل منصة لبيع وشراء العقارات في مصر",
   "start_url": "./index.html",
+  "scope": "/",
   "display": "standalone",
+  "display_override": [
+    "standalone",
+    "minimal-ui"
+  ],
   "background_color": "#0f172a",
   "theme_color": "#0f172a",
   "orientation": "portrait-primary",
+  "categories": [
+    "business",
+    "realestate"
+  ],
+  "prefer_related_applications": false,
   "icons": [
     {
-      "src": "https://raw.githubusercontent.com/shehabt1000-boop/real-estate-/3c57da6b5eb64d257a15e1a2ff26510ac9c5549f/real-estate.jpg",
+      "src": "./icon-192x192.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any maskable"
     },
     {
-      "src": "https://raw.githubusercontent.com/shehabt1000-boop/real-estate-/3c57da6b5eb64d257a15e1a2ff26510ac9c5549f/real-estate.jpg",
+      "src": "./icon-512x512.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any maskable"
@@ -24,14 +35,14 @@
   "screenshots": [
     {
       "src": "https://images.pexels.com/photos/19213018/pexels-photo-19213018.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
-      "sizes": "1080x1920",
+      "sizes": "1260x750",
       "type": "image/jpeg",
       "form_factor": "wide",
       "label": "شاشة الترحيب"
     },
     {
-      "src": "https://images.pexels.com/photos/9763760/pexels-photo-9763760.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
-      "sizes": "1080x1920",
+      "src": "https://images.pexels.com/photos/9763760/pexels-photo-9763760.jpeg?auto=compress&cs=tinysrgb&w=750&h=1260&dpr=1",
+      "sizes": "750x1260",
       "type": "image/jpeg",
       "form_factor": "narrow",
       "label": "تصفح العقارات"
