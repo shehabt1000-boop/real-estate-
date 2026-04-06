@@ -1273,11 +1273,13 @@
         window.sendAdminMsg=async()=>{const t=document.getElementById('admin-input').value;if(!t||!state.activeAdminChat)return;document.getElementById('admin-input').value='';const s=await getDocs(query(collection(db,"chats"),where('__name__','==',state.activeAdminChat)));const m=s.docs[0].data().messages;m.push({s:'support',t,d:new Date()});await updateDoc(doc(db,"chats",state.activeAdminChat),{messages:m,status:'active'})};
         window.kickUser=async()=>{if(confirm("إنهاء المحادثة؟")){await updateDoc(doc(db,"chats",state.activeAdminChat),{status:'closed'});document.getElementById('admin-msg-area').innerHTML='';document.getElementById('btn-end-chat').classList.add('hidden');state.activeAdminChat=null}};
 
-        if ('serviceWorker' in navigator) {
-            const swCode = `const CACHE_NAME = 'souq-cache-v1'; const ASSETS =['./', 'https://cdn.tailwindcss.com', 'https://unpkg.com/lucide@latest', 'https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&display=swap']; self.addEventListener('install', e => e.waitUntil(caches.open(CACHE_NAME).then(c => c.addAll(ASSETS)))); self.addEventListener('fetch', e => { e.respondWith(caches.match(e.request).then(r => r || fetch(e.request))); });`;
-            const blob = new Blob([swCode], {type: 'application/javascript'}); const swUrl = URL.createObjectURL(blob); navigator.serviceWorker.register(swUrl).catch(e => console.log(e));
-        }
-        lucide.createIcons();
+     if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('/sw.js')
+    .then(() => console.log('Service Worker Registered ✅'))
+    .catch(err => console.log('Service Worker Error ❌:', err));
+}
+
+lucide.createIcons();
     </script>
 </body>
 </html>
