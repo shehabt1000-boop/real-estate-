@@ -6,17 +6,10 @@
   "start_url": "./index.html",
   "scope": "/",
   "display": "standalone",
-  "display_override": [
-    "fullscreen",
-    "minimal-ui"
-  ],
   "background_color": "#0f172a",
   "theme_color": "#0f172a",
   "orientation": "portrait-primary",
-  "categories": [
-    "business",
-    "realestate"
-  ],
+  "categories": ["business", "realestate"],
   "prefer_related_applications": false,
   "icons": [
     {
