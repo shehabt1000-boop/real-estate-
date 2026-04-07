@@ -7,7 +7,7 @@
   "scope": "/",
   "display": "standalone",
   "display_override": [
-    "standalone",
+    "fullscreen",
     "minimal-ui"
   ],
   "background_color": "#0f172a",
