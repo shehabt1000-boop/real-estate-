@@ -2,14 +2,20 @@
   publish = "." 
   functions = "netlify/functions"
 
-# 1. توجيه روابط العقارات إلى دالة المعاينة (Netlify Function) لجلب الصورة للواتساب
+# ✅ مهم جدًا: السماح بالوصول لملفات التحقق
+[[redirects]]
+  from = "/.well-known/*"
+  to = "/.well-known/:splat"
+  status = 200
+
+# 1. توجيه روابط العقارات
 [[redirects]]
   from = "/property/:id"
   to = "/.netlify/functions/property?id=:id"
   status = 200
   force = true
 
-# 2. توجيه احتياطي لأي رابط آخر ليعمل الموقع بشكل سليم ولا يظهر صفحة 404
+# 2. fallback للموقع
 [[redirects]]
   from = "/*"
   to = "/index.html"
