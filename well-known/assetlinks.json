@@ -1,0 +1,8 @@
+[{
+      "relation": ["delegate_permission/common.handle_all_urls"],
+      "target": {
+        "namespace": "android_app",
+        "package_name": "app.netlify.real_estate2026.twa",
+        "sha256_cert_fingerprints": ["55:34:F7:96:64:E4:B3:C2:7F:8B:9D:E3:1F:D3:01:E8:FD:E5:26:31:D9:BF:E4:42:C9:06:14:33:F3:06:60:1E"]
+      }
+    }]
