@@ -3,6 +3,6 @@
       "target": {
         "namespace": "android_app",
         "package_name": "app.netlify.real_estate2026.twa",
-        "sha256_cert_fingerprints": ["B6:65:20:75:F9:65:0F:E6:FE:59:6F:DC:52:27:A9:88:B6:D9:1F:50:17:D2:EA:41:E0:DC:5C:A9:12:3B:FA:5A"]
+        "sha256_cert_fingerprints": ["ED:2A:5D:B3:28:22:D0:28:9F:B1:29:61:3E:4B:CC:8C:8C:92:D2:4A:E0:EA:EE:F2:E7:E0:0F:33:23:CB:49:2B"]
       }
     }]
