@@ -17,7 +17,14 @@ exports.handler = async (event, context) => {
     const firestoreUrl = `https://firestore.googleapis.com/v1/projects/${projectId}/databases/(default)/documents/${collection}/${id}`;
 
     try {
-        const response = await fetch(firestoreUrl);
+        const controller = new AbortController();
+const timeout = setTimeout(() => controller.abort(), 1500);
+
+const response = await fetch(firestoreUrl, {
+  signal: controller.signal
+});
+
+clearTimeout(timeout);
         if (!response.ok) throw new Error('Document not found');
         const data = await response.json();
 
@@ -99,9 +106,9 @@ exports.handler = async (event, context) => {
         return {
             statusCode: 200,
             headers: { 
-                'Content-Type': 'text/html; charset=utf-8',
-                'Cache-Control': 'public, max-age=86400'
-            },
+    'Content-Type': 'text/html; charset=utf-8',
+    'Cache-Control': 'public, max-age=0, s-maxage=86400, stale-while-revalidate=604800'
+},
             body: html
         };
 
