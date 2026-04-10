@@ -61,9 +61,9 @@ clearTimeout(timeout);
                 if (isVideo) {
                     const lastDot = cleanUrl.lastIndexOf('.');
                     if (lastDot !== -1) cleanUrl = cleanUrl.substring(0, lastDot) + '.jpg';
-                    imageUrl = `${parts[0]}/upload/w_600,h_315,c_fill,q_auto:eco,f_jpg,so_0/${cleanUrl}`;
+                    imageUrl = `${parts[0]}/upload/w_400,h_315,c_fill,q_auto:eco,f_jpg,so_0/${cleanUrl}`;
                 } else {
-                    imageUrl = `${parts[0]}/upload/w_600,h_315,c_fill,q_auto:eco,f_jpg/${cleanUrl}`;
+                    imageUrl = `${parts[0]}/upload/w_400,h_315,c_fill,q_auto:eco,f_jpg/${cleanUrl}`;
                 }
             }
         }
